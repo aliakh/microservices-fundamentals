@@ -5,10 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -20,9 +18,8 @@ public class Resource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
     @Column(nullable = false)
-    private byte[] audio;
+    private String key;
 
     public Long getId() {
         return id;
@@ -32,12 +29,12 @@ public class Resource {
         this.id = id;
     }
 
-    public byte[] getAudio() {
-        return audio;
+    public String getKey() {
+        return key;
     }
 
-    public void setAudio(byte[] audio) {
-        this.audio = audio;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override
@@ -50,21 +47,20 @@ public class Resource {
         }
         var that = (Resource) obj;
         return Objects.equals(getId(), that.getId())
-            && Arrays.equals(getAudio(), that.getAudio());
+            && Objects.equals(getKey(), that.getKey());
+
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getId());
-        result = 31 * result + Arrays.hashCode(getAudio());
-        return result;
+        return Objects.hash(getId(), getKey());
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Resource.class.getSimpleName() + "[", "]")
             .add("id=" + id)
-            .add("audio=" + Arrays.toString(audio))
+            .add("key='" + key + "'")
             .toString();
     }
 }

@@ -31,15 +31,15 @@ public class ResourceController {
 
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
-        var resource = resourceService.getResource(id);
+        var resourceResponse = resourceService.getResource(id);
 
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("audio/mpeg"));
-        headers.setContentLength(resource.getAudio().length);
+        headers.setContentLength(resourceResponse.audio().length);
 
         return ResponseEntity.ok()
             .headers(headers)
-            .body(resource.getAudio());
+            .body(resourceResponse.audio());
     }
 
     @DeleteMapping(produces = "application/json")
