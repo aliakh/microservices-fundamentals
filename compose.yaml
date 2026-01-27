@@ -37,12 +37,18 @@ services:
       SPRING_DATASOURCE_USERNAME: ${RESOURCE_DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${RESOURCE_DB_PASSWORD}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      AWS_S3_REGION: ${AWS_S3_REGION}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+      AWS_S3_ACCESS_KEY_ID: ${AWS_S3_ACCESS_KEY_ID}
+      AWS_S3_SECRET_ACCESS_KEY: ${AWS_S3_SECRET_ACCESS_KEY}
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
       - resource-db
       - eureka-server
       - song-service
+      - localstack
 
   song-service:
     build:
@@ -57,3 +63,20 @@ services:
     depends_on:
       - song-db
       - eureka-server
+
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=${AWS_S3_REGION}
+      - EAGER_SERVICE_LOADING=1
+      - PERSISTENCE=1
+      - EDGE_PORT=${AWS_S3_PORT}
+    ports:
+      - '${AWS_S3_PORT}:4566'
+    volumes:
+      - localstack:/var/lib/localstack
+
+volumes:
+  localstack:
