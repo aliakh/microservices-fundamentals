@@ -29,6 +29,18 @@ services:
     ports:
       - "${EUREKA_SERVER_PORT}:8761"
 
+  resource-processor:
+    build:
+      context: ./resource-processor
+    environment:
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+      KAFKA_CONSUMER_GROUP: ${KAFKA_CONSUMER_GROUP}
+    depends_on:
+      - kafka
+      - eureka-server
+
   resource-service:
     build:
       context: ./resource-service
@@ -42,11 +54,15 @@ services:
       AWS_S3_BUCKET: ${AWS_S3_BUCKET}
       AWS_S3_ACCESS_KEY_ID: ${AWS_S3_ACCESS_KEY_ID}
       AWS_S3_SECRET_ACCESS_KEY: ${AWS_S3_SECRET_ACCESS_KEY}
+      KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
       - resource-db
+      - kafka
       - eureka-server
+      - resource-processor
       - song-service
       - localstack
 
@@ -77,6 +93,27 @@ services:
       - '${AWS_S3_PORT}:4566'
     volumes:
       - localstack:/var/lib/localstack
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      CLUSTER_ID: 'Qk9GZ3JmY3R4TnNqU1p3RQ'
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,PLAINTEXT_HOST://0.0.0.0:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
 volumes:
   localstack:
