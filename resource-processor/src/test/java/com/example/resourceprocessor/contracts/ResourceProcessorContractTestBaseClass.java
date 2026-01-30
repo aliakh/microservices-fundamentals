@@ -19,7 +19,7 @@ import static org.springframework.cloud.contract.verifier.assertion.SpringCloudC
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(repositoryRoot = "stubs://file://song-service/target/stubs",
-        ids = "com.example:song-service:0.0.1-SNAPSHOT", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+        ids = "com.example:song-service:1.0-SNAPSHOT", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 public class ResourceProcessorContractTestBaseClass {
     private static final String SONG_BASE_URI = "http://localhost:8081/songs";
     private static final int SONG_ID = 1;
