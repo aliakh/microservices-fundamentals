@@ -24,7 +24,7 @@ public class ResourceService {
     @Autowired
     private ResourceRepository resourceRepository;
     @Autowired
-    private ResourceProducer resourcePublisher;
+    private ResourceProducer resourceProducer;
     @Autowired
     private SongServiceClient songServiceClient;
     @Autowired
@@ -53,7 +53,7 @@ public class ResourceService {
 
         var createdResource = resourceRepository.save(resource);
 
-        resourcePublisher.produceResource(createdResource);
+        resourceProducer.produceResource(createdResource);
 
         return createdResource.getId();
     }
