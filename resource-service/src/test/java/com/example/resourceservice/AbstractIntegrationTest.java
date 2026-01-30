@@ -1,6 +1,6 @@
 package com.example.resourceservice;
 
-import com.microservices.resource.service.config.properties.KafkaProperties;
+import com.example.resourceservice.dto.KafkaProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -58,10 +58,10 @@ public abstract class AbstractIntegrationTest {
         @Bean
         @Primary
         public KafkaProperties kafkaProperties() {
-            var properties = new KafkaProperties();
-            properties.setBootstrapAddress(KAFKA.getBootstrapServers());
-            properties.setTopic(TOPIC_NAME);
-            return properties;
+            return new KafkaProperties(
+                KAFKA.getBootstrapServers(),
+                TOPIC_NAME
+            );
         }
     }
 }

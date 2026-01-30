@@ -1,6 +1,6 @@
 package com.example.resourceservice.service;
 
-import com.microservices.resource.service.AbstractIntegrationTest;
+import com.example.resourceservice.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +15,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import static com.microservices.resource.service.TestConstants.UUID_REGEXP;
-import static com.microservices.resource.service.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,7 +36,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void shouldCreateBucket() {
-        s3Service.createBucketIfNotExists(BUCKET);
+        s3Service.createBucketIfDoesNotExist(BUCKET);
 
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -50,7 +48,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void shouldDoNotCreateBucket() {
-        s3Service.createBucketIfNotExists(BUCKET);
+        s3Service.createBucketIfDoesNotExist(BUCKET);
 
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -59,7 +57,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 
         assertEquals(200, headBucketResponse.sdkHttpResponse().statusCode());
 
-        s3Service.createBucketIfNotExists(BUCKET);
+        s3Service.createBucketIfDoesNotExist(BUCKET);
     }
 
     @Test
