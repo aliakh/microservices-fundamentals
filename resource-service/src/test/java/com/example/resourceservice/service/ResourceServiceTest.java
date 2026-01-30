@@ -5,11 +5,13 @@ package com.example.resourceservice.service;
 //import com.example.resourceservice.entity.Resource;
 //import com.example.resourceservice.exception.BadRequestException;
 import com.example.resourceservice.dto.S3Properties;
+import com.example.resourceservice.dto.S3ResourceDto;
 import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
 import com.example.resourceservice.service.validation.IdValidator;
+import com.example.resourceservice.service.validation.Mp3Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,10 +52,13 @@ public class ResourceServiceTest {
     private SongServiceClient songServiceClient;
     @Mock
     private S3Service s3Service;
+    @Mock
+    private Mp3Validator mp3Validator;
 
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(resourceService, "s3Properties", new S3Properties(null, null, BUCKET, null, null));
+//        ReflectionTestUtils.setField(resourceService, "mp3Validator", new Mp3Validator());
         ReflectionTestUtils.setField(resourceService, "idValidator", new IdValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsValidator", new CsvIdsValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
@@ -69,49 +74,55 @@ public class ResourceServiceTest {
         verifyNoMoreInteractions(multipartFile);
         verifyNoInteractions(resourceRepository, s3Service, resourceProducer);
     }
-
+*/
     @Test
     void shouldUploadResource() {
-        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-        when(multipartFile.getOriginalFilename()).thenReturn(FILE_NAME);
-        when(multipartFile.getSize()).thenReturn(FILE_SIZE);
+//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
+//        when(multipartFile.getOriginalFilename()).thenReturn(FILE_NAME);
+//        when(multipartFile.getSize()).thenReturn(FILE_SIZE);
 
-        var uploadedFileMetadata = new UploadedFileMetadata(BUCKET, KEY);
-        when(s3Service.uploadFile(multipartFile, BUCKET)).thenReturn(uploadedFileMetadata);
+//        var uploadedFileMetadata = new UploadedFileMetadata(BUCKET, KEY);
+        byte[] audio = new byte[]{0};
+        when(mp3Validator.valid(audio)).thenReturn(true);
+        var s3ResourceDto = new S3ResourceDto(BUCKET,KEY );
+        when(s3Service.putObject(audio, BUCKET,"audio/mpeg")).thenReturn(s3ResourceDto);
 
-        var resourceEntity = new Resource();
-        resourceEntity.setBucket(BUCKET);
-        resourceEntity.setKey(KEY);
-        resourceEntity.setName(FILE_NAME);
-        resourceEntity.setSize(FILE_SIZE);
+        var resource = new Resource();
+//        resourceEntity.setBucket(BUCKET);
+        resource.setKey(KEY);
+//        resourceEntity.setName(FILE_NAME);
+//        resourceEntity.setSize(FILE_SIZE);
 
-        var savedResourceEntry = new Resource();
-        savedResourceEntry.setId(ID);
-        savedResourceEntry.setBucket(BUCKET);
-        savedResourceEntry.setKey(KEY);
-        savedResourceEntry.setName(FILE_NAME);
-        savedResourceEntry.setSize(FILE_SIZE);
-        when(resourceRepository.save(resourceEntity)).thenReturn(savedResourceEntry);
+        var savedResource = new Resource();
+        savedResource.setId(ID);
+//        savedResource.setBucket(BUCKET);
+        savedResource.setKey(KEY);
+//        savedResource.setName(FILE_NAME);
+//        savedResource.setSize(FILE_SIZE);
+        when(resourceRepository.save(resource)).thenReturn(savedResource);
 
-        var resourceUploadedResponse = resourceService.uploadResource(multipartFile);
 
-        assertEquals(savedResourceEntry.getId(), resourceUploadedResponse.id());
+        var uploadedResponseId = resourceService.uploadResource(audio);
 
-        verify(multipartFile).getContentType();
-        verify(multipartFile).getOriginalFilename();
-        verify(multipartFile).getSize();
-        verify(s3Service).uploadFile(multipartFile, BUCKET);
-        verify(resourceRepository).save(resourceEntity);
-        verify(resourceProducer).publish(savedResourceEntry);
-        verifyNoMoreInteractions(resourceRepository, s3Service, resourceProducer, multipartFile);
+        assertEquals(savedResource.getId(), uploadedResponseId);
+
+//        verify(multipartFile).getContentType();
+//        verify(multipartFile).getOriginalFilename();
+//        verify(multipartFile).getSize();
+//        verify(s3Service).uploadFile(multipartFile, BUCKET);
+        verify(mp3Validator).valid(audio);
+        verify(s3Service).putObject(audio, BUCKET,"audio/mpeg");
+        verify(resourceRepository).save(resource);
+        verify(resourceProducer).produceResource(savedResource);
+        verifyNoMoreInteractions(resourceRepository,  resourceProducer,songServiceClient,s3Service,mp3Validator);
     }
-*/
+
     @Test
     void shouldGetResource() {
         var resource = buildResource();
         var id = resource.getId();
         when(resourceRepository.findById(id)).thenReturn(Optional.of(resource));
-        byte[] audio = "audio".getBytes();
+        byte[] audio = new byte[]{0};
         when(s3Service.getObject(BUCKET, resource.getKey())).thenReturn(audio);
 
         var resourceResponse = resourceService.getResource(id);
