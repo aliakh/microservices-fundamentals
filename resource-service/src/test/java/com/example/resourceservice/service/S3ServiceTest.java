@@ -97,11 +97,7 @@ public class S3ServiceTest {
         ArgumentCaptor<RequestBody> requestBodyCaptor = ArgumentCaptor.forClass(RequestBody.class);
         when(s3Client.putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture())).thenReturn(putObjectResponse);
 
-//        var multipartFile = mock(MultipartFile.class);
         var audio = new byte[]{0};
-//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-//        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
-//        when(multipartFile.getSize()).thenReturn((long) content.length);
 
         var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
@@ -120,9 +116,6 @@ public class S3ServiceTest {
 
         verify(s3Client).headBucket(headBucketRequest);
         verify(s3Client).createBucket(createBucketRequest);
-//        verify(multipartFile).getContentType();
-//        verify(multipartFile).getInputStream();
-//        verify(multipartFile, times(2)).getSize();
         verify(s3Client).putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture());
         verifyNoMoreInteractions(s3Client);
     }
@@ -141,11 +134,7 @@ public class S3ServiceTest {
         ArgumentCaptor<RequestBody> requestBodyCaptor = ArgumentCaptor.forClass(RequestBody.class);
         when(s3Client.putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture())).thenReturn(putObjectResponse);
 
-//        var multipartFile = mock(MultipartFile.class);
         var audio = new byte[]{0};
-//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-//        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
-//        when(multipartFile.getSize()).thenReturn((long) content.length);
 
         var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
@@ -163,9 +152,6 @@ public class S3ServiceTest {
         assertEquals(MediaType.APPLICATION_OCTET_STREAM_VALUE, requestBody.contentType());
 
         verify(s3Client).headBucket(headBucketRequest);
-//        verify(multipartFile).getContentType();
-//        verify(multipartFile).getInputStream();
-//        verify(multipartFile, times(2)).getSize();
         verify(s3Client).putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture());
         verifyNoMoreInteractions(s3Client);
     }
