@@ -1,5 +1,6 @@
 package com.example.resourceservice.service;
 
+import com.example.resourceservice.Uuids;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -7,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -23,17 +23,11 @@ import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
-import static com.example.resourceservice.TestConstants.UUID_REGEXP;
-import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -103,34 +97,34 @@ public class S3ServiceTest {
         ArgumentCaptor<RequestBody> requestBodyCaptor = ArgumentCaptor.forClass(RequestBody.class);
         when(s3Client.putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture())).thenReturn(putObjectResponse);
 
-        var multipartFile = mock(MultipartFile.class);
-        var content = new byte[]{0};
-        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
-        when(multipartFile.getSize()).thenReturn((long) content.length);
+//        var multipartFile = mock(MultipartFile.class);
+        var audio = new byte[]{0};
+//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
+//        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
+//        when(multipartFile.getSize()).thenReturn((long) content.length);
 
-        var uploadedFileMetadata = s3Service.putObject(content, BUCKET, "audio/mpeg");
+        var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
         assertEquals(BUCKET, uploadedFileMetadata.bucket());
-        assertTrue(Pattern.matches(UUID_REGEXP, uploadedFileMetadata.key()));
+        assertTrue(Uuids.isUuid(uploadedFileMetadata.key()));
 
         var putObjectRequest = putObjectRequestCaptor.getValue();
         assertEquals(BUCKET, putObjectRequest.bucket());
-        assertTrue(Pattern.matches(UUID_REGEXP, putObjectRequest.key()));
+        assertTrue(Uuids.isUuid(putObjectRequest.key()));
         assertEquals(uploadedFileMetadata.key(), putObjectRequest.key());
 
         RequestBody requestBody = requestBodyCaptor.getValue();
-        assertArrayEquals(content, requestBody.contentStreamProvider().newStream().readAllBytes());
-        assertEquals(content.length, requestBody.optionalContentLength().get());
+        assertArrayEquals(audio, requestBody.contentStreamProvider().newStream().readAllBytes());
+        assertEquals(audio.length, requestBody.optionalContentLength().get());
         assertEquals(MediaType.APPLICATION_OCTET_STREAM_VALUE, requestBody.contentType());
 
         verify(s3Client).headBucket(headBucketRequest);
         verify(s3Client).createBucket(createBucketRequest);
-        verify(multipartFile).getContentType();
-        verify(multipartFile).getInputStream();
-        verify(multipartFile, times(2)).getSize();
+//        verify(multipartFile).getContentType();
+//        verify(multipartFile).getInputStream();
+//        verify(multipartFile, times(2)).getSize();
         verify(s3Client).putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture());
-        verifyNoMoreInteractions(multipartFile, s3Client);
+        verifyNoMoreInteractions(s3Client);
     }
 
     @Test
@@ -147,33 +141,33 @@ public class S3ServiceTest {
         ArgumentCaptor<RequestBody> requestBodyCaptor = ArgumentCaptor.forClass(RequestBody.class);
         when(s3Client.putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture())).thenReturn(putObjectResponse);
 
-        var multipartFile = mock(MultipartFile.class);
-        var content = new byte[]{0};
-        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
-        when(multipartFile.getSize()).thenReturn((long) content.length);
+//        var multipartFile = mock(MultipartFile.class);
+        var audio = new byte[]{0};
+//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
+//        when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(content));
+//        when(multipartFile.getSize()).thenReturn((long) content.length);
 
-        var uploadedFileMetadata = s3Service.putObject(content, BUCKET, "audio/mpeg");
+        var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
         assertEquals(BUCKET, uploadedFileMetadata.bucket());
-        assertTrue(Pattern.matches(UUID_REGEXP, uploadedFileMetadata.key()));
+        assertTrue(Uuids.isUuid(uploadedFileMetadata.key()));
 
         var putObjectRequest = putObjectRequestCaptor.getValue();
         assertEquals(BUCKET, putObjectRequest.bucket());
-        assertTrue(Pattern.matches(UUID_REGEXP, putObjectRequest.key()));
+        assertTrue(Uuids.isUuid(putObjectRequest.key()));
         assertEquals(uploadedFileMetadata.key(), putObjectRequest.key());
 
         RequestBody requestBody = requestBodyCaptor.getValue();
-        assertArrayEquals(content, requestBody.contentStreamProvider().newStream().readAllBytes());
-        assertEquals(content.length, requestBody.optionalContentLength().get());
+        assertArrayEquals(audio, requestBody.contentStreamProvider().newStream().readAllBytes());
+        assertEquals(audio.length, requestBody.optionalContentLength().get());
         assertEquals(MediaType.APPLICATION_OCTET_STREAM_VALUE, requestBody.contentType());
 
         verify(s3Client).headBucket(headBucketRequest);
-        verify(multipartFile).getContentType();
-        verify(multipartFile).getInputStream();
-        verify(multipartFile, times(2)).getSize();
+//        verify(multipartFile).getContentType();
+//        verify(multipartFile).getInputStream();
+//        verify(multipartFile, times(2)).getSize();
         verify(s3Client).putObject(putObjectRequestCaptor.capture(), requestBodyCaptor.capture());
-        verifyNoMoreInteractions(multipartFile, s3Client);
+        verifyNoMoreInteractions(s3Client);
     }
 
     @Test

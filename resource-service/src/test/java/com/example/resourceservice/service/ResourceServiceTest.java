@@ -1,9 +1,5 @@
 package com.example.resourceservice.service;
 
-//import com.example.resourceservice.config.properties.S3Properties;
-//import com.example.resourceservice.dto.UploadedFileMetadata;
-//import com.example.resourceservice.entity.Resource;
-//import com.example.resourceservice.exception.BadRequestException;
 import com.example.resourceservice.dto.S3Properties;
 import com.example.resourceservice.dto.S3ResourceDto;
 import com.example.resourceservice.entity.Resource;
@@ -24,7 +20,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
@@ -59,7 +54,6 @@ public class ResourceServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(resourceService, "s3Properties", new S3Properties(null, null, BUCKET, null, null));
-//        ReflectionTestUtils.setField(resourceService, "mp3Validator", new Mp3Validator());
         ReflectionTestUtils.setField(resourceService, "idValidator", new IdValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsValidator", new CsvIdsValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
@@ -72,50 +66,33 @@ public class ResourceServiceTest {
 
         assertThrows(InvalidMp3FileException.class, () -> resourceService.uploadResource(audio));
 
-//        verify(multipartFile, times(2)).getContentType();
         verifyNoMoreInteractions(mp3Validator);
-        verifyNoInteractions(resourceRepository,  resourceProducer,songServiceClient,s3Service);
+        verifyNoInteractions(resourceRepository, resourceProducer, songServiceClient, s3Service);
     }
 
     @Test
     void shouldUploadResource() {
-//        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
-//        when(multipartFile.getOriginalFilename()).thenReturn(FILE_NAME);
-//        when(multipartFile.getSize()).thenReturn(FILE_SIZE);
-
-//        var uploadedFileMetadata = new UploadedFileMetadata(BUCKET, KEY);
         byte[] audio = new byte[]{0};
         when(mp3Validator.valid(audio)).thenReturn(true);
-        var s3ResourceDto = new S3ResourceDto(BUCKET,KEY );
-        when(s3Service.putObject(audio, BUCKET,"audio/mpeg")).thenReturn(s3ResourceDto);
+        var s3ResourceDto = new S3ResourceDto(BUCKET, KEY);
+        when(s3Service.putObject(audio, BUCKET, "audio/mpeg")).thenReturn(s3ResourceDto);
 
         var resource = new Resource();
-//        resourceEntity.setBucket(BUCKET);
         resource.setKey(KEY);
-//        resourceEntity.setName(FILE_NAME);
-//        resourceEntity.setSize(FILE_SIZE);
 
         var savedResource = new Resource();
         savedResource.setId(ID);
-//        savedResource.setBucket(BUCKET);
         savedResource.setKey(KEY);
-//        savedResource.setName(FILE_NAME);
-//        savedResource.setSize(FILE_SIZE);
         when(resourceRepository.save(resource)).thenReturn(savedResource);
-
 
         var uploadedResponseId = resourceService.uploadResource(audio);
         assertEquals(savedResource.getId(), uploadedResponseId);
 
-//        verify(multipartFile).getContentType();
-//        verify(multipartFile).getOriginalFilename();
-//        verify(multipartFile).getSize();
-//        verify(s3Service).uploadFile(multipartFile, BUCKET);
         verify(mp3Validator).valid(audio);
-        verify(s3Service).putObject(audio, BUCKET,"audio/mpeg");
+        verify(s3Service).putObject(audio, BUCKET, "audio/mpeg");
         verify(resourceRepository).save(resource);
         verify(resourceProducer).produceResource(savedResource);
-        verifyNoMoreInteractions(resourceRepository,  resourceProducer,songServiceClient,s3Service,mp3Validator);
+        verifyNoMoreInteractions(resourceRepository, resourceProducer, songServiceClient, s3Service, mp3Validator);
         verifyNoInteractions(songServiceClient);
     }
 
@@ -133,8 +110,8 @@ public class ResourceServiceTest {
         assertEquals(audio, resourceResponse.audio());
         verify(resourceRepository).findById(id);
         verify(s3Service).getObject(BUCKET, resource.getKey());
-        verifyNoMoreInteractions(resourceRepository,s3Service);
-        verifyNoInteractions( resourceProducer,songServiceClient);
+        verifyNoMoreInteractions(resourceRepository, s3Service);
+        verifyNoInteractions(resourceProducer, songServiceClient);
     }
 
     @Test
@@ -152,7 +129,7 @@ public class ResourceServiceTest {
         verify(s3Service).deleteObject(BUCKET, resource.getKey());
         verify(resourceRepository).deleteById(resource.getId());
         verify(songServiceClient).deleteSong(resource.getId());
-        verifyNoMoreInteractions(resourceRepository,songServiceClient,s3Service);
+        verifyNoMoreInteractions(resourceRepository, songServiceClient, s3Service);
         verifyNoInteractions(resourceProducer);
     }
 
