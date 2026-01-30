@@ -46,16 +46,14 @@ public class ResourceServiceTest {
 
     @InjectMocks
     private ResourceService resourceService;
-
     @Mock
     private ResourceRepository resourceRepository;
-
     @Mock
     private S3Service s3Service;
-
     @Mock
     private ResourceProducer resourceProducer;
-
+    @Mock
+    private SongServiceClient songServiceClient;
     @Mock
     private MultipartFile multipartFile;
 
@@ -150,30 +148,33 @@ public class ResourceServiceTest {
 */
     @Test
     void shouldDeleteResources() {
-        Resource resourceEntity = getResourceEntity();
-        var ids = List.of(resourceEntity.getId());
-        when(resourceRepository.findAllById(ids)).thenReturn(List.of(resourceEntity));
+        var resource = getResourceEntity();
+        var ids = List.of(resource.getId());
 
-        doNothing().when(resourceRepository).deleteById(resourceEntity.getId());
+        when(resourceRepository.findById(resource.getId())).thenReturn(Optional.of(resource));
+        doNothing().when(resourceRepository).deleteById(resource.getId());
+
+        doNothing().when(songServiceClient).deleteSong(resource.getId());
 
         var resourcesDeletedResponse = resourceService.deleteResources("1"/*ids*/);
 
         assertEquals(ids, resourcesDeletedResponse);
 
-        verify(resourceRepository).findAllById(ids);
-        verify(s3Service).deleteObject(BUCKET, resourceEntity.getKey());
-        verify(resourceRepository).deleteById(resourceEntity.getId());
-        verifyNoMoreInteractions(s3Service, resourceRepository);
+        verify(resourceRepository).findById(resource.getId());
+        verify(s3Service).deleteObject(BUCKET, resource.getKey());
+        verify(resourceRepository).deleteById(resource.getId());
+        verify(songServiceClient).deleteSong(resource.getId());
+        verifyNoMoreInteractions(s3Service, resourceRepository,songServiceClient);
         verifyNoInteractions(resourceProducer);
     }
 
     private Resource getResourceEntity() {
-        var resourceEntity = new Resource();
-        resourceEntity.setId(ID);
+        var resource = new Resource();
+        resource.setId(ID);
 //        resourceEntity.setBucket(BUCKET);
-        resourceEntity.setKey(KEY);
+        resource.setKey(KEY);
 //        resourceEntity.setName(FILE_NAME);
 //        resourceEntity.setSize(FILE_SIZE);
-        return resourceEntity;
+        return resource;
     }
 }
