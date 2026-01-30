@@ -7,6 +7,7 @@ package com.example.resourceservice.service;
 import com.example.resourceservice.dto.S3Properties;
 import com.example.resourceservice.dto.S3ResourceDto;
 import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.exception.InvalidMp3FileException;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
@@ -63,18 +64,19 @@ public class ResourceServiceTest {
         ReflectionTestUtils.setField(resourceService, "csvIdsValidator", new CsvIdsValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
     }
-/*
+
     @Test
     void shouldFailWhenUploadingNonAudioContentType() {
-        when(multipartFile.getContentType()).thenReturn(MediaType.APPLICATION_JSON_VALUE);
+        byte[] audio = new byte[]{0};
+        when(mp3Validator.valid(audio)).thenReturn(false);
 
-        assertThrows(BadRequestException.class, () -> resourceService.uploadResource(multipartFile));
+        assertThrows(InvalidMp3FileException.class, () -> resourceService.uploadResource(audio));
 
-        verify(multipartFile, times(2)).getContentType();
-        verifyNoMoreInteractions(multipartFile);
-        verifyNoInteractions(resourceRepository, s3Service, resourceProducer);
+//        verify(multipartFile, times(2)).getContentType();
+        verifyNoMoreInteractions(mp3Validator);
+        verifyNoInteractions(resourceRepository,  resourceProducer,songServiceClient,s3Service);
     }
-*/
+
     @Test
     void shouldUploadResource() {
 //        when(multipartFile.getContentType()).thenReturn(CONTENT_TYPE_AUDIO_MPEG);
@@ -103,7 +105,6 @@ public class ResourceServiceTest {
 
 
         var uploadedResponseId = resourceService.uploadResource(audio);
-
         assertEquals(savedResource.getId(), uploadedResponseId);
 
 //        verify(multipartFile).getContentType();
@@ -115,6 +116,7 @@ public class ResourceServiceTest {
         verify(resourceRepository).save(resource);
         verify(resourceProducer).produceResource(savedResource);
         verifyNoMoreInteractions(resourceRepository,  resourceProducer,songServiceClient,s3Service,mp3Validator);
+        verifyNoInteractions(songServiceClient);
     }
 
     @Test

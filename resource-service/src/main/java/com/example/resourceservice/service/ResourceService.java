@@ -52,9 +52,7 @@ public class ResourceService {
         resource.setKey(s3ResourceDto.key());
 
         var createdResource = resourceRepository.save(resource);
-
         resourceProducer.produceResource(createdResource);
-
         return createdResource.getId();
     }
 
