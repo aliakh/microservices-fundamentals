@@ -9,6 +9,7 @@ import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
+import com.example.resourceservice.service.validation.IdValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +54,7 @@ public class ResourceServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(resourceService, "s3Properties", new S3Properties(null, null, BUCKET, null, null));
+        ReflectionTestUtils.setField(resourceService, "idValidator", new IdValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsValidator", new CsvIdsValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
     }
@@ -103,45 +105,30 @@ public class ResourceServiceTest {
         verify(resourceProducer).publish(savedResourceEntry);
         verifyNoMoreInteractions(resourceRepository, s3Service, resourceProducer, multipartFile);
     }
-
+*/
     @Test
     void shouldGetResource() {
-        Resource resourceEntity = getResourceEntity();
-        var id = resourceEntity.getId();
-        when(resourceRepository.findById(id)).thenReturn(Optional.of(resourceEntity));
+        var resource = buildResource();
+        var id = resource.getId();
+        when(resourceRepository.findById(id)).thenReturn(Optional.of(resource));
+        byte[] audio = "audio".getBytes();
+        when(s3Service.getObject(BUCKET, resource.getKey())).thenReturn(audio);
 
-        var actualResourceEntry = resourceService.getResource(id);
+        var resourceResponse = resourceService.getResource(id);
 
-        assertEquals(id, actualResourceEntry.getId());
-        assertEquals(resourceEntity.getBucket(), actualResourceEntry.getBucket());
-        assertEquals(resourceEntity.getKey(), actualResourceEntry.getKey());
-        assertEquals(resourceEntity.getName(), actualResourceEntry.getName());
-        assertEquals(resourceEntity.getSize(), actualResourceEntry.getSize());
-
+        assertEquals(id, resourceResponse.id());
+        assertEquals(audio, resourceResponse.audio());
         verify(resourceRepository).findById(id);
-        verifyNoMoreInteractions(resourceRepository);
-        verifyNoInteractions(s3Service, resourceProducer, multipartFile);
+        verify(s3Service).getObject(BUCKET, resource.getKey());
+        verifyNoMoreInteractions(resourceRepository,s3Service);
+        verifyNoInteractions( resourceProducer,songServiceClient);
     }
 
-    @Test
-    void shouldDownloadResource() {
-        Resource resourceEntity = getResourceEntity();
-
-        when(s3Service.downloadFile(resourceEntity.getBucket(), resourceEntity.getKey())).thenReturn(FILE_CONTENT);
-
-        var actualContent = resourceService.downloadResource(resourceEntity);
-
-        assertArrayEquals(FILE_CONTENT, actualContent);
-
-        verify(s3Service).downloadFile(resourceEntity.getBucket(), resourceEntity.getKey());
-        verifyNoMoreInteractions(s3Service);
-        verifyNoInteractions(resourceRepository, resourceProducer, multipartFile);
-    }
-*/
     @Test
     void shouldDeleteResources() {
         var resource = buildResource();
         when(resourceRepository.findById(resource.getId())).thenReturn(Optional.of(resource));
+        doNothing().when(s3Service).deleteObject(BUCKET, resource.getKey());
         doNothing().when(resourceRepository).deleteById(resource.getId());
         doNothing().when(songServiceClient).deleteSong(resource.getId());
 
