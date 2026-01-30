@@ -9,26 +9,21 @@ import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
-import com.example.resourceservice.service.validation.Mp3Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -49,18 +44,15 @@ public class ResourceServiceTest {
     @Mock
     private ResourceRepository resourceRepository;
     @Mock
-    private S3Service s3Service;
-    @Mock
     private ResourceProducer resourceProducer;
     @Mock
     private SongServiceClient songServiceClient;
     @Mock
-    private MultipartFile multipartFile;
+    private S3Service s3Service;
 
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(resourceService, "s3Properties", new S3Properties(null, null, BUCKET, null, null));
-//        ReflectionTestUtils.setField(resourceService, "mp3Validator", new Mp3Validator());
         ReflectionTestUtils.setField(resourceService, "csvIdsValidator", new CsvIdsValidator());
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
     }
@@ -148,33 +140,26 @@ public class ResourceServiceTest {
 */
     @Test
     void shouldDeleteResources() {
-        var resource = getResourceEntity();
-        var ids = List.of(resource.getId());
-
+        var resource = buildResource();
         when(resourceRepository.findById(resource.getId())).thenReturn(Optional.of(resource));
         doNothing().when(resourceRepository).deleteById(resource.getId());
-
         doNothing().when(songServiceClient).deleteSong(resource.getId());
 
-        var resourcesDeletedResponse = resourceService.deleteResources("1"/*ids*/);
-
-        assertEquals(ids, resourcesDeletedResponse);
+        var deletedResourceIds = resourceService.deleteResources(String.valueOf(resource.getId()));
+        assertEquals(List.of(resource.getId()), deletedResourceIds);
 
         verify(resourceRepository).findById(resource.getId());
         verify(s3Service).deleteObject(BUCKET, resource.getKey());
         verify(resourceRepository).deleteById(resource.getId());
         verify(songServiceClient).deleteSong(resource.getId());
-        verifyNoMoreInteractions(s3Service, resourceRepository,songServiceClient);
+        verifyNoMoreInteractions(resourceRepository,songServiceClient,s3Service);
         verifyNoInteractions(resourceProducer);
     }
 
-    private Resource getResourceEntity() {
+    private Resource buildResource() {
         var resource = new Resource();
         resource.setId(ID);
-//        resourceEntity.setBucket(BUCKET);
         resource.setKey(KEY);
-//        resourceEntity.setName(FILE_NAME);
-//        resourceEntity.setSize(FILE_SIZE);
         return resource;
     }
 }
