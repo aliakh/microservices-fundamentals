@@ -25,10 +25,10 @@ public class ParameterTypes {
     public Resource resource(Map<String, String> entry) {
         return new Resource(
             Long.valueOf(entry.get("id")),
-            entry.get("bucket"),
-            entry.get("key"),
-            entry.get("name"),
-            entry.get("size") != null ? Long.valueOf(entry.get("size")) : null
+//            entry.get("bucket"),
+            entry.get("key")
+//            entry.get("name"),
+//            entry.get("size") != null ? Long.valueOf(entry.get("size")) : null
         );
     }
 }

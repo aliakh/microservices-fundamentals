@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.io.InputStream;
 
 //import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
@@ -30,14 +31,22 @@ public class ResourceClient {
         RestAssuredMockMvc.standaloneSetup(resourceController);
     }
 
-    public MockMvcResponse uploadResource(InputStream inputStream, String fileName) {
+    public MockMvcResponse uploadResource(InputStream inputStream) throws IOException {
+        byte[] audioData = inputStream.readAllBytes();
+
         return given()
-            .multiPart("file", fileName, inputStream, "audio/mpeg")
+            .contentType("audio/mpeg") // Matches the @PostMapping consumes
+            .body(audioData)           // Sends the raw bytes in the request body
+            .when()
             .post(URL_PATH);
+
+//        return given()
+//            .multiPart("file", fileName, inputStream, "audio/mpeg")
+//            .post(URL_PATH);
     }
 
     public MockMvcResponse downloadResource(long id) {
-        return given().get(URL_PATH + "/{id}/download", id);
+        return given().get(URL_PATH + "/{id}", id);
     }
 
     public MockMvcResponse deleteResource(long id) {

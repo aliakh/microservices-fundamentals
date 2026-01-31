@@ -117,7 +117,7 @@ public class StepDefinitions {
 
     public UploadResourceResponse uploadFile(String file) {
         try (InputStream inputStream = new ClassPathResource(FILES_PATH + file).getInputStream()) {
-            response = resourceClient.uploadResource(inputStream, FilenameUtils.getName(file));
+            response = resourceClient.uploadResource(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

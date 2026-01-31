@@ -12,6 +12,15 @@ Feature: Upload, download and delete resources
       {"id": 1}
       """
     Then the following resources are saved
-      | id | bucket    | name       | size  |
-      | 1  | resources | audio1.mp3 | 31808 |
+      | id |
+      | 1  |
+
+  Scenario: Download resource
+    Given the following resources uploaded
+      | id | key        |
+      | 2  | audio2.mp3 |
+    When user downloads resource with id=2
+    Then response code is 200
+    And response content type is "audio/mpeg"
+    And response body has size 29010
 
