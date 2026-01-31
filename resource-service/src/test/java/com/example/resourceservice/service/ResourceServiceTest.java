@@ -33,7 +33,7 @@ public class ResourceServiceTest {
 
     private static final long ID = 1L;
     private static final String BUCKET = "resources";
-    private static final String KEY = "11111111-2222-3333-4444-555555555555";
+    private static final String KEY = "5938ed7b-2c4c-44db-a5d1-9c7a9434252c";
     private static final String FILE_NAME = "audio.mp3";
     private static final byte[] FILE_CONTENT = new byte[]{0};
     private static final long FILE_SIZE = FILE_CONTENT.length;

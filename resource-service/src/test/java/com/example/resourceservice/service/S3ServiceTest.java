@@ -36,11 +36,10 @@ import static org.mockito.Mockito.when;
 public class S3ServiceTest {
 
     private static final String BUCKET = "resources";
-    private static final String KEY = "11111111-2222-3333-4444-555555555555";
+    private static final String KEY = "55b56cde-32cd-49d5-8f0d-cee7f22f0bf7";
 
     @InjectMocks
     private S3Service s3Service;
-
     @Mock
     private S3Client s3Client;
 
