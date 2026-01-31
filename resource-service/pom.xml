@@ -151,14 +151,21 @@
             <scope>test</scope>
         </dependency>
 
+<!--        junitVersion=5.9.1-->
+<!--        testImplementation platform("org.junit:junit-bom:${junitVersion}")-->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+<!--            <version>6.0.2</version>-->
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- spring-mock-mvc -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-mock-mvc</artifactId>
@@ -193,7 +200,14 @@
             <dependency>
                 <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-bom</artifactId>
-                <version>7.34.2</version>
+                <version>7.22.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.9.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

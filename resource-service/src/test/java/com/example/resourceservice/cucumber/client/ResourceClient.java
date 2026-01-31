@@ -2,15 +2,17 @@ package com.example.resourceservice.cucumber.client;
 
 import com.example.resourceservice.controller.ResourceController;
 import com.example.resourceservice.service.ResourceService;
+import com.example.resourceservice.service.validation.IdValidator;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
 
-import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
+//import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 
 @Component
@@ -23,12 +25,14 @@ public class ResourceClient {
 
     @PostConstruct
     void init() {
-        RestAssuredMockMvc.standaloneSetup(new ResourceController(resourceService));
+        var resourceController = new ResourceController();
+        ReflectionTestUtils.setField(resourceController, "resourceService", resourceService);
+        RestAssuredMockMvc.standaloneSetup(resourceController);
     }
 
     public MockMvcResponse uploadResource(InputStream inputStream, String fileName) {
         return given()
-            .multiPart("file", fileName, inputStream, CONTENT_TYPE_AUDIO_MPEG)
+            .multiPart("file", fileName, inputStream, "audio/mpeg")
             .post(URL_PATH);
     }
 
