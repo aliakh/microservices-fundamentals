@@ -34,7 +34,7 @@ public class StepsDefinitions {
     private ResponseEntity<CreateSongResponse> createSongResponse;
     private ResponseEntity<Song> getResponse;
 
-    public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper)    {
+    public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.songRepository = songRepository;
         this.objectMapper = objectMapper;
@@ -57,10 +57,10 @@ public class StepsDefinitions {
         assertThat(createSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-//    @And("response content type is {string}")
-//    public void responseContentTypeIs(String contentType) {
-//        assertThat(postResponse.getContentType()).isEqualTo(contentType);
-//    }
+    @And("response content type is {string}")
+    public void responseContentTypeIs(String contentType) {
+        assertThat(createSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
+    }
 
     @And("resource uploaded response is")
     public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
@@ -85,6 +85,7 @@ public class StepsDefinitions {
             }
         );
     }
+
     @When("GET request sent songs\\/{int}")
     public void sendGetRequest(Integer id) {
         String getURL = SERVICE_URL + port + "/songs/" + id;

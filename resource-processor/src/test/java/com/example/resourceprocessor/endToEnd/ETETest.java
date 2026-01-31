@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(Cucumber.class)
 @SpringBootTest
-@CucumberOptions(features = "src/test/resources/endToEnd",  plugin = {"pretty", "html:build/test-results/test/cucumber.html"})
+@CucumberOptions(features = "src/test/resources/endToEnd",  plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
 public class ETETest {
 }

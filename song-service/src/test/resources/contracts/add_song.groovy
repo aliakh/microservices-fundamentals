@@ -12,12 +12,12 @@ Contract.make {
             contentType(applicationJson())
         }
         body(
-                id: "1",
-                name: "name",
-                artist: "artist",
-                album: "album",
-                duration: "12:34",
-                year: "2020"
+            id: "1",
+            name: "name",
+            artist: "artist",
+            album: "album",
+            duration: "12:34",
+            year: "2020"
         )
     }
 
