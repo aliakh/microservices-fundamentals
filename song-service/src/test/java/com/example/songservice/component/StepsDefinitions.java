@@ -1,7 +1,6 @@
 package com.example.songservice.component;
 
-
-import com.example.songservice.model.Song;
+import com.example.songservice.entity.Song;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -58,6 +57,6 @@ public class StepsDefinitions {
     public void checkForValidResponse(Integer resourceId) {
         Song body = getResponse.getBody();
         assertNotNull(body);
-        assertEquals(resourceId, body.getResourceId());
+        assertEquals(resourceId, body.getId());
     }
 }

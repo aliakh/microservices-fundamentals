@@ -12,19 +12,19 @@ Contract.make {
             contentType(applicationJson())
         }
         body(
+                id: "1",
                 name: "name",
                 artist: "artist",
                 album: "album",
-                length: "length",
-                resourceId: "1",
-                year: "year"
+                duration: "12:34",
+                year: "2020"
         )
     }
 
     response {
         status 200
         headers {
-            contentType(applicationXml())
+            contentType(applicationJson())
         }
         body([id: 1L])
     }

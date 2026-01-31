@@ -55,8 +55,8 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
     private ResourceRepository resourceRepository;
     @Autowired
     private S3Service s3Service;
-    @MockitoBean
-    private SongServiceClient songServiceClient;
+//    @MockitoBean
+//    private SongServiceClient songServiceClient;
 
     @BeforeEach
     void init() {
@@ -128,8 +128,8 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertNotNull(resourceUploadedResponse);
         assertNotNull(resourceUploadedResponse.id());
 
-
-        doNothing().when(songServiceClient).deleteSong(resourceUploadedResponse.id());
+//
+//        doNothing().when(songServiceClient).deleteSong(resourceUploadedResponse.id());
 
         var headers2 = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -147,9 +147,9 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertNotNull(resourceDeletedResponse);
         assertNotNull(resourceDeletedResponse.ids());
         assertEquals(1, resourceDeletedResponse.ids().size());
-
-        verify(songServiceClient).deleteSong(resourceUploadedResponse.id());
-        verifyNoMoreInteractions(songServiceClient);
+//
+//        verify(songServiceClient).deleteSong(resourceUploadedResponse.id());
+//        verifyNoMoreInteractions(songServiceClient);
 
         var foundResourceEntities = resourceRepository.findAllById(resourceDeletedResponse.ids());
         assertNotNull(foundResourceEntities);

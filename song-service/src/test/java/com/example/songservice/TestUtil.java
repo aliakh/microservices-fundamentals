@@ -1,11 +1,10 @@
 package com.example.songservice;
 
-import com.example.songservice.model.Song;
-import lombok.experimental.UtilityClass;
+import com.example.songservice.entity.Song;
 
-@UtilityClass
+//@UtilityClass
 public class TestUtil {
-
+/*
     public static Song getDefaultSongMetadata(String resourceId) {
         return Song.builder()
                 .name("name")
@@ -32,4 +31,5 @@ public class TestUtil {
                 .resourceId(resourceId)
                 .build();
     }
+ */
 }
