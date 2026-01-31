@@ -1,7 +1,7 @@
 package com.example.resourceservice.cucumber.client;
 
-import com.microservices.resource.service.controller.ResourceController;
-import com.microservices.resource.service.service.ResourceService;
+import com.example.resourceservice.controller.ResourceController;
+import com.example.resourceservice.service.ResourceService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
 
-import static com.microservices.resource.service.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
+import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 
 @Component

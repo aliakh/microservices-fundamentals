@@ -1,7 +1,7 @@
 package com.example.resourceservice.cucumber;
 
-import com.microservices.resource.service.AbstractIntegrationTest;
-import com.microservices.resource.service.cucumber.config.TestConfig;
+import com.example.resourceservice.AbstractIntegrationTest;
+import com.example.resourceservice.cucumber.config.TestConfig;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
