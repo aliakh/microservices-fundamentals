@@ -15,19 +15,16 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-
 @Testcontainers
 @ContextConfiguration(classes = AbstractIntegrationTest.TestConfig.class)
 public abstract class AbstractIntegrationTest {
 
-    protected static final String TOPIC_NAME = "resource-upload";
-    protected static final String GROUP_ID = "resource-upload";
+    protected static final String TOPIC_NAME = "resources";
 
     @Container
     protected static final LocalStackContainer LOCAL_STACK =
         new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
-            .withServices(S3);
+            .withServices(LocalStackContainer.Service.S3);
 
     @Container
     protected static final KafkaContainer KAFKA =
@@ -43,7 +40,7 @@ public abstract class AbstractIntegrationTest {
 
         @Bean
         @Primary
-        public S3Client amazonS3() {
+        public S3Client s3Client() {
             return S3Client.builder()
                 .endpointOverride(LOCAL_STACK.getEndpointOverride(LocalStackContainer.Service.S3))
                 .credentialsProvider(

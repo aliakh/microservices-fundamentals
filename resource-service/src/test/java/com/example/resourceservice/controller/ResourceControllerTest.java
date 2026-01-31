@@ -34,7 +34,7 @@ public class ResourceControllerTest {
     @MockitoBean
     private ResourceService resourceService;
 
-    @Test
+    @Test //TODO
     void shouldCreateResource() throws Exception {
         var audio = new byte[]{0};
         var id = 1L;
@@ -52,7 +52,7 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    @Test
+    @Test //TODO
     void shouldGetResource() throws Exception {
         var resourceEntity = buildResource();
         var id = resourceEntity.getId();
@@ -70,7 +70,7 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    @Test
+    @Test //TODO
     void shouldDeleteResources() throws Exception {
         Long id = 1L;
         when(resourceService.deleteResources(String.valueOf(id))).thenReturn(List.of(id));

@@ -59,8 +59,8 @@ public class ResourceServiceTest {
         ReflectionTestUtils.setField(resourceService, "csvIdsParser", new CsvIdsParser());
     }
 
-    @Test
-    void shouldFailWhenUploadingNonAudioContentType() {
+    @Test //TODO
+    void shouldFailWhenUploadingWrongContentType() {
         var audio = new byte[]{0};
         when(mp3Validator.valid(audio)).thenReturn(false);
 
@@ -70,7 +70,7 @@ public class ResourceServiceTest {
         verifyNoInteractions(resourceRepository, resourceProducer, songServiceClient, s3Service);
     }
 
-    @Test
+    @Test //TODO
     void shouldUploadResource() {
         var audio = new byte[]{0};
         when(mp3Validator.valid(audio)).thenReturn(true);
@@ -92,13 +92,16 @@ public class ResourceServiceTest {
         verify(s3Service).putObject(audio, BUCKET, "audio/mpeg");
         verify(resourceRepository).save(resource);
         verify(resourceProducer).produceResource(savedResource);
-        verifyNoMoreInteractions(resourceRepository, resourceProducer, songServiceClient, s3Service, mp3Validator);
+        verifyNoMoreInteractions(resourceRepository, resourceProducer,  s3Service, mp3Validator);
         verifyNoInteractions(songServiceClient);
     }
 
-    @Test
+    @Test //TODO
     void shouldGetResource() {
-        var resource = buildResource();
+        var resource1 = new Resource();
+        resource1.setId(ID);
+        resource1.setKey(KEY);
+        var resource = resource1;
         var id = resource.getId();
         when(resourceRepository.findById(id)).thenReturn(Optional.of(resource));
         var audio = new byte[]{0};
@@ -111,12 +114,15 @@ public class ResourceServiceTest {
         verify(resourceRepository).findById(id);
         verify(s3Service).getObject(BUCKET, resource.getKey());
         verifyNoMoreInteractions(resourceRepository, s3Service);
-        verifyNoInteractions(resourceProducer, songServiceClient);
+        verifyNoInteractions(resourceProducer, songServiceClient,mp3Validator);
     }
 
-    @Test
+    @Test //TODO
     void shouldDeleteResources() {
-        var resource = buildResource();
+        var resource1 = new Resource();
+        resource1.setId(ID);
+        resource1.setKey(KEY);
+        var resource = resource1;
         when(resourceRepository.findById(resource.getId())).thenReturn(Optional.of(resource));
         doNothing().when(s3Service).deleteObject(BUCKET, resource.getKey());
         doNothing().when(resourceRepository).deleteById(resource.getId());
@@ -130,13 +136,7 @@ public class ResourceServiceTest {
         verify(resourceRepository).deleteById(resource.getId());
         verify(songServiceClient).deleteSong(resource.getId());
         verifyNoMoreInteractions(resourceRepository, songServiceClient, s3Service);
-        verifyNoInteractions(resourceProducer);
+        verifyNoInteractions(resourceProducer,mp3Validator);
     }
 
-    private Resource buildResource() {
-        var resource = new Resource();
-        resource.setId(ID);
-        resource.setKey(KEY);
-        return resource;
-    }
 }

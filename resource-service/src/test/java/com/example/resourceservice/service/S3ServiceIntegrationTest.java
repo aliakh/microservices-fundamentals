@@ -31,7 +31,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private S3Client s3Client;
 
-    @Test
+    @Test //TODO
     void shouldCreateBucket() {
         s3Service.createBucketIfDoesNotExist(BUCKET);
 
@@ -43,7 +43,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(200, headBucketResponse.sdkHttpResponse().statusCode());
     }
 
-    @Test
+    @Test //TODO
     void shouldDoNotCreateBucket() {
         s3Service.createBucketIfDoesNotExist(BUCKET);
 
@@ -57,7 +57,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
         s3Service.createBucketIfDoesNotExist(BUCKET);
     }
 
-    @Test
+    @Test //TODO
     void shouldPutObject() throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
@@ -67,7 +67,7 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
         assertTrue(Uuid.isValid(uploadedFileMetadata.key()));
     }
 
-    @Test
+    @Test //TODO
     void shouldDeleteFile() throws IOException {
         var audio = new byte[]{0};
 

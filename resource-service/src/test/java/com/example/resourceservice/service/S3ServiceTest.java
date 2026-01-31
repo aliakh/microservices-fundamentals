@@ -43,7 +43,7 @@ public class S3ServiceTest {
     @Mock
     private S3Client s3Client;
 
-    @Test
+    @Test //TODO
     void shouldCreateBucket() {
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -63,7 +63,7 @@ public class S3ServiceTest {
         verifyNoMoreInteractions(s3Client);
     }
 
-    @Test
+    @Test //TODO
     void shouldDoNotCreateBucket() {
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -77,7 +77,7 @@ public class S3ServiceTest {
         verifyNoMoreInteractions(s3Client);
     }
 
-    @Test
+    @Test //TODO
     void shouldUploadFileFolderDoesNotExist() throws IOException {
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -119,7 +119,7 @@ public class S3ServiceTest {
         verifyNoMoreInteractions(s3Client);
     }
 
-    @Test
+    @Test //TODO
     void shouldUploadFileFolderExists() throws IOException {
         var headBucketRequest = HeadBucketRequest.builder()
             .bucket(BUCKET)
@@ -155,7 +155,7 @@ public class S3ServiceTest {
         verifyNoMoreInteractions(s3Client);
     }
 
-    @Test
+    @Test //TODO
     void shouldDownloadFile() {
         var getObjectRequest = GetObjectRequest.builder()
             .bucket(BUCKET)
@@ -174,7 +174,7 @@ public class S3ServiceTest {
         verifyNoMoreInteractions(s3Client);
     }
 
-    @Test
+    @Test //TODO
     void shouldDeleteFile() {
         var deleteObjectRequest = DeleteObjectRequest.builder()
             .bucket(BUCKET)
