@@ -12,5 +12,5 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @CucumberOptions(features = "src/test/resources/component", plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
-public class SongServiceComponentTest {
+public class SongServiceApplicationComponentTest {
 }

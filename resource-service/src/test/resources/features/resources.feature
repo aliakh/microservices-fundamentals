@@ -4,7 +4,7 @@ Feature: Upload, download and delete resources
   The resource service allows to upload, get, and delete resources
 
   Scenario: Upload resource
-    When user uploads file "audio1.mp3"
+    When user makes POST request to upload file "audio1.mp3"
     Then response code is 200
     And response content type is "application/json"
     And resource uploaded response is

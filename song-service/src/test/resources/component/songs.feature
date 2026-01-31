@@ -1,7 +1,10 @@
-Feature: song service possibilities
+#@transaction
+Feature: Upload, download and delete resources
+
+  The resource service allows to upload, get, and delete resources
 
   Scenario: Create song
-    When song's data saved
+    When user makes POST request to create song
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
     Then response code is 200

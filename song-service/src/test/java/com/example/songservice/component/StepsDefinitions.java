@@ -40,7 +40,7 @@ public class StepsDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("song's data saved")
+    @When("user makes POST request to create song")
     public void songDataSaved(Song song) {
         String postURL = SERVICE_URL + port + "/songs";
         createSongResponse = restTemplate.postForEntity(postURL, song, CreateSongResponse.class);

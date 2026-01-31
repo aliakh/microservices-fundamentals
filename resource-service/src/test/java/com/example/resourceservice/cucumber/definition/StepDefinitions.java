@@ -40,7 +40,7 @@ public class StepDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("user uploads file {string}")
+    @When("user makes POST request to upload file {string}")
     public void userUploadsFile(String file) {
         resourceUploadedResponse = uploadFile(file);
     }
