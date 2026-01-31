@@ -1,6 +1,6 @@
 package com.example.resourceservice.service;
 
-public interface ContentType {
+public final class ContentType {
 
-    String AUDIO_MPEG = "audio/mpeg";
+    public static final String AUDIO_MPEG_VALUE = "audio/mpeg";
 }

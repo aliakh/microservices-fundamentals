@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestPropertySource(properties = {
+    "spring.datasource.url=jdbc:tc:postgresql:17.0://localhost:5433/resource_db",
+    "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver",
+    "spring.cloud.discovery.enabled=false"
+})
 public class ResourceControllerMvcTest extends AbstractIntegrationTest {
 
     private static final String URL_PATH = "/resources";
@@ -44,31 +50,36 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
 //            .andExpect(jsonPath(".id").isNotEmpty());
 //    }
 //
-//    @Test
-//    @Transactional
-//    void shouldGetResource() throws Exception {
-//        var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+    @Test
+    @Transactional
+    void shouldGetResource() throws Exception {
+        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 //        var multipartFile = new MockMultipartFile(
 //            "file",
 //            FILE_NAME,
 //            CONTENT_TYPE_AUDIO_MPEG,
 //            content
 //        );
-//
-//        var uploadResult = mockMvc.perform(MockMvcRequestBuilders.multipart(URL_PATH).file(multipartFile))
-//            .andReturn();
-//        var uploadResponseContent = uploadResult.getResponse().getContentAsString();
-//        var id = JsonPath.read(uploadResponseContent, "$.id");
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
+
+        var uploadResult = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+                .content(audio)
+                .contentType("audio/mpeg"))
+            .andReturn();
+        var uploadResponseContent = uploadResult.getResponse().getContentAsString();
+        var id = JsonPath.read(uploadResponseContent, "$.id");
+
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("audio/mpeg"))
+            .andExpect(content().bytes(audio));
 //            .andExpect(status().isOk())
 //            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //            .andExpect(jsonPath("$.id").value(id))
 //            .andExpect(jsonPath("$.bucket").value("resources"))
 //            .andExpect(jsonPath("$.key").isNotEmpty())
 //            .andExpect(jsonPath("$.name").value(FILE_NAME))
-//            .andExpect(jsonPath("$.size").value(content.length));
-//    }
+//            .andExpect(jsonPath("$.size").value(audio.length));
+    }
 //
 //    @Test
 //    @Transactional

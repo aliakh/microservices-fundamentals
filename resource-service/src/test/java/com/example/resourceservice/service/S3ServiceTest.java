@@ -1,6 +1,6 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceservice.Uuids;
+import com.example.resourceservice.Uuid;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class S3ServiceTest {
 
     private static final String BUCKET = "resources";
-    private static final String KEY = "55b56cde-32cd-49d5-8f0d-cee7f22f0bf7";
+    private static final String KEY = "45453da8-e24f-4eea-86bf-8ca651a54bc6";
 
     @InjectMocks
     private S3Service s3Service;
@@ -101,11 +101,11 @@ public class S3ServiceTest {
         var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
         assertEquals(BUCKET, uploadedFileMetadata.bucket());
-        assertTrue(Uuids.isUuid(uploadedFileMetadata.key()));
+        assertTrue(Uuid.isValid(uploadedFileMetadata.key()));
 
         var putObjectRequest = putObjectRequestCaptor.getValue();
         assertEquals(BUCKET, putObjectRequest.bucket());
-        assertTrue(Uuids.isUuid(putObjectRequest.key()));
+        assertTrue(Uuid.isValid(putObjectRequest.key()));
         assertEquals(uploadedFileMetadata.key(), putObjectRequest.key());
 
         RequestBody requestBody = requestBodyCaptor.getValue();
@@ -138,11 +138,11 @@ public class S3ServiceTest {
         var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
         assertEquals(BUCKET, uploadedFileMetadata.bucket());
-        assertTrue(Uuids.isUuid(uploadedFileMetadata.key()));
+        assertTrue(Uuid.isValid(uploadedFileMetadata.key()));
 
         var putObjectRequest = putObjectRequestCaptor.getValue();
         assertEquals(BUCKET, putObjectRequest.bucket());
-        assertTrue(Uuids.isUuid(putObjectRequest.key()));
+        assertTrue(Uuid.isValid(putObjectRequest.key()));
         assertEquals(uploadedFileMetadata.key(), putObjectRequest.key());
 
         RequestBody requestBody = requestBodyCaptor.getValue();

@@ -1,19 +1,17 @@
 package com.example.resourceservice.service;
 
 import com.example.resourceservice.AbstractIntegrationTest;
+import com.example.resourceservice.Uuid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 
     private static final String BUCKET = "resources";
-    private static final String KEY = "5dbabab4-29b9-4c6e-98eb-05c59c3988aa";
+    private static final String KEY = "45453da8-e24f-4eea-86bf-8ca651a54bc6";
     private static final String FILE_PATH = "/audio/audio1.mp3";
     private static final String FILE_NAME = "audio1.mp3";
 
@@ -58,26 +56,10 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 
         s3Service.createBucketIfDoesNotExist(BUCKET);
     }
-/*
-    @Test
-    void shouldUploadFile() throws IOException {
-        var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-        var multipartFile = new MockMultipartFile(
-            "file",
-            FILE_NAME,
-            CONTENT_TYPE_AUDIO_MPEG,
-            content
-        );
 
-        var uploadedFileMetadata = s3Service.putObject(multipartFile, BUCKET);
-
-        assertEquals(BUCKET, uploadedFileMetadata.bucket());
-        assertTrue(Pattern.matches(UUID_REGEXP, uploadedFileMetadata.key()));
-    }
-*/
     @Test
-    void shouldDeleteFile() throws IOException {
-//        var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+    void shouldPutObject() throws IOException {
+        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 //        var multipartFile = new MockMultipartFile(
 //            "file",
 //            FILE_NAME,
@@ -85,6 +67,14 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
 //            content
 //        );
 
+        var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
+
+        assertEquals(BUCKET, uploadedFileMetadata.bucket());
+        assertTrue(Uuid.isValid(uploadedFileMetadata.key()));
+    }
+
+    @Test
+    void shouldDeleteFile() throws IOException {
         var audio = new byte[]{0};
 
         var putObjectRequest = PutObjectRequest.builder()
@@ -101,12 +91,5 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(200, putObjectResponse.sdkHttpResponse().statusCode());
 
         s3Service.deleteObject(BUCKET, KEY);
-//
-//        try {
-//            s3Service.deleteObject(BUCKET, KEY);
-//            fail();
-//        } catch (NoSuchKeyException e) {
-//            assertTrue(true);
-//        }
     }
 }

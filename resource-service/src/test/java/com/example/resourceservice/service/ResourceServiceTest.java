@@ -33,7 +33,7 @@ public class ResourceServiceTest {
 
     private static final long ID = 1L;
     private static final String BUCKET = "resources";
-    private static final String KEY = "5938ed7b-2c4c-44db-a5d1-9c7a9434252c";
+    private static final String KEY = "45453da8-e24f-4eea-86bf-8ca651a54bc6";
     private static final String FILE_NAME = "audio.mp3";
     private static final byte[] FILE_CONTENT = new byte[]{0};
     private static final long FILE_SIZE = FILE_CONTENT.length;
@@ -61,7 +61,7 @@ public class ResourceServiceTest {
 
     @Test
     void shouldFailWhenUploadingNonAudioContentType() {
-        byte[] audio = new byte[]{0};
+        var audio = new byte[]{0};
         when(mp3Validator.valid(audio)).thenReturn(false);
 
         assertThrows(InvalidMp3FileException.class, () -> resourceService.uploadResource(audio));
@@ -72,7 +72,7 @@ public class ResourceServiceTest {
 
     @Test
     void shouldUploadResource() {
-        byte[] audio = new byte[]{0};
+        var audio = new byte[]{0};
         when(mp3Validator.valid(audio)).thenReturn(true);
         var s3ResourceDto = new S3ResourceDto(BUCKET, KEY);
         when(s3Service.putObject(audio, BUCKET, "audio/mpeg")).thenReturn(s3ResourceDto);
@@ -101,7 +101,7 @@ public class ResourceServiceTest {
         var resource = buildResource();
         var id = resource.getId();
         when(resourceRepository.findById(id)).thenReturn(Optional.of(resource));
-        byte[] audio = new byte[]{0};
+        var audio = new byte[]{0};
         when(s3Service.getObject(BUCKET, resource.getKey())).thenReturn(audio);
 
         var resourceResponse = resourceService.getResource(id);

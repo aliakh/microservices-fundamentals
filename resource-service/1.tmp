@@ -1,0 +1,394 @@
+
+> Task :resource-service:compileJava UP-TO-DATE
+> Task :resource-service:processResources UP-TO-DATE
+> Task :resource-service:classes UP-TO-DATE
+> Task :resource-service:compileTestJava UP-TO-DATE
+> Task :resource-service:processTestResources UP-TO-DATE
+> Task :resource-service:testClasses UP-TO-DATE
+> Task :resource-service:test
+2026-01-31 14:01:41,343 INFO org.testcontainers.utility.ImageNameSubstitutor [Test worker] Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+2026-01-31 14:01:41,476 INFO org.testcontainers.dockerclient.DockerClientProviderStrategy [Test worker] Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2026-01-31 14:01:43,597 INFO org.testcontainers.dockerclient.DockerClientProviderStrategy [Test worker] Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+2026-01-31 14:01:43,622 INFO org.testcontainers.DockerClientFactory [Test worker] Docker host IP address is localhost
+2026-01-31 14:01:43,827 INFO org.testcontainers.DockerClientFactory [Test worker] Connected to docker:
+  Server Version: 5.3.1
+  API Version: 1.41
+  Operating System: fedora
+  Total Memory: 15742 MB
+2026-01-31 14:01:45,245 INFO 🐳 [testcontainers/ryuk:0.3.4] [Test worker] Creating container for image: testcontainers/ryuk:0.3.4
+2026-01-31 14:01:45,265 INFO org.testcontainers.utility.RegistryAuthLocator [Test worker] Failure when attempting to lookup auth config. Please ignore if you don't have images in an authenticated registry. Details: (dockerImageName: testcontainers/ryuk:0.3.4, configFile: C:\Users\Aliaksandr_Liakh1\.docker\config.json. Falling back to docker-java default behaviour. Exception message: C:\Users\Aliaksandr_Liakh1\.docker\config.json (The system cannot find the file specified)
+2026-01-31 14:01:45,532 INFO 🐳 [testcontainers/ryuk:0.3.4] [Test worker] Container testcontainers/ryuk:0.3.4 is starting: d81ce0c971a09d2846e9b45ba4bd29661f382f4e84048d6f2ad978c176dcc8ab
+2026-01-31 14:01:46,834 INFO 🐳 [testcontainers/ryuk:0.3.4] [Test worker] Container testcontainers/ryuk:0.3.4 started in PT2.9840712S
+2026-01-31 14:01:46,856 INFO org.testcontainers.utility.RyukResourceReaper [Test worker] Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+2026-01-31 14:01:46,857 INFO org.testcontainers.DockerClientFactory [Test worker] Checking the system...
+2026-01-31 14:01:46,857 INFO org.testcontainers.DockerClientFactory [Test worker] ✔︎ Docker server version should be at least 1.6.0
+2026-01-31 14:01:46,877 INFO 🐳 [localstack/localstack:1.2.0] [Test worker] Pulling docker image: localstack/localstack:1.2.0. Please be patient; this may take some time but only needs to be done once.
+2026-01-31 14:01:48,922 INFO 🐳 [localstack/localstack:1.2.0] [docker-java-stream--824762746] Starting to pull image
+2026-01-31 14:01:48,999 INFO 🐳 [localstack/localstack:1.2.0] [docker-java-stream--824762746] Pulling image layers: 34 pending,  1 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:01:49,185 INFO 🐳 [localstack/localstack:1.2.0] [docker-java-stream--824762746] Pulling image layers: 34 pending,  1 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:01:49,271 INFO 🐳 [localstack/localstack:1.2.0] [Test worker] HOSTNAME_EXTERNAL environment variable set to localhost (to match host-routable address for container)
+2026-01-31 14:01:49,273 INFO 🐳 [localstack/localstack:1.2.0] [Test worker] Creating container for image: localstack/localstack:1.2.0
+2026-01-31 14:01:49,306 INFO 🐳 [alpine:3.16] [Test worker] Pulling docker image: alpine:3.16. Please be patient; this may take some time but only needs to be done once.
+2026-01-31 14:01:51,870 INFO 🐳 [alpine:3.16] [docker-java-stream-1037873389] Starting to pull image
+2026-01-31 14:01:53,296 INFO 🐳 [alpine:3.16] [docker-java-stream-1037873389] Pulling image layers:  0 pending,  1 downloaded,  0 extracted, (0 bytes/0 bytes)
+2026-01-31 14:01:53,380 INFO 🐳 [alpine:3.16] [docker-java-stream-1037873389] Pulling image layers:  0 pending,  2 downloaded,  0 extracted, (0 bytes/0 bytes)
+2026-01-31 14:01:53,548 INFO 🐳 [alpine:3.16] [docker-java-stream-1037873389] Pulling image layers:  0 pending,  2 downloaded,  0 extracted, (0 bytes/0 bytes)
+2026-01-31 14:01:53,548 INFO 🐳 [alpine:3.16] [docker-java-stream-1037873389] Pull complete. 2 layers, pulled in 1s (downloaded 0 bytes at 0 bytes/s)
+2026-01-31 14:01:55,004 WARN 🐳 [localstack/localstack:1.2.0] [Test worker] Unable to mount a file from test host into a running container. This may be a misconfiguration or limitation of your Docker environment. Some features might not work.
+2026-01-31 14:01:55,204 INFO 🐳 [localstack/localstack:1.2.0] [Test worker] Container localstack/localstack:1.2.0 is starting: de488f776c8a0080400aca96c7c180dd93cebc721c787bb722e2547842b81b8b
+2026-01-31 14:02:07,664 INFO 🐳 [localstack/localstack:1.2.0] [Test worker] Container localstack/localstack:1.2.0 started in PT18.390761S
+2026-01-31 14:02:07,714 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [Test worker] Pulling docker image: confluentinc/cp-kafka:5.4.10. Please be patient; this may take some time but only needs to be done once.
+2026-01-31 14:02:10,188 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Starting to pull image
+2026-01-31 14:02:10,749 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  2 pending,  1 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:02:10,828 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  2 pending,  2 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:02:10,972 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  3 pending,  3 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:02:11,530 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  3 pending,  4 downloaded,  0 extracted, (4 MB/? MB)
+2026-01-31 14:02:41,663 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  3 pending,  5 downloaded,  0 extracted, (153 MB/? MB)
+2026-01-31 14:02:55,221 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  2 pending,  6 downloaded,  0 extracted, (220 MB/? MB)
+2026-01-31 14:03:02,546 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  1 pending,  7 downloaded,  0 extracted, (248 MB/? MB)
+2026-01-31 14:03:40,075 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  0 pending,  8 downloaded,  0 extracted, (330 MB/338 MB)
+2026-01-31 14:03:40,136 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  0 pending,  9 downloaded,  0 extracted, (330 MB/338 MB)
+2026-01-31 14:03:40,513 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pulling image layers:  0 pending,  9 downloaded,  0 extracted, (330 MB/338 MB)
+2026-01-31 14:03:40,514 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [docker-java-stream--957040701] Pull complete. 9 layers, pulled in 90s (downloaded 330 MB at 3 MB/s)
+2026-01-31 14:03:40,541 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [Test worker] Creating container for image: confluentinc/cp-kafka:5.4.10
+2026-01-31 14:03:40,773 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [Test worker] Container confluentinc/cp-kafka:5.4.10 is starting: 50acd83c5356fab3336c98c81a9ff71b9648cb61925656c3669f7e4b539f5fd2
+2026-01-31 14:03:53,016 INFO 🐳 [confluentinc/cp-kafka:5.4.10] [Test worker] Container confluentinc/cp-kafka:5.4.10 started in PT1M45.3509288S
+2026-01-31 14:03:58,766 INFO org.springframework.test.context.support.AbstractContextLoader [Test worker] Could not detect default resource locations for test class [com.microservices.resource.service.AbstractIntegrationTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2026-01-31 14:03:59,139 INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper [Test worker] Found @SpringBootConfiguration com.microservices.resource.service.ResourceServiceApplication for test class com.microservices.resource.service.controller.ResourceControllerMvcTest
+2026-01-31 14:03:59,617 INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper [Test worker] Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2026-01-31 14:03:59,687 INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper [Test worker] Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@6892d403, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@3fb42ec7, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@1f7b1d6a, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@32d8e58d, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4c941d19, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5248c05a, org.springframework.test.context.transaction.TransactionalTestExecutionListener@151f1734, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@601e7c97, org.springframework.test.context.event.EventPublishingTestExecutionListener@c8ed958, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@18d09283, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@751b901a, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@6672b0ea, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@1ccce165, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@943cf5, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@2926f7bd]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.5)
+
+2026-01-31 14:04:02,446 INFO org.hibernate.validator.internal.util.Version [background-preinit] HV000001: Hibernate Validator 6.2.5.Final
+2026-01-31 14:04:02,579 INFO com.microservices.resource.service.controller.ResourceControllerMvcTest [Test worker] Starting ResourceControllerMvcTest using Java 17.0.17 on EPBYVITW0086 with PID 15796 (started by AliaksandrLiakh1 in C:\GitHub.MF\demo-microservices\4-tests\resource-service)
+2026-01-31 14:04:02,583 INFO com.microservices.resource.service.controller.ResourceControllerMvcTest [Test worker] The following 1 profile is active: "test"
+2026-01-31 14:04:03,297 DEBUG org.springframework.web.context.support.GenericWebApplicationContext [Test worker] Refreshing org.springframework.web.context.support.GenericWebApplicationContext@7959fbe3
+2026-01-31 14:04:06,418 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [Test worker] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-31 14:04:06,972 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [Test worker] Finished Spring Data repository scanning in 529 ms. Found 1 JPA repository interfaces.
+2026-01-31 14:04:07,734 INFO org.springframework.cloud.context.scope.GenericScope [Test worker] BeanFactory id=7d64f11f-3125-322a-a662-fb6018c78fea
+2026-01-31 14:04:09,090 INFO org.flywaydb.core.internal.license.VersionPrinter [Test worker] Flyway Community Edition 9.4.0 by Redgate
+2026-01-31 14:04:09,091 INFO org.flywaydb.core.internal.license.VersionPrinter [Test worker] See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#9.4.0
+2026-01-31 14:04:09,091 INFO org.flywaydb.core.internal.license.VersionPrinter [Test worker]
+2026-01-31 14:04:09,123 INFO com.zaxxer.hikari.HikariDataSource [Test worker] HikariPool-1 - Starting...
+2026-01-31 14:04:09,192 INFO com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec [Test worker] Recoverable I/O exception (com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.NoHttpResponseException) caught when processing request to {}->npipe://localhost:2375
+2026-01-31 14:04:09,205 INFO 🐳 [postgres:15.0] [Test worker] Pulling docker image: postgres:15.0. Please be patient; this may take some time but only needs to be done once.
+2026-01-31 14:04:11,771 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Starting to pull image
+2026-01-31 14:04:12,051 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  1 pending,  1 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:04:12,532 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  3 pending,  2 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:04:12,727 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  4 pending,  3 downloaded,  0 extracted, (0 bytes/? MB)
+2026-01-31 14:04:13,140 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  4 pending,  4 downloaded,  0 extracted, (1 MB/? MB)
+2026-01-31 14:04:14,171 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  5 pending,  5 downloaded,  0 extracted, (7 MB/? MB)
+2026-01-31 14:04:14,654 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  4 pending,  6 downloaded,  0 extracted, (10 MB/? MB)
+2026-01-31 14:04:14,808 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  4 pending,  7 downloaded,  0 extracted, (10 MB/? MB)
+2026-01-31 14:04:15,138 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  3 pending,  8 downloaded,  0 extracted, (12 MB/? MB)
+2026-01-31 14:04:15,381 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  3 pending,  9 downloaded,  0 extracted, (13 MB/? MB)
+2026-01-31 14:04:15,502 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  3 pending, 10 downloaded,  0 extracted, (13 MB/? MB)
+2026-01-31 14:04:18,378 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  2 pending, 11 downloaded,  0 extracted, (25 MB/? MB)
+2026-01-31 14:04:30,105 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  1 pending, 12 downloaded,  0 extracted, (55 MB/? MB)
+2026-01-31 14:04:59,306 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  0 pending, 13 downloaded,  0 extracted, (126 MB/130 MB)
+2026-01-31 14:04:59,384 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  0 pending, 14 downloaded,  0 extracted, (126 MB/130 MB)
+2026-01-31 14:04:59,555 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pulling image layers:  0 pending, 14 downloaded,  0 extracted, (126 MB/130 MB)
+2026-01-31 14:04:59,555 INFO 🐳 [postgres:15.0] [docker-java-stream-1089774965] Pull complete. 14 layers, pulled in 47s (downloaded 126 MB at 2 MB/s)
+2026-01-31 14:04:59,576 INFO 🐳 [postgres:15.0] [Test worker] Creating container for image: postgres:15.0
+2026-01-31 14:04:59,678 INFO 🐳 [postgres:15.0] [Test worker] Container postgres:15.0 is starting: 8d914aff67d9d168d5d9e14e51c2421650abbeb4ed02d42ca0202732f5ae0d74
+2026-01-31 14:05:03,669 INFO 🐳 [postgres:15.0] [Test worker] Container postgres:15.0 started in PT54.4849947S
+2026-01-31 14:05:04,173 INFO com.zaxxer.hikari.HikariDataSource [Test worker] HikariPool-1 - Start completed.
+2026-01-31 14:05:04,244 INFO org.flywaydb.core.internal.database.base.BaseDatabaseType [Test worker] Database: jdbc:postgresql://localhost:39487/test (PostgreSQL 15.0)
+2026-01-31 14:05:04,274 WARN org.flywaydb.core.internal.database.base.Database [Test worker] Flyway upgrade recommended: PostgreSQL 15.0 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 14.
+2026-01-31 14:05:04,359 INFO org.flywaydb.core.internal.command.DbValidate [Test worker] Successfully validated 1 migration (execution time 00:00.056s)
+2026-01-31 14:05:04,391 INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory [Test worker] Creating Schema History table "public"."flyway_schema_history" ...
+2026-01-31 14:05:04,476 INFO org.flywaydb.core.internal.command.DbMigrate [Test worker] Current version of schema "public": << Empty Schema >>
+2026-01-31 14:05:04,489 INFO org.flywaydb.core.internal.command.DbMigrate [Test worker] Migrating schema "public" to version "1 - create table resources"
+2026-01-31 14:05:04,534 INFO org.flywaydb.core.internal.command.DbMigrate [Test worker] Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.073s)
+2026-01-31 14:05:04,908 INFO org.hibernate.jpa.internal.util.LogHelper [Test worker] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-31 14:05:05,127 INFO org.hibernate.Version [Test worker] HHH000412: Hibernate ORM core version 5.6.12.Final
+2026-01-31 14:05:05,726 INFO org.hibernate.annotations.common.Version [Test worker] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-01-31 14:05:06,113 INFO org.hibernate.dialect.Dialect [Test worker] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2026-01-31 14:05:07,778 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [Test worker] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-01-31 14:05:07,803 INFO org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [Test worker] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-31 14:05:11,489 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [Test worker] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-31 14:05:12,539 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter [Test worker] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-01-31 14:05:13,089 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] 6 mappings in 'requestMappingHandlerMapping'
+2026-01-31 14:05:13,356 DEBUG org.springframework.web.servlet.handler.SimpleUrlHandlerMapping [Test worker] Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-01-31 14:05:13,415 DEBUG org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [Test worker] ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-01-31 14:05:15,317 INFO org.springframework.boot.test.mock.web.SpringBootMockServletContext [Test worker] Initializing Spring TestDispatcherServlet ''
+2026-01-31 14:05:15,319 INFO org.springframework.test.web.servlet.TestDispatcherServlet [Test worker] Initializing Servlet ''
+2026-01-31 14:05:15,344 INFO org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver [Test worker] Exposing 2 endpoint(s) beneath base path '/actuator'
+2026-01-31 14:05:15,463 INFO org.springframework.test.web.servlet.TestDispatcherServlet [Test worker] Completed initialization in 144 ms
+2026-01-31 14:05:17,209 INFO org.springframework.cloud.commons.util.InetUtils [Test worker] Cannot determine local hostname
+2026-01-31 14:05:17,239 INFO org.springframework.cloud.netflix.eureka.config.DiscoveryClientOptionalArgsConfiguration [Test worker] Eureka HTTP Client uses RestTemplate.
+2026-01-31 14:05:17,539 WARN org.springframework.cloud.loadbalancer.config.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger [Test worker] Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-01-31 14:05:17,642 INFO org.apache.kafka.clients.admin.AdminClientConfig [Test worker] AdminClientConfig values:
+	bootstrap.servers = [PLAINTEXT://localhost:41313]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+2026-01-31 14:05:17,947 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka version: 3.1.2
+2026-01-31 14:05:17,947 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka commitId: f8c67dc3ae0a3265
+2026-01-31 14:05:17,947 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka startTimeMs: 1769857517940
+2026-01-31 14:05:19,184 INFO org.apache.kafka.common.utils.AppInfoParser [kafka-admin-client-thread | adminclient-1] App info kafka.admin.client for adminclient-1 unregistered
+2026-01-31 14:05:19,193 INFO org.apache.kafka.common.metrics.Metrics [kafka-admin-client-thread | adminclient-1] Metrics scheduler closed
+2026-01-31 14:05:19,193 INFO org.apache.kafka.common.metrics.Metrics [kafka-admin-client-thread | adminclient-1] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-01-31 14:05:19,194 INFO org.apache.kafka.common.metrics.Metrics [kafka-admin-client-thread | adminclient-1] Metrics reporters closed
+2026-01-31 14:05:19,246 INFO com.microservices.resource.service.controller.ResourceControllerMvcTest [Test worker] Started ResourceControllerMvcTest in 79.41 seconds (JVM running for 222.112)
+2026-01-31 14:05:19,339 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Began transaction (1) for test context [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@50e72b95, testMethod = shouldUploadResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@727b4709]; rollback [true]
+2026-01-31 14:05:20,060 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#uploadResource(MultipartFile)
+2026-01-31 14:05:20,186 INFO com.microservices.resource.service.service.S3Service [Test worker] Upload file org.springframework.mock.web.MockMultipartFile@1e6bc3d2 to bucket resources
+2026-01-31 14:05:20,187 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket resources if not exists
+2026-01-31 14:05:21,595 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket request: CreateBucketRequest(Bucket=resources)
+2026-01-31 14:05:21,652 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket response: CreateBucketResponse(Location=/resources)
+2026-01-31 14:05:21,674 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object request: PutObjectRequest(Bucket=resources, ContentLength=31808, ContentType=audio/mpeg, Key=77715314-9551-409f-b22a-49afbaa5c691)
+2026-01-31 14:05:21,788 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object response: PutObjectResponse(ETag="b3404cc10ac7b6e3fda8faa91579b671")
+2026-01-31 14:05:21,972 INFO com.microservices.resource.service.service.ResourcePublisher [Test worker] Publish message: GenericMessage [payload={"id":1,"bucket":"resources","key":"77715314-9551-409f-b22a-49afbaa5c691","name":"audio1.mp3","size":31808}, headers={kafka_messageKey=1, id=8073a865-de5e-5893-5b84-81f6b9ab60e7, timestamp=1769857521971}]
+2026-01-31 14:05:21,995 INFO org.apache.kafka.clients.producer.ProducerConfig [Test worker] ProducerConfig values:
+	acks = -1
+	batch.size = 16384
+	bootstrap.servers = [PLAINTEXT://localhost:41313]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.LongSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-01-31 14:05:22,034 INFO org.apache.kafka.clients.producer.KafkaProducer [Test worker] [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-01-31 14:05:22,087 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka version: 3.1.2
+2026-01-31 14:05:22,087 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka commitId: f8c67dc3ae0a3265
+2026-01-31 14:05:22,088 INFO org.apache.kafka.common.utils.AppInfoParser [Test worker] Kafka startTimeMs: 1769857522087
+2026-01-31 14:05:22,145 INFO org.apache.kafka.clients.Metadata [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Cluster ID: nTp00MqzQLqjKVNJwjrwgQ
+2026-01-31 14:05:22,172 INFO org.apache.kafka.clients.producer.internals.TransactionManager [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] ProducerId set to 0 with epoch 0
+2026-01-31 14:05:22,239 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json, application/cbor]
+2026-01-31 14:05:22,244 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourceUploadedResponse[id=1]]
+2026-01-31 14:05:22,442 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Rolled back transaction for test: [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@50e72b95, testMethod = shouldUploadResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]
+2026-01-31 14:05:22,456 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Began transaction (1) for test context [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@557f8588, testMethod = shouldDownloadResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@727b4709]; rollback [true]
+2026-01-31 14:05:22,463 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#uploadResource(MultipartFile)
+2026-01-31 14:05:22,471 INFO com.microservices.resource.service.service.S3Service [Test worker] Upload file org.springframework.mock.web.MockMultipartFile@6a7ee5f5 to bucket resources
+2026-01-31 14:05:22,471 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket resources if not exists
+2026-01-31 14:05:22,508 INFO com.microservices.resource.service.service.S3Service [Test worker] Bucket resources already exists
+2026-01-31 14:05:22,509 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object request: PutObjectRequest(Bucket=resources, ContentLength=31808, ContentType=audio/mpeg, Key=145fa97c-d37c-436d-b3e8-697548303719)
+2026-01-31 14:05:22,593 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object response: PutObjectResponse(ETag="b3404cc10ac7b6e3fda8faa91579b671")
+2026-01-31 14:05:22,600 INFO com.microservices.resource.service.service.ResourcePublisher [Test worker] Publish message: GenericMessage [payload={"id":2,"bucket":"resources","key":"145fa97c-d37c-436d-b3e8-697548303719","name":"audio1.mp3","size":31808}, headers={kafka_messageKey=2, id=075ae28b-8e4f-4ee1-6ed2-ddc5abb39ca9, timestamp=1769857522600}]
+2026-01-31 14:05:22,603 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json, application/cbor]
+2026-01-31 14:05:22,604 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourceUploadedResponse[id=2]]
+2026-01-31 14:05:22,615 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#downloadResource(Long)
+2026-01-31 14:05:22,645 INFO com.microservices.resource.service.service.S3Service [Test worker] Download file from bucket resources and key 145fa97c-d37c-436d-b3e8-697548303719
+2026-01-31 14:05:22,664 INFO com.microservices.resource.service.service.S3Service [Test worker] Get object request: GetObjectRequest(Bucket=resources, Key=145fa97c-d37c-436d-b3e8-697548303719)
+2026-01-31 14:05:22,774 INFO com.microservices.resource.service.service.PublishEventCallback [kafka-producer-network-thread | producer-1] Resource upload message with key 1 and value {"id":1,"bucket":"resources","key":"77715314-9551-409f-b22a-49afbaa5c691","name":"audio1.mp3","size":31808} was published to topic resource-upload with offset 0
+2026-01-31 14:05:22,780 INFO com.microservices.resource.service.service.PublishEventCallback [kafka-producer-network-thread | producer-1] Resource upload message with key 2 and value {"id":2,"bucket":"resources","key":"145fa97c-d37c-436d-b3e8-697548303719","name":"audio1.mp3","size":31808} was published to topic resource-upload with offset 1
+2026-01-31 14:05:22,790 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Found 'Content-Type:audio/mpeg' in response
+2026-01-31 14:05:22,790 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [Byte array resource [resource loaded from byte array]]
+2026-01-31 14:05:22,819 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Rolled back transaction for test: [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@557f8588, testMethod = shouldDownloadResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]
+2026-01-31 14:05:22,864 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Began transaction (1) for test context [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@2286efbd, testMethod = shouldDeleteResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@727b4709]; rollback [true]
+2026-01-31 14:05:22,872 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#uploadResource(MultipartFile)
+2026-01-31 14:05:22,873 INFO com.microservices.resource.service.service.S3Service [Test worker] Upload file org.springframework.mock.web.MockMultipartFile@3babaf87 to bucket resources
+2026-01-31 14:05:22,873 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket resources if not exists
+2026-01-31 14:05:23,109 INFO com.microservices.resource.service.service.S3Service [Test worker] Bucket resources already exists
+2026-01-31 14:05:23,111 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object request: PutObjectRequest(Bucket=resources, ContentLength=31808, ContentType=audio/mpeg, Key=581e7025-b9db-4bad-8ea5-64b25c512cbb)
+2026-01-31 14:05:23,204 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object response: PutObjectResponse(ETag="b3404cc10ac7b6e3fda8faa91579b671")
+2026-01-31 14:05:23,208 INFO com.microservices.resource.service.service.ResourcePublisher [Test worker] Publish message: GenericMessage [payload={"id":3,"bucket":"resources","key":"581e7025-b9db-4bad-8ea5-64b25c512cbb","name":"audio1.mp3","size":31808}, headers={kafka_messageKey=3, id=9c8e78a4-08c0-42bb-d208-6d47f67cf055, timestamp=1769857523208}]
+2026-01-31 14:05:23,210 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json, application/cbor]
+2026-01-31 14:05:23,211 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourceUploadedResponse[id=3]]
+2026-01-31 14:05:23,218 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#deleteResources(List)
+2026-01-31 14:05:23,218 INFO com.microservices.resource.service.service.PublishEventCallback [kafka-producer-network-thread | producer-1] Resource upload message with key 3 and value {"id":3,"bucket":"resources","key":"581e7025-b9db-4bad-8ea5-64b25c512cbb","name":"audio1.mp3","size":31808} was published to topic resource-upload with offset 2
+2026-01-31 14:05:23,860 INFO com.microservices.resource.service.service.S3Service [Test worker] Delete file from bucket resources and key 581e7025-b9db-4bad-8ea5-64b25c512cbb
+2026-01-31 14:05:23,865 INFO com.microservices.resource.service.service.S3Service [Test worker] Delete object request: DeleteObjectRequest(Bucket=resources, Key=581e7025-b9db-4bad-8ea5-64b25c512cbb)
+2026-01-31 14:05:24,114 INFO com.microservices.resource.service.service.S3Service [Test worker] Delete object response: DeleteObjectResponse()
+2026-01-31 14:05:24,127 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json, application/cbor]
+2026-01-31 14:05:24,129 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourcesDeletedResponse[ids=[3]]]
+2026-01-31 14:05:24,142 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Rolled back transaction for test: [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@2286efbd, testMethod = shouldDeleteResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]
+2026-01-31 14:05:24,147 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Began transaction (1) for test context [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@1d61b259, testMethod = shouldGetResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@727b4709]; rollback [true]
+2026-01-31 14:05:24,151 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#uploadResource(MultipartFile)
+2026-01-31 14:05:24,154 INFO com.microservices.resource.service.service.S3Service [Test worker] Upload file org.springframework.mock.web.MockMultipartFile@788975a2 to bucket resources
+2026-01-31 14:05:24,155 INFO com.microservices.resource.service.service.S3Service [Test worker] Create bucket resources if not exists
+2026-01-31 14:05:24,183 INFO com.microservices.resource.service.service.S3Service [Test worker] Bucket resources already exists
+2026-01-31 14:05:24,183 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object request: PutObjectRequest(Bucket=resources, ContentLength=31808, ContentType=audio/mpeg, Key=e7b9a5ef-c47e-4e27-9480-134587ba18c5)
+2026-01-31 14:05:24,255 INFO com.microservices.resource.service.service.S3Service [Test worker] Put object response: PutObjectResponse(ETag="b3404cc10ac7b6e3fda8faa91579b671")
+2026-01-31 14:05:24,260 INFO com.microservices.resource.service.service.ResourcePublisher [Test worker] Publish message: GenericMessage [payload={"id":4,"bucket":"resources","key":"e7b9a5ef-c47e-4e27-9480-134587ba18c5","name":"audio1.mp3","size":31808}, headers={kafka_messageKey=4, id=695cf19d-cb30-73d1-6e26-813a503a9a2d, timestamp=1769857524260}]
+2026-01-31 14:05:24,262 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json, application/cbor]
+2026-01-31 14:05:24,262 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourceUploadedResponse[id=4]]
+2026-01-31 14:05:24,265 DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping [Test worker] Mapped to com.microservices.resource.service.controller.ResourceController#getResource(Long)
+2026-01-31 14:05:24,267 INFO com.microservices.resource.service.service.PublishEventCallback [kafka-producer-network-thread | producer-1] Resource upload message with key 4 and value {"id":4,"bucket":"resources","key":"e7b9a5ef-c47e-4e27-9480-134587ba18c5","name":"audio1.mp3","size":31808} was published to topic resource-upload with offset 3
+2026-01-31 14:05:24,268 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Using 'application/json', given [*/*] and supported [application/json]
+2026-01-31 14:05:24,269 DEBUG org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor [Test worker] Writing [ResourceEntity[id=4, bucket='resources', key='e7b9a5ef-c47e-4e27-9480-134587ba18c5', name='audio1.mp (truncated)...]
+2026-01-31 14:05:24,280 INFO org.springframework.test.context.transaction.TransactionContext [Test worker] Rolled back transaction for test: [DefaultTestContext@2acb03fb testClass = ResourceControllerMvcTest, testInstance = com.microservices.resource.service.controller.ResourceControllerMvcTest@1d61b259, testMethod = shouldGetResource@ResourceControllerMvcTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6e639132 testClass = ResourceControllerMvcTest, locations = '{}', classes = '{class com.microservices.resource.service.ResourceServiceApplication, class com.microservices.resource.service.AbstractIntegrationTest$TestConfig}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@31dd0e2e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5e72c82a, [ImportsContextCustomizer@67a261d key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@58ca6ba3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66d69cd2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@6dfebd2a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1dfd5f51], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -> true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -> true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -> false]]
+2026-01-31 14:05:24,290 INFO com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec [Test worker] Recoverable I/O exception (com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.NoHttpResponseException) caught when processing request to {}->npipe://localhost:2375
+2026-01-31 14:05:25,918 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:25,923 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node -1 disconnected.
+2026-01-31 14:05:26,041 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,041 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Cancelled in-flight API_VERSIONS request with correlation id 8 due to node 1 being disconnected (elapsed time since creation: 3ms, elapsed time since send: 3ms, request timeout: 30000ms)
+2026-01-31 14:05:26,188 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,190 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Cancelled in-flight API_VERSIONS request with correlation id 9 due to node 1 being disconnected (elapsed time since creation: 36ms, elapsed time since send: 36ms, request timeout: 30000ms)
+2026-01-31 14:05:26,306 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,306 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Cancelled in-flight API_VERSIONS request with correlation id 10 due to node 1 being disconnected (elapsed time since creation: 3ms, elapsed time since send: 3ms, request timeout: 30000ms)
+2026-01-31 14:05:26,420 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,421 WARN org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Connection to node 1 (localhost/127.0.0.1:41313) could not be established. Broker may not be available.
+2026-01-31 14:05:26,540 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,541 WARN org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Connection to node 1 (localhost/127.0.0.1:41313) could not be established. Broker may not be available.
+ResourceControllerMvcTest > shouldUploadResource() PASSED
+ResourceControllerMvcTest > shouldDownloadResource() PASSED
+ResourceControllerMvcTest > shouldDeleteResource() PASSED
+ResourceControllerMvcTest > shouldGetResource() PASSED
+2026-01-31 14:05:26,803 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:26,804 WARN org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Connection to node 1 (localhost/127.0.0.1:41313) could not be established. Broker may not be available.
+2026-01-31 14:05:27,234 INFO org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Node 1 disconnected.
+2026-01-31 14:05:27,235 WARN org.apache.kafka.clients.NetworkClient [kafka-producer-network-thread | producer-1] [Producer clientId=producer-1] Connection to node 1 (localhost/127.0.0.1:41313) could not be established. Broker may not be available.
+2026-01-31 14:05:27,372 DEBUG org.springframework.web.context.support.GenericWebApplicationContext [SpringApplicationShutdownHook] Closing org.springframework.web.context.support.GenericWebApplicationContext@7959fbe3, started on Sat Jan 31 14:04:03 MSK 2026
+2026-01-31 14:05:27,493 INFO org.apache.kafka.clients.producer.KafkaProducer [SpringApplicationShutdownHook] [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+2026-01-31 14:05:27,498 INFO org.apache.kafka.common.metrics.Metrics [SpringApplicationShutdownHook] Metrics scheduler closed
+2026-01-31 14:05:27,498 INFO org.apache.kafka.common.metrics.Metrics [SpringApplicationShutdownHook] Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-01-31 14:05:27,498 INFO org.apache.kafka.common.metrics.Metrics [SpringApplicationShutdownHook] Metrics reporters closed
+2026-01-31 14:05:27,498 INFO org.apache.kafka.common.utils.AppInfoParser [SpringApplicationShutdownHook] App info kafka.producer for producer-1 unregistered
+2026-01-31 14:05:27,501 INFO org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-31 14:05:27,503 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2026-01-31 14:05:28,159 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+> Task :resource-service:jacocoTestReport
+BUILD SUCCESSFUL in 3m 57s
+6 actionable tasks: 2 executed, 4 up-to-date
+2:05:30 PM: Execution finished ':resource-service:test --tests "com.microservices.resource.service.controller.ResourceControllerMvcTest"'.
