@@ -75,7 +75,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+<!--            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>-->
+            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -109,7 +110,7 @@
 <!--                <version>5.0.2</version>-->
                 <extensions>true</extensions>
                 <configuration>
-                    <baseClassForTests>com.example.songservice.contracts.SongServiceContractTestBaseClass</baseClassForTests>
+                    <baseClassForTests>com.example.songservice.contracts.SongServiceApplicationBaseTestClass</baseClassForTests>
                 </configuration>
             </plugin>
 <!--            <plugin>-->

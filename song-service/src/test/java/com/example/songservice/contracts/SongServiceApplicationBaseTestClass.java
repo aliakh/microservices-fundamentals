@@ -9,11 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public abstract class SongServiceContractTestBaseClass {
+public abstract class SongServiceApplicationBaseTestClass {
 
     @Autowired
     private SongController songController;
@@ -23,7 +24,6 @@ public abstract class SongServiceContractTestBaseClass {
     @BeforeEach
     public void init() {
         RestAssuredMockMvc.standaloneSetup(this.songController);
-
         when(songService.createSong(any())).thenReturn(1L);
     }
 }
