@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:tc:postgresql:17.0://localhost:5433/resource_db
-  cloud:
-    discovery:
-      enabled: false
