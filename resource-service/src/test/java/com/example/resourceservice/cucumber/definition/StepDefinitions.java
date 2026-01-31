@@ -14,7 +14,6 @@ import io.cucumber.java.en.When;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.core.io.ClassPathResource;
-import org.testcontainers.shaded.org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,9 +77,9 @@ public class StepDefinitions {
         );
     }
 
-    @When("user downloads resource with id={long}")
-    public void userDownloadsResourceWithId(long id) {
-        response = resourceClient.downloadResource(id);
+    @When("user gets resource with id={long}")
+    public void userGetsResourceWithId(long id) {
+        response = resourceClient.getResource(id);
     }
 
     @When("user deletes resource with id={long}")

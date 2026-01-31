@@ -2,7 +2,6 @@ package com.example.resourceservice.cucumber.client;
 
 import com.example.resourceservice.controller.ResourceController;
 import com.example.resourceservice.service.ResourceService;
-import com.example.resourceservice.service.validation.IdValidator;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +44,11 @@ public class ResourceClient {
 //            .post(URL_PATH);
     }
 
-    public MockMvcResponse downloadResource(long id) {
+    public MockMvcResponse getResource(long id) {
         return given().get(URL_PATH + "/{id}", id);
     }
 
     public MockMvcResponse deleteResource(long id) {
-        return given().delete(URL_PATH + "?ids=" + id);
+        return given().delete(URL_PATH + "?id=" + id);
     }
 }
