@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = {
     "spring.datasource.url=jdbc:tc:postgresql:17.0://localhost:5433/resource_db",
     "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver",
+    "spring.jpa.hibernate.ddl-auto=create",
     "spring.cloud.discovery.enabled=false"
 })
 public class ResourceControllerMvcTest extends AbstractIntegrationTest {
