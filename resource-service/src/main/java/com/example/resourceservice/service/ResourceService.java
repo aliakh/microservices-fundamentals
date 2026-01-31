@@ -24,7 +24,7 @@ public class ResourceService {
     @Autowired
     private ResourceRepository resourceRepository;
     @Autowired
-    private MetadataService metadataService;
+    private ResourceProducer resourceProducer;
     @Autowired
     private SongServiceClient songServiceClient;
     @Autowired
@@ -52,16 +52,8 @@ public class ResourceService {
         resource.setKey(s3ResourceDto.key());
 
         var createdResource = resourceRepository.save(resource);
-        var createdId = createdResource.getId();
-
-        try {
-            var createSongDto = metadataService.extractSongMetadata(audio, createdId);
-            songServiceClient.createSong(createSongDto);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(String.format("Failed to save song metadata for ID=%d", createdId));
-        }
-
-        return createdId;
+        resourceProducer.produceResource(createdResource);
+        return createdResource.getId();
     }
 
     @Transactional(readOnly = true)
