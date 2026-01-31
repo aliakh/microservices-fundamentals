@@ -60,12 +60,6 @@ public class S3ServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     void shouldPutObject() throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-//        var multipartFile = new MockMultipartFile(
-//            "file",
-//            FILE_NAME,
-//            CONTENT_TYPE_AUDIO_MPEG,
-//            content
-//        );
 
         var uploadedFileMetadata = s3Service.putObject(audio, BUCKET, "audio/mpeg");
 
