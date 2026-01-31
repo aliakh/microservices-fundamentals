@@ -2,10 +2,12 @@ package com.example.resourceservice.cucumber.client;
 
 import com.example.resourceservice.controller.ResourceController;
 import com.example.resourceservice.service.ResourceService;
+import com.example.resourceservice.service.SongServiceClient;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,9 @@ import java.io.InputStream;
 
 //import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
 @Component
 public class ResourceClient {
@@ -22,11 +27,16 @@ public class ResourceClient {
 
     @Autowired
     private ResourceService resourceService;
+//    @MockitoBean
+//    private SongServiceClient songServiceClient;
 
     @PostConstruct
     void init() {
         var resourceController = new ResourceController();
         ReflectionTestUtils.setField(resourceController, "resourceService", resourceService);
+        var songServiceClient = mock(SongServiceClient.class);
+        doNothing().when(songServiceClient).deleteSong(anyLong());
+        ReflectionTestUtils.setField(resourceService, "songServiceClient", songServiceClient);
         RestAssuredMockMvc.standaloneSetup(resourceController);
     }
 
