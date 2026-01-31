@@ -95,7 +95,7 @@ services:
       - localstack:/var/lib/localstack
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka
     container_name: kafka
     ports:
       - "9092:9092"

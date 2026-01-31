@@ -26,12 +26,12 @@ public abstract class AbstractIntegrationTest {
 
     @Container
     protected static final LocalStackContainer LOCAL_STACK =
-        new LocalStackContainer(DockerImageName.parse("localstack/localstack:1.2.0"))
+        new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(S3);
 
     @Container
     protected static final KafkaContainer KAFKA =
-        new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.10"));
+        new KafkaContainer(DockerImageName.parse("apache/kafka"));
 
     static {
         LOCAL_STACK.start();
