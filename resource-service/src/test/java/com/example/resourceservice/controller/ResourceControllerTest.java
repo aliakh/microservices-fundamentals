@@ -1,22 +1,22 @@
 package com.example.resourceservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microservices.resource.service.dto.ResourceUploadedResponse;
-import com.microservices.resource.service.dto.ResourcesDeletedResponse;
-import com.microservices.resource.service.entity.ResourceEntity;
-import com.microservices.resource.service.service.ResourceService;
+import com.example.resourceservice.dto.ResourceUploadedResponse;
+import com.example.resourceservice.dto.ResourcesDeletedResponse;
+import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.service.ResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static com.microservices.resource.service.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
+import static com.example.resourceservice.service.ContentType.AUDIO_MPEG;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -32,11 +32,9 @@ public class ResourceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
-    @MockBean
+    @MockitoBean
     private ResourceService resourceService;
 
     @Test
@@ -85,7 +83,7 @@ public class ResourceControllerTest {
     void shouldDownloadResource() throws Exception {
         var content = new byte[]{0};
 
-        var resourceEntity = new ResourceEntity();
+        var resourceEntity = new Resource();
         resourceEntity.setId(1L);
         resourceEntity.setBucket("resources");
         resourceEntity.setKey("11111111-2222-3333-4444-555555555555");
@@ -124,8 +122,8 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    private ResourceEntity getResourceEntity() {
-        var resourceEntity = new ResourceEntity();
+    private Resource getResourceEntity() {
+        var resourceEntity = new Resource();
         resourceEntity.setId(1L);
         resourceEntity.setBucket("resources");
         resourceEntity.setKey("11111111-2222-3333-4444-555555555555");

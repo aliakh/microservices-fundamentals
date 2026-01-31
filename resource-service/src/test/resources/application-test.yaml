@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:15.0:///resource-service-db
+    url: jdbc:tc:postgresql:17.0:///resource_db
   cloud:
     discovery:
       enabled: false

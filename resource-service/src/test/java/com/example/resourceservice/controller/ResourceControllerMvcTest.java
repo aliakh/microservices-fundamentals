@@ -1,7 +1,7 @@
 package com.example.resourceservice.controller;
 
 import com.jayway.jsonpath.JsonPath;
-import com.microservices.resource.service.AbstractIntegrationTest;
+import com.example.resourceservice.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.microservices.resource.service.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
+import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

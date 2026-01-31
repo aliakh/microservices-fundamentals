@@ -1,11 +1,9 @@
 package com.example.resourceservice.controller;
 
-import com.microservices.resource.service.AbstractIntegrationTest;
-import com.microservices.resource.service.dto.ResourceUploadedResponse;
-import com.microservices.resource.service.dto.ResourcesDeletedResponse;
-import com.microservices.resource.service.entity.ResourceEntity;
-import com.microservices.resource.service.repository.ResourceRepository;
-import com.microservices.resource.service.service.S3Service;
+import com.example.resourceservice.AbstractIntegrationTest;
+import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.repository.ResourceRepository;
+import com.example.resourceservice.service.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import static com.microservices.resource.service.TestConstants.UUID_REGEXP;
-import static com.microservices.resource.service.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
+import static com.example.resourceservice.TestConstants.UUID_REGEXP;
+import static com.example.resourceservice.service.Constants.CONTENT_TYPE_AUDIO_MPEG;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,10 +43,8 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
     @Autowired
     private ResourceRepository resourceRepository;
-
     @Autowired
     private S3Service s3Service;
 
@@ -120,7 +116,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertEquals(BUCKET, uploadedFileMetadata.bucket());
         assertTrue(Pattern.matches(UUID_REGEXP, uploadedFileMetadata.key()));
 
-        var resourceEntity = new ResourceEntity();
+        var resourceEntity = new Resource();
         resourceEntity.setBucket(BUCKET);
         resourceEntity.setKey(uploadedFileMetadata.key());
         resourceEntity.setName(FILE_NAME);
@@ -139,7 +135,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
     void shouldDeleteResource() throws IOException {
         var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var resourceEntity = new ResourceEntity();
+        var resourceEntity = new Resource();
         resourceEntity.setBucket(BUCKET);
         resourceEntity.setKey(KEY);
         resourceEntity.setName(FILE_NAME);
