@@ -1,5 +1,6 @@
 package com.example.songservice.component;
 
+import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.entity.Song;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.DataTableType;
@@ -17,7 +18,12 @@ public class DataTableConfig {
     }
 
     @DataTableType
-    public Song convertSong(Map<String, String> tableRow) {
-        return objectMapper.convertValue(tableRow, Song.class);
+    public CreateSongRequest convertCreateSongRequest(Map<String, String> row) {
+        return objectMapper.convertValue(row, CreateSongRequest.class);
+    }
+
+    @DataTableType
+    public Song convertSong(Map<String, String> row) {
+        return objectMapper.convertValue(row, Song.class);
     }
 }

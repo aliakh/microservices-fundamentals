@@ -1,10 +1,8 @@
 #@transaction TODO
-Feature: Upload, download and delete resources
+Feature: Create, get, and delete songs
 
-  The resource service allows to upload, get, and delete resources
-
-  Scenario: Create song
-    When user makes POST request to create song
+  Scenario: Create a song
+    When the user sends a POST request to the /songs endpoint
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
     Then response code is 200

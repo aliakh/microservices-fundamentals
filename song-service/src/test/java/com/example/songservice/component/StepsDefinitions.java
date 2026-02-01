@@ -1,5 +1,6 @@
 package com.example.songservice.component;
 
+import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.CreateSongResponse;
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.entity.Song;
@@ -42,10 +43,9 @@ public class StepsDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("user makes POST request to create song")
-    public void songDataSaved(Song song) {
-        String postURL = SERVICE_URL + port + "/songs";
-        createSongResponse = restTemplate.postForEntity(postURL, song, CreateSongResponse.class);
+    @When("the user sends a POST request to the \\/songs endpoint")
+    public void songDataSaved(CreateSongRequest createSongRequest) {
+        createSongResponse = restTemplate.postForEntity(SERVICE_URL + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
 
 
