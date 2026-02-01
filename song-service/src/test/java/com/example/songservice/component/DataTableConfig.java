@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Configurable;
 import java.util.Map;
 
 @Configurable
-public class SongDataTableType {
+public class DataTableConfig {
 
     private final ObjectMapper objectMapper;
 
-    public SongDataTableType(ObjectMapper objectMapper) {
+    public DataTableConfig(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @DataTableType
-    public Song songTypeConverter(Map<String, String> tableRow) {
+    public Song convertSong(Map<String, String> tableRow) {
         return objectMapper.convertValue(tableRow, Song.class);
     }
 
