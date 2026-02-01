@@ -43,7 +43,7 @@ public class StepsDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("the user sends a POST request to the \\/songs endpoint")
+    @When("the user sends a POST request to the \\/songs endpoint:")
     public void songDataSaved(CreateSongRequest createSongRequest) {
         createSongResponse = restTemplate.postForEntity(SERVICE_URL + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
@@ -55,24 +55,25 @@ public class StepsDefinitions {
 //        assertEquals(code, codeValue);
 //    }
 
-    @Then("response code is {int}")
+    @Then("the song creation response code is {int}")
     public void responseCodeIs(int responseStatus) {
         assertThat(createSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("response content type is {string}")
+    @And("the song creation content type is {string}")
     public void responseContentTypeIs(String contentType) {
         assertThat(createSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("resource uploaded response is")
-    public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<CreateSongResponse>() {
+    @And("the song creation response is")
+    public void resourceUploadedResponseIs(String json) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(json, new TypeReference<CreateSongResponse>() {
         });
-        assertThat(createSongResponse.getBody().id()).isEqualTo(expectedResponse.id());
+        CreateSongResponse body = createSongResponse.getBody();
+        assertThat(body.id()).isEqualTo(expectedResponse.id());
     }
 
-    @Then("the following resources are saved")
+    @Then("the songs are saved to the database:")
     public void theFollowingResourcesAreSaved(List<Song> resources) {
         resources.forEach(resource -> {
                 Optional<Song> foundResource = songRepository.findById(resource.getId());

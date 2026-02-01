@@ -2,16 +2,18 @@
 Feature: Create, get, and delete songs
 
   Scenario: Create a song
-    When the user sends a POST request to the /songs endpoint
+    When the user sends a POST request to the /songs endpoint:
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
-    Then response code is 200
-    And response content type is "application/json"
-    And resource uploaded response is
+    Then the song creation response code is 200
+    And the song creation content type is "application/json"
+    And the song creation response is
       """
-      {"id": 1}
+      {
+        "id": 1
+      }
       """
-    Then the following resources are saved
+    Then the songs are saved to the database:
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
 
