@@ -6,7 +6,7 @@ Contract.make {
     request {
         url("/songs") {
             queryParameters {
-                parameter("ids", "1")
+                parameter("id", "1")
             }
         }
         method DELETE()

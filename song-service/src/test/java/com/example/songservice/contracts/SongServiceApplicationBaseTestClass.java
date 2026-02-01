@@ -34,16 +34,16 @@ public abstract class SongServiceApplicationBaseTestClass {
             "Song",
             "John Doe",
             "Songs",
-            "60",
+            "12:34",
             "2020"
         );
         var songDto = new SongDto(
-            id,
-            "Song",
-            "John Doe",
-            "Songs",
-            "60",
-            "2020"
+            createSongRequest.id(),
+            createSongRequest.name(),
+            createSongRequest.artist(),
+            createSongRequest.album(),
+            createSongRequest.duration(),
+            createSongRequest.year()
         );
 
         when(songService.createSong(createSongRequest)).thenReturn(id);

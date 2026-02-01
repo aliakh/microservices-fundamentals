@@ -1,4 +1,4 @@
-#@transaction
+#@transaction TODO
 Feature: Upload, download and delete resources
 
   The resource service allows to upload, get, and delete resources
