@@ -92,17 +92,17 @@ public class StepsDefinitions {
         getSongResponse = restTemplate.getForEntity(SERVICE_URL + port + "/songs/" + id, SongDto.class);
     }
 
-    @Then("response2 code is {int}")
+    @Then("the song retrieval response code is {int}")
     public void response2CodeIs(int responseStatus) {
         assertThat(getSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("response2 content type is {string}")
+    @And("the song retrieval response content type is {string}")
     public void response2ContentTypeIs(String contentType) {
         assertThat(getSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("resource uploaded response2 is")
+    @And("the song retrieval response is")
     public void resourceUploadedResponseIs2(String json) throws JsonProcessingException {
         var expectedSongDto = objectMapper.readValue(json, new TypeReference<SongDto>() {
         });
@@ -130,17 +130,17 @@ public class StepsDefinitions {
 //        deleteSonfResponse = restTemplate.delete(SERVICE_URL + port + "/songs/ids=" + id, DeleteSongsResponse.class);
     }
 
-    @Then("response3 code is {int}")
+    @Then("the song deletion response code is {int}")
     public void response3CodeIs(int responseStatus) {
         assertThat(deleteSonfResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("response3 content type is {string}")
+    @And("the song deletion response content type is {string}")
     public void response3ContentTypeIs(String contentType) {
         assertThat(deleteSonfResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("resource uploaded response3 is")
+    @And("the song deleting response is")
     public void resourceUploadedResponseIs3(String json) throws JsonProcessingException {
         var expectedSongDto = objectMapper.readValue(json, new TypeReference<DeleteSongsResponse>() {
         });

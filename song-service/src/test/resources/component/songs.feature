@@ -19,9 +19,9 @@ Feature: Create, get, and delete songs
 
   Scenario: Get a song
     When the user sends a GET request to the /songs/1 endpoint
-    Then response2 code is 200
-    And response2 content type is "application/json"
-    And resource uploaded response2 is
+    Then the song retrieval response code is 200
+    And the song retrieval response content type is "application/json"
+    And the song retrieval response is
       """
       {
         "id": 1,
@@ -35,9 +35,9 @@ Feature: Create, get, and delete songs
 
   Scenario: Delete a song
     When the user sends a DELETE request to the /songs?id=1 endpoint
-    Then response3 code is 200
-    And response3 content type is "application/json"
-    And resource uploaded response3 is
+    Then the song deletion response code is 200
+    And the song deletion response content type is "application/json"
+    And the song deleting response is
       """
       {
         "ids": [1]
