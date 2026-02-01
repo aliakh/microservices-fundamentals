@@ -1,6 +1,8 @@
 package com.example.songservice.contracts;
 
 import com.example.songservice.controller.SongController;
+import com.example.songservice.dto.CreateSongRequest;
+import com.example.songservice.dto.SongDto;
 import com.example.songservice.service.SongService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.mockito.Mockito.any;
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -23,7 +26,28 @@ public abstract class SongServiceApplicationBaseTestClass {
 
     @BeforeEach
     public void init() {
-        RestAssuredMockMvc.standaloneSetup(this.songController);
-        when(songService.createSong(any())).thenReturn(1L);
+        RestAssuredMockMvc.standaloneSetup(songController);
+
+        var id = 1L;
+        var createSongRequest = new CreateSongRequest(
+            id,
+            "Song",
+            "John Doe",
+            "Songs",
+            "60",
+            "2020"
+        );
+        var songDto = new SongDto(
+            id,
+            "Song",
+            "John Doe",
+            "Songs",
+            "60",
+            "2020"
+        );
+
+        when(songService.createSong(createSongRequest)).thenReturn(id);
+        when(songService.getSongById(id)).thenReturn(songDto);
+        when(songService.deleteSongs(String.valueOf(id))).thenReturn(List.of(id));
     }
 }
