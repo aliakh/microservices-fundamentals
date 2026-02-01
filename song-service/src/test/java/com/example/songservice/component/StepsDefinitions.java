@@ -34,8 +34,7 @@ public class StepsDefinitions {
     private int port;
 
     private ResponseEntity<CreateSongResponse> createSongResponse;
-    private ResponseEntity<SongDto> getResponse2;
-    private ResponseEntity<Song> getResponse;
+    private ResponseEntity<SongDto> getSongResponse;
 
     public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -43,17 +42,10 @@ public class StepsDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("the user sends a POST request to the \\/songs endpoint:")
+    @When("the user sends a POST request to the \\/songs endpoint")
     public void songDataSaved(CreateSongRequest createSongRequest) {
         createSongResponse = restTemplate.postForEntity(SERVICE_URL + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
-
-
-//    @Then("POST response code is {int}")
-//    public void checkPostResponseCode(Integer code) {
-//        int codeValue = postResponse.getStatusCode().value();
-//        assertEquals(code, codeValue);
-//    }
 
     @Then("the song creation response code is {int}")
     public void responseCodeIs(int responseStatus) {
@@ -73,7 +65,7 @@ public class StepsDefinitions {
         assertThat(body.id()).isEqualTo(expectedResponse.id());
     }
 
-    @Then("the songs are saved to the database:")
+    @Then("the songs are saved to the database")
     public void theFollowingResourcesAreSaved(List<Song> resources) {
         resources.forEach(resource -> {
                 Optional<Song> foundResource = songRepository.findById(resource.getId());
@@ -90,51 +82,31 @@ public class StepsDefinitions {
         );
     }
 
-    @When("user gets resource with id={long}")
+    @When("the user sends a GET request to the \\/songs\\/{long} endpoint")
     public void userGetsResourceWithId(long id) {
-        String getURL = SERVICE_URL + port + "/songs/" + id;
-        getResponse2 = restTemplate.getForEntity(getURL, SongDto.class);
+        getSongResponse = restTemplate.getForEntity(SERVICE_URL + port + "/songs/" + id, SongDto.class);
     }
 
     @Then("response2 code is {int}")
     public void response2CodeIs(int responseStatus) {
-        assertThat(getResponse2.getStatusCode().value()).isEqualTo(responseStatus);
+        assertThat(getSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
     @And("response2 content type is {string}")
     public void response2ContentTypeIs(String contentType) {
-        assertThat(getResponse2.getHeaders().getContentType().toString()).isEqualTo(contentType);
+        assertThat(getSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
     @And("resource uploaded response2 is")
-    public void resourceUploadedResponseIs2(String jsonResponse) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<SongDto>() {
+    public void resourceUploadedResponseIs2(String json) throws JsonProcessingException {
+        var expectedSongDto = objectMapper.readValue(json, new TypeReference<SongDto>() {
         });
-        SongDto body = getResponse2.getBody();
-        assertThat(body.id()).isEqualTo(expectedResponse.id());
-        assertThat(body.name()).isEqualTo(expectedResponse.name());
-        assertThat(body.artist()).isEqualTo(expectedResponse.artist());
-        assertThat(body.album()).isEqualTo(expectedResponse.album());
-        assertThat(body.duration()).isEqualTo(expectedResponse.duration());
-        assertThat(body.year()).isEqualTo(expectedResponse.year());
-    }
-
-    @When("GET request sent songs\\/{int}")
-    public void sendGetRequest(Integer id) {
-        String getURL = SERVICE_URL + port + "/songs/" + id;
-        getResponse = restTemplate.getForEntity(getURL, Song.class);
-    }
-
-    @Then("GET response code is {int}")
-    public void checkGetResponseCode(Integer code) {
-        int codeValue = getResponse.getStatusCode().value();
-        assertEquals(code, codeValue);
-    }
-
-    @And("song's data returned with resourceId {}")
-    public void checkForValidResponse(Integer resourceId) {
-        Song body = getResponse.getBody();
-        assertNotNull(body);
-        assertEquals(resourceId, body.getId());
+        SongDto actualSongDto = getSongResponse.getBody();
+        assertThat(actualSongDto.id()).isEqualTo(expectedSongDto.id());
+        assertThat(actualSongDto.name()).isEqualTo(expectedSongDto.name());
+        assertThat(actualSongDto.artist()).isEqualTo(expectedSongDto.artist());
+        assertThat(actualSongDto.album()).isEqualTo(expectedSongDto.album());
+        assertThat(actualSongDto.duration()).isEqualTo(expectedSongDto.duration());
+        assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 }

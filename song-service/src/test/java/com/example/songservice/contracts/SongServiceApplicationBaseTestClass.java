@@ -31,7 +31,7 @@ public abstract class SongServiceApplicationBaseTestClass {
         var id = 1L;
         var createSongRequest = new CreateSongRequest(
             id,
-            "Song",
+            "A song",
             "John Doe",
             "Songs",
             "12:34",

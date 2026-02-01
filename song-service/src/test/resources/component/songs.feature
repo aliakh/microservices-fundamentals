@@ -2,7 +2,7 @@
 Feature: Create, get, and delete songs
 
   Scenario: Create a song
-    When the user sends a POST request to the /songs endpoint:
+    When the user sends a POST request to the /songs endpoint
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
     Then the song creation response code is 200
@@ -13,22 +13,22 @@ Feature: Create, get, and delete songs
         "id": 1
       }
       """
-    Then the songs are saved to the database:
+    Then the songs are saved to the database
       | id | name                 | artist | album             | duration | year |
       | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
 
-  Scenario: Get resource
-    When user gets resource with id=1
+  Scenario: Get a song
+    When the user sends a GET request to the /songs/1 endpoint
     Then response2 code is 200
     And response2 content type is "application/json"
     And resource uploaded response2 is
       """
-        {
-    "id": 1,
-    "name": "We are the champions",
-    "artist": "Queen",
-    "album": "News of the world",
-    "duration": "02:59",
-    "year": 1977
-  }
+      {
+        "id": 1,
+        "name": "We are the champions",
+        "artist": "Queen",
+        "album": "News of the world",
+        "duration": "02:59",
+        "year": 1977
+      }
       """
