@@ -1,6 +1,7 @@
 package com.example.songservice.component;
 
 import com.example.songservice.dto.CreateSongResponse;
+import com.example.songservice.dto.SongDto;
 import com.example.songservice.entity.Song;
 import com.example.songservice.repository.SongRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +33,7 @@ public class StepsDefinitions {
     private int port;
 
     private ResponseEntity<CreateSongResponse> createSongResponse;
+    private ResponseEntity<SongDto> getResponse2;
     private ResponseEntity<Song> getResponse;
 
     public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
@@ -45,6 +47,7 @@ public class StepsDefinitions {
         String postURL = SERVICE_URL + port + "/songs";
         createSongResponse = restTemplate.postForEntity(postURL, song, CreateSongResponse.class);
     }
+
 
 //    @Then("POST response code is {int}")
 //    public void checkPostResponseCode(Integer code) {
@@ -84,6 +87,35 @@ public class StepsDefinitions {
                 assertThat(actualResource.getYear().equals(resource.getYear())).isTrue();
             }
         );
+    }
+
+    @When("user gets resource with id={long}")
+    public void userGetsResourceWithId(long id) {
+        String getURL = SERVICE_URL + port + "/songs/" + id;
+        getResponse2 = restTemplate.getForEntity(getURL, SongDto.class);
+    }
+
+    @Then("response2 code is {int}")
+    public void response2CodeIs(int responseStatus) {
+        assertThat(getResponse2.getStatusCode().value()).isEqualTo(responseStatus);
+    }
+
+    @And("response2 content type is {string}")
+    public void response2ContentTypeIs(String contentType) {
+        assertThat(getResponse2.getHeaders().getContentType().toString()).isEqualTo(contentType);
+    }
+
+    @And("resource uploaded response2 is")
+    public void resourceUploadedResponseIs2(String jsonResponse) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<SongDto>() {
+        });
+        SongDto body = getResponse2.getBody();
+        assertThat(body.id()).isEqualTo(expectedResponse.id());
+        assertThat(body.name()).isEqualTo(expectedResponse.name());
+        assertThat(body.artist()).isEqualTo(expectedResponse.artist());
+        assertThat(body.album()).isEqualTo(expectedResponse.album());
+        assertThat(body.duration()).isEqualTo(expectedResponse.duration());
+        assertThat(body.year()).isEqualTo(expectedResponse.year());
     }
 
     @When("GET request sent songs\\/{int}")

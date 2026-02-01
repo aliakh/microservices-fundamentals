@@ -20,5 +20,4 @@ public class DataTableConfig {
     public Song convertSong(Map<String, String> tableRow) {
         return objectMapper.convertValue(tableRow, Song.class);
     }
-
 }
