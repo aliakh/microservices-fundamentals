@@ -2,6 +2,7 @@ package com.example.songservice.component;
 
 import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.CreateSongResponse;
+import com.example.songservice.dto.DeleteSongsResponse;
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.entity.Song;
 import com.example.songservice.repository.SongRepository;
@@ -12,9 +13,12 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +39,7 @@ public class StepsDefinitions {
 
     private ResponseEntity<CreateSongResponse> createSongResponse;
     private ResponseEntity<SongDto> getSongResponse;
+    private ResponseEntity<DeleteSongsResponse> deleteSonfResponse;
 
     public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -108,5 +113,43 @@ public class StepsDefinitions {
         assertThat(actualSongDto.album()).isEqualTo(expectedSongDto.album());
         assertThat(actualSongDto.duration()).isEqualTo(expectedSongDto.duration());
         assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
+    }
+
+    @When("the user sends a DELETE request to the \\/songs?id={long} endpoint")
+    public void userGetsResource2WithId(long id) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(SERVICE_URL + port + "/songs" )
+            .queryParam("id", id)
+            .build()
+            .toUri();
+
+        deleteSonfResponse= restTemplate.exchange(
+            uri,
+            HttpMethod.DELETE,
+            null,
+            DeleteSongsResponse.class);
+//        deleteSonfResponse = restTemplate.delete(SERVICE_URL + port + "/songs/ids=" + id, DeleteSongsResponse.class);
+    }
+
+    @Then("response3 code is {int}")
+    public void response3CodeIs(int responseStatus) {
+        assertThat(deleteSonfResponse.getStatusCode().value()).isEqualTo(responseStatus);
+    }
+
+    @And("response3 content type is {string}")
+    public void response3ContentTypeIs(String contentType) {
+        assertThat(deleteSonfResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
+    }
+
+    @And("resource uploaded response3 is")
+    public void resourceUploadedResponseIs3(String json) throws JsonProcessingException {
+        var expectedSongDto = objectMapper.readValue(json, new TypeReference<DeleteSongsResponse>() {
+        });
+        DeleteSongsResponse actualSongDto = deleteSonfResponse.getBody();
+        assertThat(actualSongDto.ids()).isEqualTo(expectedSongDto.ids());
+//        assertThat(actualSongDto.name()).isEqualTo(expectedSongDto.name());
+//        assertThat(actualSongDto.artist()).isEqualTo(expectedSongDto.artist());
+//        assertThat(actualSongDto.album()).isEqualTo(expectedSongDto.album());
+//        assertThat(actualSongDto.duration()).isEqualTo(expectedSongDto.duration());
+//        assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 }

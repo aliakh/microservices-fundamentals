@@ -32,3 +32,14 @@ Feature: Create, get, and delete songs
         "year": 1977
       }
       """
+
+  Scenario: Delete a song
+    When the user sends a DELETE request to the /songs?id=1 endpoint
+    Then response3 code is 200
+    And response3 content type is "application/json"
+    And resource uploaded response3 is
+      """
+      {
+        "ids": [1]
+      }
+      """
