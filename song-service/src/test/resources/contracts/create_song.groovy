@@ -3,8 +3,6 @@ package contracts
 import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
-    description "Create song"
-
     request {
         url "/songs"
         method POST()
@@ -16,8 +14,8 @@ Contract.make {
             name: "Song",
             artist: "John Doe",
             album: "Songs",
-            length: "60",
-            released: "2020"
+            duration: "12:34",
+            year: "2020"
         )
     }
     response {
@@ -25,6 +23,6 @@ Contract.make {
         headers {
             contentType('application/json')
         }
-        body(id: 1)
+        body(ids: [1])
     }
 }
