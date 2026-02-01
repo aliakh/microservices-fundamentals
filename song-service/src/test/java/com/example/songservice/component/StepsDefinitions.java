@@ -23,12 +23,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StepsDefinitions {
 
-    private static final String SERVICE_URL = "http://localhost:";
+    private static final String URL_HOST = "http://localhost:";
 
     private final RestTemplate restTemplate;
     private final SongRepository songRepository;
@@ -39,7 +37,7 @@ public class StepsDefinitions {
 
     private ResponseEntity<CreateSongResponse> createSongResponse;
     private ResponseEntity<SongDto> getSongResponse;
-    private ResponseEntity<DeleteSongsResponse> deleteSonfResponse;
+    private ResponseEntity<DeleteSongsResponse> deleteSongsResponse;
 
     public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -49,7 +47,7 @@ public class StepsDefinitions {
 
     @When("the user sends a POST request to the \\/songs endpoint")
     public void songDataSaved(CreateSongRequest createSongRequest) {
-        createSongResponse = restTemplate.postForEntity(SERVICE_URL + port + "/songs", createSongRequest, CreateSongResponse.class);
+        createSongResponse = restTemplate.postForEntity(URL_HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
 
     @Then("the song creation response code is {int}")
@@ -89,7 +87,7 @@ public class StepsDefinitions {
 
     @When("the user sends a GET request to the \\/songs\\/{long} endpoint")
     public void userGetsResourceWithId(long id) {
-        getSongResponse = restTemplate.getForEntity(SERVICE_URL + port + "/songs/" + id, SongDto.class);
+        getSongResponse = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
 
     @Then("the song retrieval response code is {int}")
@@ -117,12 +115,12 @@ public class StepsDefinitions {
 
     @When("the user sends a DELETE request to the \\/songs?id={long} endpoint")
     public void userGetsResource2WithId(long id) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(SERVICE_URL + port + "/songs" )
+        URI uri = UriComponentsBuilder.fromHttpUrl(URL_HOST + port + "/songs")
             .queryParam("id", id)
             .build()
             .toUri();
 
-        deleteSonfResponse= restTemplate.exchange(
+        deleteSongsResponse = restTemplate.exchange(
             uri,
             HttpMethod.DELETE,
             null,
@@ -132,19 +130,19 @@ public class StepsDefinitions {
 
     @Then("the song deletion response code is {int}")
     public void response3CodeIs(int responseStatus) {
-        assertThat(deleteSonfResponse.getStatusCode().value()).isEqualTo(responseStatus);
+        assertThat(deleteSongsResponse.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
     @And("the song deletion response content type is {string}")
     public void response3ContentTypeIs(String contentType) {
-        assertThat(deleteSonfResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
+        assertThat(deleteSongsResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
     @And("the song deleting response is")
     public void resourceUploadedResponseIs3(String json) throws JsonProcessingException {
         var expectedSongDto = objectMapper.readValue(json, new TypeReference<DeleteSongsResponse>() {
         });
-        DeleteSongsResponse actualSongDto = deleteSonfResponse.getBody();
+        DeleteSongsResponse actualSongDto = deleteSongsResponse.getBody();
         assertThat(actualSongDto.ids()).isEqualTo(expectedSongDto.ids());
 //        assertThat(actualSongDto.name()).isEqualTo(expectedSongDto.name());
 //        assertThat(actualSongDto.artist()).isEqualTo(expectedSongDto.artist());
