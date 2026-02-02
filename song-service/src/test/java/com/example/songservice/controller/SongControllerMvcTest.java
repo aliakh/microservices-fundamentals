@@ -93,7 +93,7 @@ public class SongControllerMvcTest {
     private SongDto getSongDto() {
         return new SongDto(
             1L,
-            "A song",
+            "The song",
             "John Doe",
             "Songs",
             "12:34",

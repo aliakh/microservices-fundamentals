@@ -94,7 +94,7 @@ public class SongControllerTest {
     private SongDto getSongDto() {
         return new SongDto(
             1L,
-            "Song",
+            "The song",
             "John Doe",
             "Songs",
             "60",
@@ -105,10 +105,10 @@ public class SongControllerTest {
     private CreateSongRequest getCreateSongRequest() {
         return new CreateSongRequest(
             1L,
-            "Song",
+            "The song",
             "John Doe",
             "Songs",
-            "60",
+            "12:24",
             "2020"
         );
     }

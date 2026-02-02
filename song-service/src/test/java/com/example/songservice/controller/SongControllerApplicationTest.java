@@ -110,10 +110,10 @@ class SongControllerApplicationTest {
     private SongDto getSongDto() {
         return new SongDto(
             1L,
-            "Song",
+            "The song",
             "John Doe",
             "Songs",
-            "60",
+            "12:34",
             "2020"
         );
     }
@@ -121,7 +121,7 @@ class SongControllerApplicationTest {
     private Song getSongEntity() {
         Song songEntity = new Song();
         songEntity.setId(1L);
-        songEntity.setName("A song");
+        songEntity.setName("The song");
         songEntity.setArtist("John Doe");
         songEntity.setAlbum("Songs");
         songEntity.setDuration("12:34");
