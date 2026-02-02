@@ -1,8 +1,8 @@
 package com.example.songservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.songservice.dto.CreateSongResponse;
+import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.SongDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.songservice.dto.DeleteSongsResponse;
 import com.example.songservice.service.SongService;
 import org.junit.jupiter.api.Test;
@@ -36,20 +36,20 @@ public class SongControllerTest {
 
     @Test
     void shouldCreateSong() throws Exception {
-        var songDto = getSongDto();
-        var id = songDto.id();
+        var createSongRequest = getCreateSongRequest();
+        var id = createSongRequest.id();
 
-        when(songService.createSong(songDto)).thenReturn(new CreateSongResponse(id));
+        when(songService.createSong(createSongRequest)).thenReturn(id);
 
         mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(songDto)))
+                .content(objectMapper.writeValueAsString(createSongRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(id.intValue()));
 
-        verify(songService).createSong(songDto);
+        verify(songService).createSong(createSongRequest);
         verifyNoMoreInteractions(songService);
     }
 
@@ -58,7 +58,7 @@ public class SongControllerTest {
         var songDto = getSongDto();
         var id = songDto.id();
 
-        when(songService.getSong(id)).thenReturn(songDto);
+        when(songService.getSongById(id)).thenReturn(songDto);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
             .andExpect(status().isOk())
@@ -67,10 +67,10 @@ public class SongControllerTest {
             .andExpect(jsonPath("$.name").value(songDto.name()))
             .andExpect(jsonPath("$.artist").value(songDto.artist()))
             .andExpect(jsonPath("$.album").value(songDto.album()))
-            .andExpect(jsonPath("$.length").value(songDto.length()))
-            .andExpect(jsonPath("$.released").value(songDto.released()));
+            .andExpect(jsonPath("$.duration").value(songDto.duration()))
+            .andExpect(jsonPath("$.year").value(songDto.year()));
 
-        verify(songService).getSong(id);
+        verify(songService).getSongById(id);
         verifyNoMoreInteractions(songService);
     }
 
@@ -79,20 +79,31 @@ public class SongControllerTest {
         Long id = 1L;
         var ids = List.of(id);
 
-        when(songService.deleteSongs(ids)).thenReturn(new DeleteSongsResponse(ids));
+        when(songService.deleteSongs(String.valueOf(id))).thenReturn(ids);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("ids", id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))
             .andExpect(jsonPath("$.ids[0]").value(id));
 
-        verify(songService).deleteSongs(ids);
+        verify(songService).deleteSongs(String.valueOf(id));
         verifyNoMoreInteractions(songService);
     }
 
     private SongDto getSongDto() {
         return new SongDto(
+            1L,
+            "Song",
+            "John Doe",
+            "Songs",
+            "60",
+            "2020"
+        );
+    }
+
+    private CreateSongRequest getCreateSongRequest() {
+        return new CreateSongRequest(
             1L,
             "Song",
             "John Doe",

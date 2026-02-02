@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -60,8 +59,8 @@ class SongControllerApplicationTest {
         assertEquals(songDto.name(), actualSongEntity.getName());
         assertEquals(songDto.artist(), actualSongEntity.getArtist());
         assertEquals(songDto.album(), actualSongEntity.getAlbum());
-        assertEquals(songDto.length(), actualSongEntity.getLength());
-        assertEquals(songDto.released(), actualSongEntity.getReleased());
+        assertEquals(songDto.duration(), actualSongEntity.getDuration());
+        assertEquals(songDto.year(), actualSongEntity.getYear());
     }
 
     @Test
@@ -78,8 +77,8 @@ class SongControllerApplicationTest {
         assertEquals(savedSongEntity.getName(), songDto.name());
         assertEquals(savedSongEntity.getArtist(), songDto.artist());
         assertEquals(savedSongEntity.getAlbum(), songDto.album());
-        assertEquals(savedSongEntity.getLength(), songDto.length());
-        assertEquals(savedSongEntity.getReleased(), songDto.released());
+        assertEquals(savedSongEntity.getDuration(), songDto.duration());
+        assertEquals(savedSongEntity.getYear(), songDto.year());
     }
 
     @Test
@@ -90,7 +89,7 @@ class SongControllerApplicationTest {
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         var responseEntity = testRestTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL_PATH).queryParam("ids", savedSongEntity.getId()).build().toUri(),
+            UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSongEntity.getId()).build().toUri(),
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
             DeleteSongsResponse.class
@@ -122,11 +121,11 @@ class SongControllerApplicationTest {
     private Song getSongEntity() {
         Song songEntity = new Song();
         songEntity.setId(1L);
-        songEntity.setName("Song");
+        songEntity.setName("A song");
         songEntity.setArtist("John Doe");
         songEntity.setAlbum("Songs");
-        songEntity.setLength("60");
-        songEntity.setReleased("2020");
+        songEntity.setDuration("12:34");
+        songEntity.setYear("2020");
         return songEntity;
     }
 }

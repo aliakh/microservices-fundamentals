@@ -67,8 +67,8 @@ public class SongControllerMvcTest {
             .andExpect(jsonPath("$.name").value(songDto.name()))
             .andExpect(jsonPath("$.artist").value(songDto.artist()))
             .andExpect(jsonPath("$.album").value(songDto.album()))
-            .andExpect(jsonPath("$.length").value(songDto.length()))
-            .andExpect(jsonPath("$.released").value(songDto.released()));
+            .andExpect(jsonPath("$.duration").value(songDto.duration()))
+            .andExpect(jsonPath("$.year").value(songDto.year()));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SongControllerMvcTest {
         String DeleteSongsResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(DeleteSongsResponse, "$.id");
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("ids", id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))
@@ -93,10 +93,10 @@ public class SongControllerMvcTest {
     private SongDto getSongDto() {
         return new SongDto(
             1L,
-            "Song",
+            "A song",
             "John Doe",
             "Songs",
-            "60",
+            "12:34",
             "2020"
         );
     }
