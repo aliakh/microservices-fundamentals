@@ -2,17 +2,18 @@ package com.example.songservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.microservices.song.service.dto.SongDto;
-import com.microservices.song.service.repository.SongRepository;
+import com.example.songservice.dto.SongDto;
+import com.example.songservice.repository.SongRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.junit.jupiter.Testcontainers;
+//import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,17 +21,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
+//@Testcontainers
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class SongControllerMvcTest {
 
     private static final String URL_PATH = "/songs";
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private SongRepository songRepository;
 
@@ -57,8 +57,8 @@ public class SongControllerMvcTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        String songCreatedResponse = resultActions.getResponse().getContentAsString();
-        var id = JsonPath.read(songCreatedResponse, "$.id");
+        String CreateSongResponse = resultActions.getResponse().getContentAsString();
+        var id = JsonPath.read(CreateSongResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
             .andExpect(status().isOk())
@@ -80,8 +80,8 @@ public class SongControllerMvcTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        String songsDeletedResponse = resultActions.getResponse().getContentAsString();
-        var id = JsonPath.read(songsDeletedResponse, "$.id");
+        String DeleteSongsResponse = resultActions.getResponse().getContentAsString();
+        var id = JsonPath.read(DeleteSongsResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("ids", id.toString()))
             .andExpect(status().isOk())

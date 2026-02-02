@@ -1,15 +1,15 @@
 package com.example.songservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microservices.song.service.dto.SongCreatedResponse;
-import com.microservices.song.service.dto.SongDto;
-import com.microservices.song.service.dto.SongsDeletedResponse;
-import com.microservices.song.service.service.SongService;
+import com.example.songservice.dto.CreateSongResponse;
+import com.example.songservice.dto.SongDto;
+import com.example.songservice.dto.DeleteSongsResponse;
+import com.example.songservice.service.SongService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -29,11 +29,9 @@ public class SongControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
-    @MockBean
+    @MockitoBean
     private SongService songService;
 
     @Test
@@ -41,7 +39,7 @@ public class SongControllerTest {
         var songDto = getSongDto();
         var id = songDto.id();
 
-        when(songService.createSong(songDto)).thenReturn(new SongCreatedResponse(id));
+        when(songService.createSong(songDto)).thenReturn(new CreateSongResponse(id));
 
         mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +79,7 @@ public class SongControllerTest {
         Long id = 1L;
         var ids = List.of(id);
 
-        when(songService.deleteSongs(ids)).thenReturn(new SongsDeletedResponse(ids));
+        when(songService.deleteSongs(ids)).thenReturn(new DeleteSongsResponse(ids));
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("ids", id.toString()))
             .andExpect(status().isOk())

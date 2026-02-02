@@ -1,10 +1,10 @@
 package com.example.songservice.controller;
 
-import com.microservices.song.service.dto.SongCreatedResponse;
-import com.microservices.song.service.dto.SongDto;
-import com.microservices.song.service.dto.SongsDeletedResponse;
-import com.microservices.song.service.entity.SongEntity;
-import com.microservices.song.service.repository.SongRepository;
+import com.example.songservice.dto.CreateSongResponse;
+import com.example.songservice.dto.SongDto;
+import com.example.songservice.dto.DeleteSongsResponse;
+import com.example.songservice.entity.Song;
+import com.example.songservice.repository.SongRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +15,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
+//@Testcontainers
+@TestPropertySource(locations = "classpath:application-test.properties")
 class SongControllerApplicationTest {
 
     private static final String URL_PATH = "/songs";
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
     @Autowired
     private SongRepository songRepository;
 
@@ -42,19 +43,19 @@ class SongControllerApplicationTest {
     void shouldCreateSong() {
         var songDto = getSongDto();
 
-        var responseEntity = testRestTemplate.postForEntity(URL_PATH, songDto, SongCreatedResponse.class);
+        var responseEntity = testRestTemplate.postForEntity(URL_PATH, songDto, CreateSongResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
-        var songCreatedResponse = responseEntity.getBody();
-        assertNotNull(songCreatedResponse);
-        assertNotNull(songCreatedResponse.id());
+        var CreateSongResponse = responseEntity.getBody();
+        assertNotNull(CreateSongResponse);
+        assertNotNull(CreateSongResponse.id());
 
-        var foundSongEntity = songRepository.findById(songCreatedResponse.id());
+        var foundSongEntity = songRepository.findById(CreateSongResponse.id());
         assertTrue(foundSongEntity.isPresent());
 
         var actualSongEntity = foundSongEntity.get();
-        assertEquals(songCreatedResponse.id(), actualSongEntity.getId());
+        assertEquals(CreateSongResponse.id(), actualSongEntity.getId());
         assertEquals(songDto.id(), actualSongEntity.getId());
         assertEquals(songDto.name(), actualSongEntity.getName());
         assertEquals(songDto.artist(), actualSongEntity.getArtist());
@@ -92,7 +93,7 @@ class SongControllerApplicationTest {
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("ids", savedSongEntity.getId()).build().toUri(),
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
-            SongsDeletedResponse.class
+            DeleteSongsResponse.class
         );
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
@@ -118,8 +119,8 @@ class SongControllerApplicationTest {
         );
     }
 
-    private SongEntity getSongEntity() {
-        SongEntity songEntity = new SongEntity();
+    private Song getSongEntity() {
+        Song songEntity = new Song();
         songEntity.setId(1L);
         songEntity.setName("Song");
         songEntity.setArtist("John Doe");
