@@ -1,11 +1,10 @@
 package com.example.resourceprocessor.service;
 
+import com.example.resourceprocessor.dto.CreateSongDto;
+import com.example.resourceprocessor.dto.CreateSongResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.resourceprocessor.service.ResourceServiceClient;
-import com.example.resourceprocessor.service.SongServiceClient;
 import com.example.resourceprocessor.dto.KafkaProperties;
 import com.example.resourceprocessor.dto.ResourceDto;
-import com.example.resourceprocessor.dto.CreateSongResponse;
 import com.example.resourceprocessor.dto.SongDto;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -27,6 +26,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,24 +43,21 @@ import static org.mockito.Mockito.when;
     topics = "${kafka.topic}"
 )
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class ResourceProcessorIntegrationTest {
+@ActiveProfiles("test")
+class ResourceConsumerIntegrationTest {
 
     @Value("${kafka.topic}")
     private String topic;
 
     @Autowired
-    private ResourceProcessor resourceProcessorService;
-
+    private ResourceConsumer resourceConsumer;
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
-
     @Autowired
     private ObjectMapper objectMapper;
-
-    @MockBean
+    @MockitoBean
     private ResourceServiceClient resourceServiceClient;
-
-    @MockBean
+    @MockitoBean
     private SongServiceClient songServiceClient;
 
     private Producer<Long, String> producer;
@@ -77,35 +75,31 @@ class ResourceProcessorIntegrationTest {
     }
 
     @Test
-    public void shouldProcess() throws IOException {
+    public void shouldConsumeResource() throws IOException {
         var id = 1L;
 
         var resource = new ClassPathResource("audio/Kevin MacLeod - Impact Moderato.mp3");
         var content = resource.getInputStream().readAllBytes();
-        var byteArrayResource = new ByteArrayResource(content);
-        when(resourceServiceClient.downloadResource(id)).thenReturn(byteArrayResource);
+        when(resourceServiceClient.getResource(id)).thenReturn(content);
 
-        var songDto = new SongDto(
+        var songDto = new CreateSongDto(
             id,
             "Impact Moderato",
             "Kevin MacLeod",
             "Impact",
-            "75.67630767822266",
-            "2014-11-19T15:43:31"
+            "01:16",
+            "2014"
         );
-        when(songServiceClient.createSong(songDto)).thenReturn(new SongCreatedResponse(id));
+        when(songServiceClient.createSong(songDto)).thenReturn(new CreateSongResponse(id));
 
         var resourceDto = new ResourceDto(
             id,
-            "resources",
-            "11111111-2222-3333-4444-555555555555",
-            "Kevin MacLeod - Impact Moderato.mp3",
-            3636515L
+            "11111111-2222-3333-4444-555555555555"
         );
         String message = objectMapper.writeValueAsString(resourceDto);
         producer.send(new ProducerRecord<>(topic, resourceDto.id(), message));
 
-        verify(resourceServiceClient, timeout(5_000L)).downloadResource(id);
+        verify(resourceServiceClient, timeout(5_000L)).getResource(id);
         verify(songServiceClient, timeout(5_000L)).createSong(songDto);
     }
 

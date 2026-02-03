@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
-            <version>3.0.4</version>
+            <version>${springKafkaVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
