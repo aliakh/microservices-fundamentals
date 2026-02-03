@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -21,14 +24,13 @@ public class StepsDefinitions {
     private static final String FILE_PATH = "/audio/audio2.mp3";
 
     private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    private Integer postResourceId;
 
     public StepsDefinitions(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    private Integer postResourceId;
 
     @When("I upload the resource {string} to the resource service")
     public void upload_file_to_the_resource_service(String fileName) throws IOException {
@@ -57,7 +59,7 @@ public class StepsDefinitions {
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
 //        TimeUnit.SECONDS.sleep(60);
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 String url = "http://localhost:8084/songs/" + postResourceId;
                 ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
@@ -85,7 +87,7 @@ public class StepsDefinitions {
 
         var actual = response.getBody();
 
-        expectedSongDto.forEach((key,value) -> {
+        expectedSongDto.forEach((key, value) -> {
             assertEquals(value, actual.get(key));
         });
 //        var expected = getSongDto();
