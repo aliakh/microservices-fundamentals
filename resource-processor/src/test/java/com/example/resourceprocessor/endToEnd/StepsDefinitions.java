@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StepsDefinitions {
 
-    private static final String FILE_PATH = "/audio/audio1.mp3";
+    private static final String FILE_PATH = "/audio/Kevin MacLeod - Impact Moderato.mp3";
 
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -29,7 +29,7 @@ public class StepsDefinitions {
     @When("upload file with name {string} to the resource service")
     public void upload_file_to_the_resource_service(String fileName) throws IOException {
 //        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
-        String RESOURCES_URL = "http://localhost:8082/resources";
+        String RESOURCES_URL = "http://localhost:8083/resources";
 //        ResponseEntity<Map> response = restTemplate.postForEntity(RESOURCES_URL, entity, Map.class);
 
         var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
@@ -51,12 +51,12 @@ public class StepsDefinitions {
 
     @Then("wait for processor service to parse data")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(20);
     }
 
     @Then("check data is saved via GET call to the song service")
     public void check_data_is_saved_via_get_call_to_the_song_service() {
-        String url = "http://localhost:8081/songs/" + postResourceId;
+        String url = "http://localhost:8084/songs/" + postResourceId;
         ResponseEntity<SongDto> response = restTemplate.exchange(url, HttpMethod.GET, null, SongDto.class);
         int statusCodeValue = response.getStatusCodeValue();
         SongDto actual = response.getBody();
@@ -83,7 +83,7 @@ public class StepsDefinitions {
     private SongDto getSongDto() {
         return new SongDto(
             1L,
-            "The song",
+            "Impact Moderato",
             "John Doe",
             "Songs",
             "12:34",
