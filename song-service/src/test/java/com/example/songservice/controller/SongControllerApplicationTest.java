@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ class SongControllerApplicationTest {
     private static final String URL_PATH = "/songs";
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private TestRestTemplate restTemplate;
     @Autowired
     private SongRepository songRepository;
 
@@ -42,7 +41,7 @@ class SongControllerApplicationTest {
     void shouldCreateSong() {
         var songDto = getSongDto();
 
-        var responseEntity = testRestTemplate.postForEntity(URL_PATH, songDto, CreateSongResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL_PATH, songDto, CreateSongResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -67,7 +66,7 @@ class SongControllerApplicationTest {
     void shouldGetSong() {
         var savedSongEntity = songRepository.save(buildSongEntity());
 
-        var responseEntity = testRestTemplate.getForEntity(URL_PATH + "/" + savedSongEntity.getId(), SongDto.class);
+        var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + savedSongEntity.getId(), SongDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -88,7 +87,7 @@ class SongControllerApplicationTest {
         var headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        var responseEntity = testRestTemplate.exchange(
+        var responseEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSongEntity.getId()).build().toUri(),
             HttpMethod.DELETE,
             null/*new HttpEntity<>(headers)*/,

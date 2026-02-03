@@ -1,6 +1,5 @@
 package com.example.resourceprocessor.endToEnd;
 
-
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.spring.CucumberContextConfiguration;

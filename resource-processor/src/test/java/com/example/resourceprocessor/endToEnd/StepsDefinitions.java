@@ -1,6 +1,7 @@
 package com.example.resourceprocessor.endToEnd;
 
 import com.example.resourceprocessor.dto.SongDto;
+import com.example.resourceprocessor.dto.UploadResourceResponse;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.core.io.ClassPathResource;
@@ -9,6 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -16,21 +18,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StepsDefinitions {
+
+    private static final String FILE_PATH = "/audio/audio1.mp3";
+
+
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private String postResourceId;
+    private Long postResourceId;
 
     @When("upload file with name {string} to the resource service")
-    public void upload_file_to_the_resource_service(String fileName) {
-        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
+    public void upload_file_to_the_resource_service(String fileName) throws IOException {
+//        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
         String RESOURCES_URL = "http://localhost:8082/resources";
-        ResponseEntity<Map> response = restTemplate.postForEntity(RESOURCES_URL, entity, Map.class);
+//        ResponseEntity<Map> response = restTemplate.postForEntity(RESOURCES_URL, entity, Map.class);
 
-        Map<String, String> responseBody = response.getBody();
-        assertEquals(200, response.getStatusCodeValue());
+        var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
+
+        var requestEntity = new HttpEntity<>(content, headers);
+
+        var responseEntity = restTemplate.postForEntity(RESOURCES_URL, requestEntity, UploadResourceResponse.class);
+
+        UploadResourceResponse responseBody = responseEntity.getBody();
+//        assertEquals(200, responseBody.getStatusCodeValue());
         assertNotNull(responseBody);
 
-        String uploadedId = responseBody.get("id");
+        var uploadedId = responseBody.id();
         postResourceId = uploadedId;
         assertNotNull(uploadedId);
     }

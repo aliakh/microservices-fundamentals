@@ -3,41 +3,29 @@ package com.example.resourceservice.controller;
 import com.example.resourceservice.AbstractIntegrationTest;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
-import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.S3Service;
-import com.example.resourceservice.service.SongServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -50,7 +38,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
     private static final String FILE_NAME = "audio1.mp3";
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private TestRestTemplate restTemplate;
     @Autowired
     private ResourceRepository resourceRepository;
     @Autowired
@@ -71,7 +59,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
 
         var requestEntity = new HttpEntity<>(content, headers);
 
-        var responseEntity = testRestTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -94,7 +82,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
 
         var requestEntity = new HttpEntity<>(content, headers);
 
-        var responseEntity = testRestTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -102,7 +90,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertNotNull(resourceUploadedResponse);
         assertNotNull(resourceUploadedResponse.id());
 
-        var responseEntity2 = testRestTemplate.getForEntity(URL_PATH + "/" + resourceUploadedResponse.id(), byte[].class);
+        var responseEntity2 = restTemplate.getForEntity(URL_PATH + "/" + resourceUploadedResponse.id(), byte[].class);
         assertEquals(HttpStatus.OK, responseEntity2.getStatusCode());
         assertEquals("audio/mpeg", responseEntity2.getHeaders().getContentType().toString());
 
@@ -120,7 +108,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
 
         var requestEntity = new HttpEntity<>(content, headers);
 
-        var responseEntity = testRestTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -134,7 +122,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         var headers2 = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        var responseEntity2 = testRestTemplate.exchange(
+        var responseEntity2 = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", resourceUploadedResponse.id()).build().toUri(),
             HttpMethod.DELETE,
             null/*new HttpEntity<>(headers2)*/,
