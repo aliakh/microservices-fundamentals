@@ -1,11 +1,9 @@
-package com.example.e2etests.endToEnd;
+package com.example.e2etests.cucumber;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
