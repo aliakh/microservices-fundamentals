@@ -1,8 +1,8 @@
 package com.example.resourceprocessor.contracts;
 
-import com.microservices.resource.processor.dto.SongCreatedResponse;
-import com.microservices.resource.processor.dto.SongDto;
-import com.microservices.resource.processor.dto.SongsDeletedResponse;
+import com.example.resourceprocessor.dto.CreateSongResponse;
+import com.example.resourceprocessor.dto.SongDto;
+import com.example.resourceprocessor.dto.DeleteSongsResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
@@ -40,10 +40,10 @@ public class SongClientContractTest {
 
     @Test
     void shouldCreateSong() {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
         var id = songDto.id();
 
-        var response = restTemplate.postForEntity(URL, songDto, SongCreatedResponse.class);
+        var response = restTemplate.postForEntity(URL, songDto, CreateSongResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
@@ -52,7 +52,7 @@ public class SongClientContractTest {
 
     @Test
     void shouldGetSong() {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
         var id = songDto.id();
 
         var response = restTemplate.getForEntity(URL + "/" + id, SongDto.class);
@@ -65,7 +65,7 @@ public class SongClientContractTest {
     @Test
     void shouldDeleteSong() {
         var id = 1L;
-        var deleteResponseDto = new SongsDeletedResponse(List.of(id));
+        var deleteResponseDto = new DeleteSongsResponse(List.of(id));
 
         var headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -74,7 +74,7 @@ public class SongClientContractTest {
             UriComponentsBuilder.fromUriString(URL).queryParam("ids", id).build().toUri(),
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
-            SongsDeletedResponse.class
+            DeleteSongsResponse.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -82,10 +82,10 @@ public class SongClientContractTest {
         assertThat(response.getBody()).isEqualTo(deleteResponseDto);
     }
 
-    private SongDto getSongDto() {
+    private SongDto buildSongDto() {
         return new SongDto(
             1L,
-            "Song",
+            "The song",
             "John Doe",
             "Songs",
             "60",
