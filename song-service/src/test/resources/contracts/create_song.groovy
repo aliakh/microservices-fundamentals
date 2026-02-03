@@ -11,7 +11,7 @@ Contract.make {
         }
         body(
             id: 1,
-            name: "A song",
+            name: "The song",
             artist: "John Doe",
             album: "Songs",
             duration: "12:34",

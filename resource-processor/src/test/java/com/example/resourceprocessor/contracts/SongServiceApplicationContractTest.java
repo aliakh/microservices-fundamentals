@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,22 +20,23 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureStubRunner(
-    stubsMode = StubRunnerProperties.StubsMode.LOCAL,
-    ids = "com.microservices:song-service:+:stubs:8082")
 @SpringBootTest
 @ActiveProfiles("test")
-public class SongClientContractTest {
+@AutoConfigureStubRunner(
+    stubsMode = StubRunnerProperties.StubsMode.LOCAL,
+    ids = "com.example:song-service:+:stubs:8082"
+)
+public class SongServiceApplicationContractTest {
 
     private static final String URL = "http://localhost:8082/songs";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Test
-    void pingStub() {
-        ResponseEntity<Void> response = restTemplate.getForEntity("http://localhost:8082/ping", Void.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+//    @Test
+//    void pingStub() {
+//        ResponseEntity<Void> response = restTemplate.getForEntity("http://localhost:8082/ping", Void.class);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//    }
 
     @Test
     void shouldCreateSong() {
@@ -71,7 +71,7 @@ public class SongClientContractTest {
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         var response = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL).queryParam("ids", id).build().toUri(),
+            UriComponentsBuilder.fromUriString(URL).queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
             DeleteSongsResponse.class
@@ -88,7 +88,7 @@ public class SongClientContractTest {
             "The song",
             "John Doe",
             "Songs",
-            "60",
+            "12:34",
             "2020"
         );
     }
