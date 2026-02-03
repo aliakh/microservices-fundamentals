@@ -37,7 +37,7 @@ public class SongControllerMvcTest {
     @Test
     @Transactional
     void shouldCreateSong() throws Exception {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
 
         mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +51,7 @@ public class SongControllerMvcTest {
     @Test
     @Transactional
     void shouldGetSong() throws Exception {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
 
         var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
             .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +74,7 @@ public class SongControllerMvcTest {
     @Test
     @Transactional
     void shouldDeleteSongs() throws Exception {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
 
         var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
             .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ public class SongControllerMvcTest {
             .andExpect(jsonPath("$.ids[0]").value(id));
     }
 
-    private SongDto getSongDto() {
+    private SongDto buildSongDto() {
         return new SongDto(
             1L,
             "The song",

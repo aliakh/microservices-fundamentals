@@ -3,7 +3,6 @@ package com.example.songservice.controller;
 import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.SongDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.songservice.dto.DeleteSongsResponse;
 import com.example.songservice.service.SongService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class SongControllerTest {
 
     @Test
     void shouldCreateSong() throws Exception {
-        var createSongRequest = getCreateSongRequest();
+        var createSongRequest = buildCreateSongRequest();
         var id = createSongRequest.id();
 
         when(songService.createSong(createSongRequest)).thenReturn(id);
@@ -102,7 +101,7 @@ public class SongControllerTest {
         );
     }
 
-    private CreateSongRequest getCreateSongRequest() {
+    private CreateSongRequest buildCreateSongRequest() {
         return new CreateSongRequest(
             1L,
             "The song",

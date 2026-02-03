@@ -21,11 +21,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
 @AutoConfigureStubRunner(
     stubsMode = StubRunnerProperties.StubsMode.LOCAL,
     ids = "com.microservices:song-service:+:stubs:8082")
 @SpringBootTest
+@ActiveProfiles("test")
 public class SongClientContractTest {
 
     private static final String URL = "http://localhost:8082/songs";

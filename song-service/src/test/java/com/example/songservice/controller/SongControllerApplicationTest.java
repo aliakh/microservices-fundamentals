@@ -65,7 +65,7 @@ class SongControllerApplicationTest {
 
     @Test
     void shouldGetSong() {
-        var savedSongEntity = songRepository.save(getSongEntity());
+        var savedSongEntity = songRepository.save(buildSongEntity());
 
         var responseEntity = testRestTemplate.getForEntity(URL_PATH + "/" + savedSongEntity.getId(), SongDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -83,7 +83,7 @@ class SongControllerApplicationTest {
 
     @Test
     void shouldDeleteSong() {
-        var savedSongEntity = songRepository.save(getSongEntity());
+        var savedSongEntity = songRepository.save(buildSongEntity());
 
         var headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -118,7 +118,7 @@ class SongControllerApplicationTest {
         );
     }
 
-    private Song getSongEntity() {
+    private Song buildSongEntity() {
         Song songEntity = new Song();
         songEntity.setId(1L);
         songEntity.setName("The song");
