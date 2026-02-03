@@ -1,4 +1,4 @@
-package com.example.resourceprocessor.endToEnd;
+package com.example.e2etests.endToEnd;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -10,5 +10,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @CucumberOptions(features = "src/test/resources/endToEnd",  plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
-public class ETETest {
+public class ETETestTest {
 }

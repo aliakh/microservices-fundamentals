@@ -1,4 +1,4 @@
-package com.example.resourceprocessor.endToEnd;
+package com.example.e2etests.endToEnd;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
