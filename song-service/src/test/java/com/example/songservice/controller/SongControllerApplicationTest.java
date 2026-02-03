@@ -91,7 +91,7 @@ class SongControllerApplicationTest {
         var responseEntity = testRestTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSongEntity.getId()).build().toUri(),
             HttpMethod.DELETE,
-            new HttpEntity<>(headers),
+            null/*new HttpEntity<>(headers)*/,
             DeleteSongsResponse.class
         );
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

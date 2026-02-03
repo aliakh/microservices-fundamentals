@@ -20,11 +20,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 @AutoConfigureStubRunner(
-    stubsMode = StubRunnerProperties.StubsMode.LOCAL,
-    ids = "com.example:song-service:+:stubs:8082"
+    ids = "com.example:song-service:+:stubs:8082",
+    stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 public class SongServiceApplicationContractTest {
 
@@ -73,7 +73,7 @@ public class SongServiceApplicationContractTest {
         var response = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL).queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
-            new HttpEntity<>(headers),
+            null/*new HttpEntity<>(headers)*/,
             DeleteSongsResponse.class
         );
 

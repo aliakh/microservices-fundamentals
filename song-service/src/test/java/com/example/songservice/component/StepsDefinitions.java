@@ -113,12 +113,12 @@ public class StepsDefinitions {
 
     @When("the user sends a DELETE request to the \\/songs?id={long} endpoint")
     public void sendDeleteSongRequest(long id) {
-        var uri = UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs")
-            .queryParam("id", id)
-            .build()
-            .toUri();
-
-        deleteSongsResponse = restTemplate.exchange(uri, HttpMethod.DELETE, null, DeleteSongsResponse.class);
+        deleteSongsResponse = restTemplate.exchange(
+            UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),
+            HttpMethod.DELETE,
+            null,
+            DeleteSongsResponse.class
+        );
     }
 
     @Then("the song deletion response code is {int}")

@@ -137,7 +137,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         var responseEntity2 = testRestTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", resourceUploadedResponse.id()).build().toUri(),
             HttpMethod.DELETE,
-            new HttpEntity<>(headers2),
+            null/*new HttpEntity<>(headers2)*/,
             DeleteResourcesResponse.class
         );
         assertEquals(HttpStatus.OK, responseEntity2.getStatusCode());
