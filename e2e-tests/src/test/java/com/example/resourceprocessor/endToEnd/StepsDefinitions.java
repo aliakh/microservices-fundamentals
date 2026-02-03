@@ -1,7 +1,5 @@
 package com.example.resourceprocessor.endToEnd;
 
-import com.example.resourceprocessor.dto.SongDto;
-import com.example.resourceprocessor.dto.UploadResourceResponse;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.core.io.ClassPathResource;
@@ -21,7 +19,6 @@ public class StepsDefinitions {
 
     private static final String FILE_PATH = "/audio/Kevin MacLeod - Impact Moderato.mp3";
 
-
     private final RestTemplate restTemplate = new RestTemplate();
 
     private Long postResourceId;
@@ -38,13 +35,13 @@ public class StepsDefinitions {
 
         var requestEntity = new HttpEntity<>(content, headers);
 
-        var responseEntity = restTemplate.postForEntity(RESOURCES_URL, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(RESOURCES_URL, requestEntity, Map.class);
 
-        UploadResourceResponse responseBody = responseEntity.getBody();
+        Map responseBody = responseEntity.getBody();
 //        assertEquals(200, responseBody.getStatusCodeValue());
         assertNotNull(responseBody);
 
-        var uploadedId = responseBody.id();
+        var uploadedId = (long) responseBody.get("id");
         postResourceId = uploadedId;
         assertNotNull(uploadedId);
     }
@@ -57,38 +54,37 @@ public class StepsDefinitions {
     @Then("check data is saved via GET call to the song service")
     public void check_data_is_saved_via_get_call_to_the_song_service() {
         String url = "http://localhost:8084/songs/" + postResourceId;
-        ResponseEntity<SongDto> response = restTemplate.exchange(url, HttpMethod.GET, null, SongDto.class);
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
         int statusCodeValue = response.getStatusCodeValue();
-        SongDto actual = response.getBody();
-        SongDto expected = getSongDto();
+        var actual = response.getBody();
+//        var expected = getSongDto();
 
         assertEquals(200, statusCodeValue);
         assertNotNull(actual);
-        assertEquals(expected.name(), actual.name());
+        assertEquals("Impact Moderato", actual.get("name"));
 //        assertEquals(expected.getArtist(), actual.getArtist());
 //        assertEquals(expected.getAlbum(), actual.getAlbum());
 //        assertEquals(expected.getLength(), actual.getLength());
 //        assertEquals(expected.getYear(), actual.getYear());
     }
 
-    private HttpEntity<MultiValueMap<String, Object>> getMultipartEntity(String fileName) {
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("Name", "sss");
-        body.add("data", new ClassPathResource(fileName));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return new HttpEntity<>(body, headers);
-    }
-
-    private SongDto getSongDto() {
-        return new SongDto(
-            1L,
-            "Impact Moderato",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
-    }
+//    private HttpEntity<MultiValueMap<String, Object>> getMultipartEntity(String fileName) {
+//        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+//        body.add("Name", "sss");
+//        body.add("data", new ClassPathResource(fileName));
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//        return new HttpEntity<>(body, headers);
+//    }
+//
+//    private SongDto getSongDto() {
+//        return new SongDto(
+//            1L,
+//            "Impact Moderato",
+//            "John Doe",
+//            "Songs",
+//            "12:34",
+//            "2020"
+//        );
+//    }
 }
-
