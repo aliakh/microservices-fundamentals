@@ -48,7 +48,22 @@ public class StepsDefinitions {
 
     @Then("wait for processor service to parse data")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(60);
+//        TimeUnit.SECONDS.sleep(60);
+
+        for (int i=0; i<10; i++) {
+            try {
+                String url = "http://localhost:8084/songs/" + postResourceId;
+                ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
+                int statusCodeValue = response.getStatusCodeValue();
+
+                if (statusCodeValue == 200) {
+                    break;
+                }
+            } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+                System.out.println("wait");
+            }
+            TimeUnit.SECONDS.sleep(5);
+        }
     }
 
     @Then("check data is saved via GET call to the song service")
