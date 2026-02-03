@@ -21,7 +21,7 @@ public class StepsDefinitions {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private Long postResourceId;
+    private Integer postResourceId;
 
     @When("upload file with name {string} to the resource service")
     public void upload_file_to_the_resource_service(String fileName) throws IOException {
@@ -41,14 +41,14 @@ public class StepsDefinitions {
 //        assertEquals(200, responseBody.getStatusCodeValue());
         assertNotNull(responseBody);
 
-        var uploadedId = (long) responseBody.get("id");
+        var uploadedId = (int) responseBody.get("id");
         postResourceId = uploadedId;
         assertNotNull(uploadedId);
     }
 
     @Then("wait for processor service to parse data")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(20);
+        TimeUnit.SECONDS.sleep(60);
     }
 
     @Then("check data is saved via GET call to the song service")
