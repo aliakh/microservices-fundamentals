@@ -49,12 +49,12 @@ public class StepsDefinitions {
         assertNotNull(uploadedId);
     }
 
-    @Then("wait for processor service to parse data")
+    @Then("wait for the resource processor to consume the resource")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
         TimeUnit.SECONDS.sleep(20);
     }
 
-    @Then("check data is saved via GET call to the song service")
+    @Then("And I get the song metadata from the song service")
     public void check_data_is_saved_via_get_call_to_the_song_service() {
         String url = "http://localhost:8084/songs/" + postResourceId;
         ResponseEntity<SongDto> response = restTemplate.exchange(url, HttpMethod.GET, null, SongDto.class);

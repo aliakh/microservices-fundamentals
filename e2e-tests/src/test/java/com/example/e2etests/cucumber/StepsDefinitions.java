@@ -30,8 +30,7 @@ public class StepsDefinitions {
 
     private Integer postResourceId;
 
-
-    @When("upload the audio file {string} to the resource service")
+    @When("I upload the resource {string} to the resource service")
     public void upload_file_to_the_resource_service(String fileName) throws IOException {
 //        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
         String RESOURCES_URL = "http://localhost:8083/resources";
@@ -54,7 +53,7 @@ public class StepsDefinitions {
         assertNotNull(uploadedId);
     }
 
-    @Then("wait for the resource processor to consume the resource")
+    @Then("I wait for the resource processor to consume the resource")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
 //        TimeUnit.SECONDS.sleep(60);
 
