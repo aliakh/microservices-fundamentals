@@ -1,4 +1,4 @@
-package com.example.e2etests.cucumber;
+package com.example.endtoendtests.endtoend;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -12,5 +12,5 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test") //TODO ?
 @CucumberOptions(features = "src/test/resources/features", plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
-public class E2eTest {
+public class EndToEndTest {
 }

@@ -1,5 +1,6 @@
-package com.example.songservice.controller;
+package com.example.songservice.unit;
 
+import com.example.songservice.controller.SongController;
 import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.SongDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

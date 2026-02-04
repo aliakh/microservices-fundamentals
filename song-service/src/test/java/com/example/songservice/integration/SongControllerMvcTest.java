@@ -1,4 +1,4 @@
-package com.example.songservice.controller;
+package com.example.songservice.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
