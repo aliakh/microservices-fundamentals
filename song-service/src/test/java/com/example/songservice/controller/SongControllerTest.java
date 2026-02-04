@@ -75,12 +75,12 @@ public class SongControllerTest {
 
     @Test
     void shouldDeleteSongs() throws Exception {
-        Long id = 1L;
+        var id = 1L;
         var ids = List.of(id);
 
         when(songService.deleteSongs(String.valueOf(id))).thenReturn(ids);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", String.valueOf(id)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))

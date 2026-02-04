@@ -26,9 +26,9 @@ public class StepDefinitions {
 
     private static final String URL_HOST = "http://localhost:";
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
     private final SongRepository songRepository;
-    private final ObjectMapper objectMapper;
 
     @LocalServerPort
     private int port;
@@ -37,9 +37,8 @@ public class StepDefinitions {
     private ResponseEntity<SongDto> getSongResponse;
     private ResponseEntity<DeleteSongsResponse> deleteSongsResponse;
 
-    public StepDefinitions(SongRepository songRepository, ObjectMapper objectMapper) {
+    public StepDefinitions(SongRepository songRepository) {
         this.songRepository = songRepository;
-        this.objectMapper = objectMapper;
     }
 
     @When("user sends a POST request to create song")
