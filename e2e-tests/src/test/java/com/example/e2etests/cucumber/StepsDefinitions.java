@@ -32,7 +32,7 @@ public class StepsDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("I upload the resource {string} to the resource service")
+    @When("the user upload the resource {string} to the resource service")
     public void upload_file_to_the_resource_service(String fileName) throws IOException {
 //        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
         String RESOURCES_URL = "http://localhost:8083/resources";
@@ -55,7 +55,7 @@ public class StepsDefinitions {
         assertNotNull(uploadedId);
     }
 
-    @Then("I wait for the resource processor to consume the resource")
+    @Then("the user wait for the resource processor to consume the resource")
     public void wait_for_processor_service_to_parse_data() throws InterruptedException {
 //        TimeUnit.SECONDS.sleep(60);
 
@@ -75,7 +75,7 @@ public class StepsDefinitions {
         }
     }
 
-    @Then("I get the song metadata from the song service")
+    @Then("the user get the song metadata from the song service")
     public void check_data_is_saved_via_get_call_to_the_song_service(String json) throws JsonProcessingException {
         String url = "http://localhost:8084/songs/" + postResourceId;
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
