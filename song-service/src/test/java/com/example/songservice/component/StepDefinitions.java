@@ -47,17 +47,17 @@ public class StepDefinitions {
     }
 
     @Then("the song creation response code is {int}")
-    public void checkCreateSongRequestResponseCode(int responseStatus) {
+    public void checkCreateSongResponseCode(int responseStatus) {
         assertThat(createSongEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
     @And("the song creation content type is {string}")
-    public void checkCreateSongRequestResponseContentType(String contentType) {
+    public void checkCreateSongResponseContentType(String contentType) {
         assertThat(createSongEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
     @And("the song creation response body is")
-    public void checkCreateSongRequestResponseBody(String json) throws JsonProcessingException {
+    public void checkCreateSongResponseBody(String json) throws JsonProcessingException {
         var expectedResponse = objectMapper.readValue(json, new TypeReference<CreateSongResponse>() {
         });
         var actualResponse = createSongEntity.getBody();
@@ -81,23 +81,23 @@ public class StepDefinitions {
         );
     }
 
-    @When("user sends a GET request to get song by id={long}")
+    @When("user sends a GET request to get a song by id={long}")
     public void sendGetSongRequest(long id) {
         getSongEntity = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
 
     @Then("the song retrieval response code is {int}")
-    public void checkResponseCodeGetSongRequest(int responseStatus) {
+    public void checkGetSongRequestResponseCode(int responseStatus) {
         assertThat(getSongEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
     @And("the song retrieval response content type is {string}")
-    public void checkResponseContentTypeGetSongRequest(String contentType) {
+    public void checkGetSongRequestResponseContentType(String contentType) {
         assertThat(getSongEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("the song retrieval response is")
-    public void checkResponseGetSongRequest(String json) throws JsonProcessingException {
+    @And("the song retrieval response body is")
+    public void checkGetSongRequestResponseBody(String json) throws JsonProcessingException {
         var expectedSongDto = objectMapper.readValue(json, new TypeReference<SongDto>() {
         });
         var actualSongDto = getSongEntity.getBody();
@@ -109,7 +109,7 @@ public class StepDefinitions {
         assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 
-    @When("user sends a DELETE request to delete song by id={long}")
+    @When("user sends a DELETE request to delete a song by id={long}")
     public void sendDeleteSongRequest(long id) {
         deleteSongsEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),
@@ -120,17 +120,17 @@ public class StepDefinitions {
     }
 
     @Then("the song deletion response code is {int}")
-    public void checkResponseCodeDeleteSongRequest(int responseStatus) {
+    public void checkDeleteSongRequestResponseCode(int responseStatus) {
         assertThat(deleteSongsEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
     @And("the song deletion response content type is {string}")
-    public void checkResponseContentTypeDeleteSongRequest(String contentType) {
+    public void checkDeleteSongRequestResponseContentType(String contentType) {
         assertThat(deleteSongsEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("the song deleting response is")
-    public void checkResponseDeleteSongRequest(String json) throws JsonProcessingException {
+    @And("the song deleting response body is")
+    public void checkDeleteSongRequestResponseBody(String json) throws JsonProcessingException {
         var expectedResponse = objectMapper.readValue(json, new TypeReference<DeleteSongsResponse>() {
         });
         var actualResponse = deleteSongsEntity.getBody();
