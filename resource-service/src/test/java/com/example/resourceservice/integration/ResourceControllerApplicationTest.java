@@ -1,4 +1,4 @@
-package com.example.resourceservice.controller;
+package com.example.resourceservice.integration;
 
 import com.example.resourceservice.AbstractIntegrationTest;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
