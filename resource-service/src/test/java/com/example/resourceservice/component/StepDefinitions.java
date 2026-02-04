@@ -1,5 +1,6 @@
 package com.example.resourceservice.component;
 
+import com.example.resourceservice.Uuid;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.repository.ResourceRepository;
@@ -30,30 +31,27 @@ public class StepDefinitions {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
+    private final ResourceRepository resourceRepository;
 
     @LocalServerPort
     private int port;
-
-    private final ResourceClient resourceClient;
-    private final ResourceRepository resourceRepository;
 
     private ResponseEntity<UploadResourceResponse> uploadResourceEntity;
     private ResponseEntity<byte[]> getResourceEntity;
     private ResponseEntity<DeleteResourcesResponse> deleteResourceEntity;
 
-    public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository) {
-        this.resourceClient = resourceClient;
+    public StepDefinitions(ResourceRepository resourceRepository) {
         this.resourceRepository = resourceRepository;
     }
 
     @When("user makes POST request to upload file {string}")
     public void userUploadsFile(String file) throws IOException {
-        var audio = new ClassPathResource(FILE_PATH+file).getInputStream().readAllBytes();
+        var audio = new ClassPathResource(FILE_PATH + file).getInputStream().readAllBytes();
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
 
-         uploadResourceEntity = restTemplate.postForEntity(URL_HOST + port + "/resources", requestEntity, UploadResourceResponse.class);
+        uploadResourceEntity = restTemplate.postForEntity(URL_HOST + port + "/resources", requestEntity, UploadResourceResponse.class);
     }
 
     @Then("the resource creation response code is {int}")
@@ -79,7 +77,7 @@ public class StepDefinitions {
         resources.forEach(expectedResource -> {
                 var actualResource = resourceRepository.findById(expectedResource.id()).orElseThrow();
                 assertThat(actualResource.getId()).isEqualTo(expectedResource.id());
-                assertThat(actualResource.getKey()).isNotNull();
+                Uuid.isValid(actualResource.getKey());
             }
         );
     }
