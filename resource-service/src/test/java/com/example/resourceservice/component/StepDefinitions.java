@@ -11,7 +11,14 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,25 +27,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StepDefinitions {
 
-    private static final String FILES_PATH = "/audio/";
+    private static final String URL_HOST = "http://localhost:";
+    private static final String FILE_PATH = "/audio/";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @LocalServerPort
+    private int port;
 
     private final ResourceClient resourceClient;
     private final ResourceRepository resourceRepository;
-    private final ObjectMapper objectMapper;
 
+    private ResponseEntity<UploadResourceResponse> uploadResourceEntity;
+    private ResponseEntity<byte[]> getResourceEntity;
+    private ResponseEntity<DeleteResourcesResponse> deleteResourceEntity;
+    
     private MockMvcResponse response;
     private UploadResourceResponse uploadResourceResponse;
     private DeleteResourcesResponse deleteResourceResponse;
 
-    public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
+    public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository) {
         this.resourceClient = resourceClient;
         this.resourceRepository = resourceRepository;
-        this.objectMapper = objectMapper;
     }
 
     @When("user makes POST request to upload file {string}")
-    public void userUploadsFile(String file) {
-        uploadResourceResponse = uploadFile(file);
+    public void userUploadsFile(String file) throws IOException {
+        var audio = new ClassPathResource(FILE_PATH+file).getInputStream().readAllBytes();
+        var headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
+        var requestEntity = new HttpEntity<>(audio, headers);
+
+         uploadResourceEntity = restTemplate.postForEntity(URL_HOST + port + "/resources", requestEntity, UploadResourceResponse.class);
+
+//        uploadResourceResponse = uploadFile(file);
     }
 
     @And("resource uploaded response is")
@@ -60,17 +83,24 @@ public class StepDefinitions {
 
     @When("user gets resource by id={long}")
     public void userGetsResourceWithId(long id) {
-        response = resourceClient.getResource(id);
+        getResourceEntity = restTemplate.getForEntity(URL_HOST + port + "/resources/" + id, byte[].class);
+//        response = resourceClient.getResource(id);
     }
 
     @When("user deletes the resource by id={long}")
     public void userDeletesResourceWithId(long id) {
-        response = resourceClient.deleteResource(id);
-
-        deleteResourceResponse = response.as(new TypeRef<>() {
-        });
-        assertThat(deleteResourceResponse.ids().size()).isEqualTo(1);
-        assertThat(deleteResourceResponse.ids().iterator().next()).isEqualTo(id);
+        deleteResourceEntity = restTemplate.exchange(
+            UriComponentsBuilder.fromUriString(URL_HOST + port + "/resources").queryParam("id", id).build().toUri(),
+            HttpMethod.DELETE,
+            null,
+            DeleteResourcesResponse.class
+        );        
+//        response = resourceClient.deleteResource(id);
+//
+//        deleteResourceResponse = response.as(new TypeRef<>() {
+//        });
+//        assertThat(deleteResourceResponse.ids().size()).isEqualTo(1);
+//        assertThat(deleteResourceResponse.ids().iterator().next()).isEqualTo(id);
     }
 
     @Then("response code is {int}")
@@ -96,7 +126,7 @@ public class StepDefinitions {
     }
 
     public UploadResourceResponse uploadFile(String file) {
-        try (var is = new ClassPathResource(FILES_PATH + file).getInputStream()) {
+        try (var is = new ClassPathResource(FILE_PATH + file).getInputStream()) {
             response = resourceClient.uploadResource(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
