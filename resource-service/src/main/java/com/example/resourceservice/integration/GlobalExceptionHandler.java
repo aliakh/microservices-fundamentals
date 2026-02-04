@@ -1,4 +1,4 @@
-package com.example.resourceservice.controller;
+package com.example.resourceservice.integration;
 
 import com.example.resourceservice.dto.ErrorResponse;
 import com.example.resourceservice.exception.InvalidIdException;

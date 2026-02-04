@@ -41,7 +41,7 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
 //    @MockitoBean
 //    private SongServiceClient songServiceClient;
 
-    @Test //TODO
+    @Test
     @Transactional
     void shouldUploadResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
@@ -52,7 +52,7 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath(".id").isNotEmpty());
     }
-    @Test //TODO
+    @Test
     @Transactional
     void shouldGetResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
@@ -70,7 +70,7 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
             .andExpect(content().bytes(audio));
     }
 
-    @Test //TODO
+    @Test
     @Transactional
     void shouldDeleteResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();

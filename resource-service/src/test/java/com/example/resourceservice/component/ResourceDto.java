@@ -1,10 +1,7 @@
 package com.example.resourceservice.component;
 
-public record Resource(
+public record ResourceDto(
     Long id,
-//    String bucket,
     String key
-//    String name,
-//    Long size
 ) {
 }

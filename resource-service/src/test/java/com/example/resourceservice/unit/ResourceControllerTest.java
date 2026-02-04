@@ -1,5 +1,6 @@
-package com.example.resourceservice.controller;
+package com.example.resourceservice.unit;
 
+import com.example.resourceservice.integration.ResourceController;
 import com.example.resourceservice.dto.ResourceResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.resourceservice.entity.Resource;
@@ -34,7 +35,7 @@ public class ResourceControllerTest {
     @MockitoBean
     private ResourceService resourceService;
 
-    @Test //TODO
+    @Test
     void shouldCreateResource() throws Exception {
         var audio = new byte[]{0};
         var id = 1L;
@@ -52,7 +53,7 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    @Test //TODO
+    @Test
     void shouldGetResource() throws Exception {
         var resourceEntity = buildResource();
         var id = resourceEntity.getId();
@@ -70,7 +71,7 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    @Test //TODO
+    @Test
     void shouldDeleteResources() throws Exception {
         Long id = 1L;
         when(resourceService.deleteResources(String.valueOf(id))).thenReturn(List.of(id));

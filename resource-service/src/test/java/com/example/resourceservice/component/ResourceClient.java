@@ -1,6 +1,6 @@
 package com.example.resourceservice.component;
 
-import com.example.resourceservice.controller.ResourceController;
+import com.example.resourceservice.integration.ResourceController;
 import com.example.resourceservice.service.ResourceService;
 import com.example.resourceservice.service.SongServiceClient;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;

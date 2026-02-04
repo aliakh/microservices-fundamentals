@@ -51,7 +51,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         resourceRepository.deleteAll();
     }
 
-    @Test //TODO
+    @Test
     void shouldUploadResource() throws Exception {
         var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
         HttpHeaders headers = new HttpHeaders();
@@ -74,8 +74,8 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertEquals(resourceUploadedResponse.id(), actualResourceEntity.getId());
     }
 
-    @Test //TODO
-    void shouldDownloadResource() throws IOException {
+    @Test
+    void shouldGetResource() throws IOException {
         var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
@@ -98,7 +98,7 @@ public class ResourceControllerApplicationTest extends AbstractIntegrationTest {
         assertArrayEquals(content, responseEntity2.getBody());
     }
 
-    @Test //TODO
+    @Test
     void shouldDeleteResource() throws IOException {
 
 

@@ -21,13 +21,10 @@ public class ParameterTypes {
     }
 
     @DataTableType
-    public Resource resource(Map<String, String> entry) {
-        return new Resource(
+    public ResourceDto resource(Map<String, String> entry) {
+        return new ResourceDto(
             Long.valueOf(entry.get("id")),
-//            entry.get("bucket"),
             entry.get("key")
-//            entry.get("name"),
-//            entry.get("size") != null ? Long.valueOf(entry.get("size")) : null
         );
     }
 }

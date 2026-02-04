@@ -2,10 +2,11 @@ package com.example.resourceservice.component;
 
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
+import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.repository.ResourceRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.resourceservice.repository.ResourceRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -51,9 +52,9 @@ public class StepDefinitions {
     }
 
     @Then("the following resources are saved")
-    public void theFollowingResourcesAreSaved(List<Resource> resources) {
+    public void theFollowingResourcesAreSaved(List<ResourceDto> resources) {
         resources.forEach(resource -> {
-                Optional<com.example.resourceservice.entity.Resource> foundResource = resourceRepository.findById(resource.id());
+                Optional<Resource> foundResource = resourceRepository.findById(resource.id());
                 assertThat(foundResource).isPresent();
 
                 com.example.resourceservice.entity.Resource actualResource = foundResource.get();
