@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,7 +42,7 @@ public class StepDefinitions {
         var responseEntity = restTemplate.postForEntity(RESOURCES_URL, requestEntity, Map.class);
         assertNotNull(responseEntity);
 
-        assertEquals(200, responseEntity.getStatusCode().value());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         var responseBody = responseEntity.getBody();
         assertNotNull(responseBody);
 
@@ -54,7 +55,7 @@ public class StepDefinitions {
         for (var i = 0; i < 60; i++) {
             try {
                 var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + id, Map.class);
-                if (responseEntity.getStatusCode().value() == 200) {
+                if (responseEntity.getStatusCode() == HttpStatus.OK) {
                     break;
                 }
             } catch (HttpClientErrorException.NotFound e) {
@@ -68,7 +69,7 @@ public class StepDefinitions {
     @Then("user gets the song metadata from the song service")
     public void getSongMetadata(String json) throws JsonProcessingException {
         var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + id, Map.class);
-        assertEquals(200, responseEntity.getStatusCode().value());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         var expectedMetadata = objectMapper.readValue(json, new TypeReference<Map<?, ?>>() {
         });
