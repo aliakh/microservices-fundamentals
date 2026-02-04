@@ -11,19 +11,15 @@ import java.util.Map;
 @Configurable
 public class DataTableConfig {
 
-    private final ObjectMapper objectMapper;
-
-    public DataTableConfig(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @DataTableType
-    public CreateSongRequest convertCreateSongRequest(Map<String, String> row) {
+    public CreateSongRequest convertToCreateSongRequest(Map<String, String> row) {
         return objectMapper.convertValue(row, CreateSongRequest.class);
     }
 
     @DataTableType
-    public Song convertSong(Map<String, String> row) {
+    public Song convertToSong(Map<String, String> row) {
         return objectMapper.convertValue(row, Song.class);
     }
 }
