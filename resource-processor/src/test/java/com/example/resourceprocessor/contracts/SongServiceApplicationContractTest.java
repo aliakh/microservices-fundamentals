@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+import static com.example.resourceprocessor.Builders.buildSongDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -68,16 +69,5 @@ public class SongServiceApplicationContractTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody()).isEqualTo(deleteResponseDto);
-    }
-
-    private SongDto buildSongDto() {
-        return new SongDto(
-            1L,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
     }
 }

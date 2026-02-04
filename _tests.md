@@ -14,3 +14,5 @@ Test plan for the project is the following:
    - happy-path of uploading new file.
      - example: e2e folder
 
+../mvnw clean test
+../mvnw surefire-report:report-only

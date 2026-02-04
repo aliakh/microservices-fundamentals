@@ -6,6 +6,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -16,7 +17,8 @@ import static com.example.songservice.Builders.buildSongDto;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+@ActiveProfiles("test")
+//@TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class SongServiceApplicationBaseTestClass {
 
     @Autowired
