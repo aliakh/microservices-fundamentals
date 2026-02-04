@@ -1,7 +1,5 @@
 package com.example.songservice.controller;
 
-import com.example.songservice.dto.CreateSongRequest;
-import com.example.songservice.dto.SongDto;
 import com.example.songservice.service.SongService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,6 +12,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static com.example.songservice.Builders.buildCreateSongRequest;
+import static com.example.songservice.Builders.buildSongDto;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -88,27 +88,5 @@ public class SongControllerTest {
 
         verify(songService).deleteSongs(String.valueOf(id));
         verifyNoMoreInteractions(songService);
-    }
-
-    private SongDto buildSongDto() {
-        return new SongDto(
-            1L,
-            "The song",
-            "John Doe",
-            "Songs",
-            "60",
-            "2020"
-        );
-    }
-
-    private CreateSongRequest buildCreateSongRequest() {
-        return new CreateSongRequest(
-            1L,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
     }
 }

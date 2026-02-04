@@ -1,12 +1,12 @@
 Feature: Create, get and delete a song
 
   Scenario: Create a song
-    When user sends a POST request to create song
+    When user sends a POST request to create a song
       | id | name     | artist   | album | duration | year |
       | 1  | The song | John Doe | Songs | 12:34    | 2020 |
     Then the song creation response code is 200
     And the song creation content type is "application/json"
-    And the song creation response is
+    And the song creation response body is
       """
       {
         "id": 1

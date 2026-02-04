@@ -3,7 +3,6 @@ package com.example.songservice.controller;
 import com.example.songservice.dto.CreateSongResponse;
 import com.example.songservice.dto.DeleteSongsResponse;
 import com.example.songservice.dto.SongDto;
-import com.example.songservice.entity.Song;
 import com.example.songservice.repository.SongRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static com.example.songservice.Builders.buildSong;
+import static com.example.songservice.Builders.buildSongDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -99,27 +100,5 @@ class SongControllerApplicationTest {
         var foundSongs = songRepository.findAllById(deleteSongResponse.ids());
         assertNotNull(foundSongs);
         assertTrue(foundSongs.isEmpty());
-    }
-
-    private SongDto buildSongDto() {
-        return new SongDto(
-            1L,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
-    }
-
-    private Song buildSong() {
-        var song = new Song();
-        song.setId(1L);
-        song.setName("The song");
-        song.setArtist("John Doe");
-        song.setAlbum("Songs");
-        song.setDuration("12:34");
-        song.setYear("2020");
-        return song;
     }
 }

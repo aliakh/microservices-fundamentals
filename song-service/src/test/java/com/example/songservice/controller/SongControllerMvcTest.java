@@ -1,6 +1,5 @@
 package com.example.songservice.controller;
 
-import com.example.songservice.dto.SongDto;
 import com.example.songservice.repository.SongRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -14,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.songservice.Builders.buildSongDto;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,16 +86,5 @@ public class SongControllerMvcTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))
             .andExpect(jsonPath("$.ids[0]").value(id));
-    }
-
-    private SongDto buildSongDto() {
-        return new SongDto(
-            1L,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
     }
 }
