@@ -2,7 +2,6 @@ package com.example.songservice.controller;
 
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.repository.SongRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
