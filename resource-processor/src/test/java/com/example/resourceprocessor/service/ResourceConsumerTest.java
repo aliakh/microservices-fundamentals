@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,12 +29,12 @@ class ResourceConsumerTest {
 
     @Test
     void shouldConsumeResource() throws Exception {
+        var id = 1L;
         var message = "{\"id\": 1, \"key\": \"74bcaf90-df4f-4e55-bb63-5d84961c2f5a\"}";
-        var resourceDto = new ResourceDto(1L,"74bcaf90-df4f-4e55-bb63-5d84961c2f5a");
+        var resourceDto = new ResourceDto(id, "74bcaf90-df4f-4e55-bb63-5d84961c2f5a");
         var audio = new byte[]{0};
-//        var songDto = mock(SongDto.class); // Replace with your actual SongDto
         var createSongDto = new CreateSongDto(
-            1L,
+            id,
             "The song",
             "John Doe",
             "Songs",
@@ -45,15 +43,15 @@ class ResourceConsumerTest {
         );
 
         when(objectMapper.readValue(message, ResourceDto.class)).thenReturn(resourceDto);
-        when(resourceServiceClient.getResource(1L)).thenReturn(audio);
-        when(metadataService.extractSongMetadata(audio, 1L)).thenReturn(createSongDto);
-        when(songServiceClient.createSong(createSongDto)).thenReturn(new CreateSongResponse(1L));
+        when(resourceServiceClient.getResource(id)).thenReturn(audio);
+        when(metadataService.extractSongMetadata(audio, id)).thenReturn(createSongDto);
+        when(songServiceClient.createSong(createSongDto)).thenReturn(new CreateSongResponse(id));
 
         resourceConsumer.consumeResource(message);
 
         verify(objectMapper).readValue(message, ResourceDto.class);
-        verify(resourceServiceClient).getResource(1L);
-        verify(metadataService).extractSongMetadata(audio, 1L);
+        verify(resourceServiceClient).getResource(id);
+        verify(metadataService).extractSongMetadata(audio, id);
         verify(songServiceClient).createSong(createSongDto);
     }
 }
