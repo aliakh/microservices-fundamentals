@@ -13,7 +13,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 @Component
-public class SongServiceMock {
+public class SongServiceClientMock {
 
     @Autowired
     private ResourceService resourceService;
