@@ -34,14 +34,7 @@ class ResourceConsumerTest {
         var message = String.format("{\"id\": %d, \"key\": \"%s\"}", id, key);
         var resourceDto = new ResourceDto(id, key);
         var audio = new byte[]{0};
-        var createSongDto = new CreateSongDto(
-            id,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
+        var createSongDto = buildCreateSongDto(id);
 
         when(objectMapper.readValue(message, ResourceDto.class)).thenReturn(resourceDto);
         when(resourceServiceClient.getResource(id)).thenReturn(audio);
@@ -54,5 +47,16 @@ class ResourceConsumerTest {
         verify(resourceServiceClient).getResource(id);
         verify(metadataService).extractSongMetadata(audio, id);
         verify(songServiceClient).createSong(createSongDto);
+    }
+
+    private CreateSongDto buildCreateSongDto(long id) {
+        return new CreateSongDto(
+            id,
+            "The song",
+            "John Doe",
+            "Songs",
+            "12:34",
+            "2020"
+        );
     }
 }
