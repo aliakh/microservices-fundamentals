@@ -30,8 +30,9 @@ class ResourceConsumerTest {
     @Test
     void shouldConsumeResource() throws Exception {
         var id = 1L;
-        var message = "{\"id\": 1, \"key\": \"74bcaf90-df4f-4e55-bb63-5d84961c2f5a\"}";
-        var resourceDto = new ResourceDto(id, "74bcaf90-df4f-4e55-bb63-5d84961c2f5a");
+        var key = "74bcaf90-df4f-4e55-bb63-5d84961c2f5a";
+        var message = String.format("{\"id\": %d, \"key\": \"%s\"}", id, key);
+        var resourceDto = new ResourceDto(id, key);
         var audio = new byte[]{0};
         var createSongDto = new CreateSongDto(
             id,
