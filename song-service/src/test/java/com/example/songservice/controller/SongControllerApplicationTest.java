@@ -62,7 +62,7 @@ class SongControllerApplicationTest {
 
     @Test
     void shouldGetSong() {
-        var savedSong = songRepository.save(buildSongEntity());
+        var savedSong = songRepository.save(buildSong());
 
         var createSongEntity = restTemplate.getForEntity(URL_PATH + "/" + savedSong.getId(), SongDto.class);
         assertEquals(HttpStatus.OK, createSongEntity.getStatusCode());
@@ -80,7 +80,7 @@ class SongControllerApplicationTest {
 
     @Test
     void shouldDeleteSong() {
-        var savedSong = songRepository.save(buildSongEntity());
+        var savedSong = songRepository.save(buildSong());
 
         var deleteSongEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSong.getId()).build().toUri(),
@@ -112,7 +112,7 @@ class SongControllerApplicationTest {
         );
     }
 
-    private Song buildSongEntity() {
+    private Song buildSong() {
         var song = new Song();
         song.setId(1L);
         song.setName("The song");

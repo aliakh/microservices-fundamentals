@@ -71,12 +71,12 @@ public class StepDefinitions {
                 assertThat(songOptional).isPresent();
 
                 var actualSong = songOptional.get();
-                assertThat(actualSong.getId().equals(expectedSong.getId())).isTrue();
-                assertThat(actualSong.getName().equals(expectedSong.getName())).isTrue();
-                assertThat(actualSong.getArtist().equals(expectedSong.getArtist())).isTrue();
-                assertThat(actualSong.getAlbum().equals(expectedSong.getAlbum())).isTrue();
-                assertThat(actualSong.getDuration().equals(expectedSong.getDuration())).isTrue();
-                assertThat(actualSong.getYear().equals(expectedSong.getYear())).isTrue();
+                assertThat(actualSong.getId()).isEqualTo(expectedSong.getId());
+                assertThat(actualSong.getName()).isEqualTo(expectedSong.getName());
+                assertThat(actualSong.getArtist()).isEqualTo(expectedSong.getArtist());
+                assertThat(actualSong.getAlbum()).isEqualTo(expectedSong.getAlbum());
+                assertThat(actualSong.getDuration()).isEqualTo(expectedSong.getDuration());
+                assertThat(actualSong.getYear()).isEqualTo(expectedSong.getYear());
             }
         );
     }

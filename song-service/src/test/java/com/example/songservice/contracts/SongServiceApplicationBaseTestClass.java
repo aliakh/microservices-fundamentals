@@ -29,25 +29,33 @@ public abstract class SongServiceApplicationBaseTestClass {
         RestAssuredMockMvc.standaloneSetup(songController);
 
         var id = 1L;
-        var createSongRequest = new CreateSongRequest(
-            id,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
-        var songDto = new SongDto(
-            id,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
+        var createSongRequest = buildCreateSongRequest();
+        var songDto = buildSongDto();
 
         when(songService.createSong(createSongRequest)).thenReturn(id);
         when(songService.getSongById(id)).thenReturn(songDto);
         when(songService.deleteSongs(String.valueOf(id))).thenReturn(List.of(id));
+    }
+
+    private SongDto buildSongDto() {
+        return new SongDto(
+            1L,
+            "The song",
+            "John Doe",
+            "Songs",
+            "60",
+            "2020"
+        );
+    }
+
+    private CreateSongRequest buildCreateSongRequest() {
+        return new CreateSongRequest(
+            1L,
+            "The song",
+            "John Doe",
+            "Songs",
+            "12:24",
+            "2020"
+        );
     }
 }
