@@ -107,7 +107,7 @@ public class SongControllerTest {
             "The song",
             "John Doe",
             "Songs",
-            "12:24",
+            "12:34",
             "2020"
         );
     }
