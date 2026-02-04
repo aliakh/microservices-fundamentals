@@ -1,9 +1,9 @@
-Feature: Create, get, and delete songs
+Feature: Create, retrieve, and delete songs
 
   Scenario: Create a song
-    When the user sends a POST request to the /songs endpoint
-      | id | name                 | artist | album             | duration | year |
-      | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
+    When the user sends a POST request to create song metadata
+      | id | name     | artist   | album | duration | year |
+      | 1  | The song | John Doe | Songs | 12:34    | 2020 |
     Then the song creation response code is 200
     And the song creation content type is "application/json"
     And the song creation response is
@@ -13,27 +13,27 @@ Feature: Create, get, and delete songs
       }
       """
     Then the songs are saved to the database
-      | id | name                 | artist | album             | duration | year |
-      | 1  | We are the champions | Queen  | News of the world | 02:59    | 1977 |
+      | id | name     | artist   | album | duration | year |
+      | 1  | The song | John Doe | Songs | 12:34    | 2020 |
 
-  Scenario: Get a song
-    When the user sends a GET request to the /songs/1 endpoint
+  Scenario: Retrieve a song
+    When the user sends a GET request to retrieve song metadata by id=1
     Then the song retrieval response code is 200
     And the song retrieval response content type is "application/json"
     And the song retrieval response is
       """
       {
         "id": 1,
-        "name": "We are the champions",
-        "artist": "Queen",
-        "album": "News of the world",
-        "duration": "02:59",
-        "year": 1977
+        "name": "The song",
+        "artist": "John Doe",
+        "album": "Songs",
+        "duration": "12:34",
+        "year": 2020
       }
       """
 
   Scenario: Delete a song
-    When the user sends a DELETE request to the /songs?id=1 endpoint
+    When the user sends a DELETE request to delete song metadata by id=1
     Then the song deletion response code is 200
     And the song deletion response content type is "application/json"
     And the song deleting response is
