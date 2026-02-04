@@ -81,8 +81,8 @@ public class StepsDefinitions {
         var actualMetadata = responseEntity.getBody();
         assertNotNull(actualMetadata);
 
-        expectedMetadata.forEach((key, value) -> {
-            assertEquals(value, actualMetadata.get(key));
+        expectedMetadata.keySet().forEach(key -> {
+            assertEquals(expectedMetadata.get(key), actualMetadata.get(key));
         });
     }
 }
