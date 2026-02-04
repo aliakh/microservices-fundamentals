@@ -1,4 +1,4 @@
-package com.example.resourceprocessor.unit;
+package com.example.resourceprocessor.service;
 
 import com.example.resourceprocessor.dto.CreateSongDto;
 import com.example.resourceprocessor.dto.CreateSongResponse;

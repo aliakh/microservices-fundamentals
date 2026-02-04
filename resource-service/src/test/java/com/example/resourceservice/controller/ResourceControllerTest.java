@@ -1,4 +1,4 @@
-package com.example.resourceservice.unit;
+package com.example.resourceservice.controller;
 
 import com.example.resourceservice.dto.ResourceResponse;
 import com.example.resourceservice.entity.Resource;

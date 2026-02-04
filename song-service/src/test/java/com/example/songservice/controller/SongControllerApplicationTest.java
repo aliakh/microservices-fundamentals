@@ -1,4 +1,4 @@
-package com.example.songservice.integration;
+package com.example.songservice.controller;
 
 import com.example.songservice.dto.CreateSongResponse;
 import com.example.songservice.dto.DeleteSongsResponse;
@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@Testcontainers
 @TestPropertySource(locations = "classpath:application-test.properties")
 class SongControllerApplicationTest {
 

@@ -1,4 +1,4 @@
-package com.example.songservice.integration;
+package com.example.songservice.controller;
 
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.repository.SongRepository;

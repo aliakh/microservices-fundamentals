@@ -1,6 +1,5 @@
-package com.example.songservice.unit;
+package com.example.songservice.controller;
 
-import com.example.songservice.controller.SongController;
 import com.example.songservice.dto.CreateSongRequest;
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.service.SongService;
