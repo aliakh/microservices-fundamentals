@@ -1,6 +1,6 @@
 package com.example.resourceservice.controller;
 
-import com.example.resourceservice.AbstractIntegrationTest;
+import com.example.resourceservice.AbstractTestcontainersTest;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
-public class ResourceControllerMvcTest extends AbstractIntegrationTest {
+public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
 
     private static final String URL_PATH = "/resources";
     private static final String FILE_PATH = "/audio/audio1.mp3";
-    private static final String FILE_NAME = "audio1.mp3";
 
     @Autowired
     private MockMvc mockMvc;
-//    @MockitoBean
-//    private SongServiceClient songServiceClient;
 
     @Test
     @Transactional
@@ -48,12 +45,12 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
     void shouldGetResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var uploadResult = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var uploadResourceActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
-        var uploadResponseContent = uploadResult.getResponse().getContentAsString();
-        var id = JsonPath.read(uploadResponseContent, "$.id");
+        var uploadResourceResponse = uploadResourceActions.getResponse().getContentAsString();
+        var id = JsonPath.read(uploadResourceResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
             .andExpect(status().isOk())
@@ -66,22 +63,17 @@ public class ResourceControllerMvcTest extends AbstractIntegrationTest {
     void shouldDeleteResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var uploadResult = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var uploadResourceActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
-        var uploadResponseContent = uploadResult.getResponse().getContentAsString();
-        var id = JsonPath.read(uploadResponseContent, "$.id");
-
-//        doNothing().when(songServiceClient).deleteSong(Long.valueOf(id.toString()));
+        var uploadResourceResponse = uploadResourceActions.getResponse().getContentAsString();
+        var id = JsonPath.read(uploadResourceResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))
             .andExpect(jsonPath("$.ids[0]").value(id));
-
-//        verify(songServiceClient).deleteSong(Long.valueOf(id.toString()));
-//        verifyNoMoreInteractions(songServiceClient);
     }
 }

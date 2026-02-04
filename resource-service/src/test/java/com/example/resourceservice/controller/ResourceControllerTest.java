@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static com.example.resourceservice.Builders.buildResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -25,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ResourceControllerTest {
 
     private static final String URL_PATH = "/resources";
-    private static final String FILE_NAME = "audio.mp3";
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,8 +54,8 @@ public class ResourceControllerTest {
 
     @Test
     void shouldGetResource() throws Exception {
-        var resourceEntity = buildResource();
-        var id = resourceEntity.getId();
+        var resource = buildResource();
+        var id = resource.getId();
         var audio = new byte[]{0};
 
         var resourceResponse = new ResourceResponse(id, audio);
@@ -72,10 +72,10 @@ public class ResourceControllerTest {
 
     @Test
     void shouldDeleteResources() throws Exception {
-        Long id = 1L;
+        var id = 1L;
         when(resourceService.deleteResources(String.valueOf(id))).thenReturn(List.of(id));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", String.valueOf(id)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))
@@ -83,12 +83,5 @@ public class ResourceControllerTest {
 
         verify(resourceService).deleteResources(String.valueOf(id));
         verifyNoMoreInteractions(resourceService);
-    }
-
-    private Resource buildResource() {
-        var resource = new Resource();
-        resource.setId(1L);
-        resource.setKey("45453da8-e24f-4eea-86bf-8ca651a54bc6");
-        return resource;
     }
 }

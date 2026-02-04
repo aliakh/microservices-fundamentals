@@ -16,8 +16,8 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @Testcontainers
-@ContextConfiguration(classes = AbstractIntegrationTest.TestConfig.class)
-public abstract class AbstractIntegrationTest {
+@ContextConfiguration(classes = AbstractTestcontainersTest.TestConfig.class)
+public abstract class AbstractTestcontainersTest {
 
     protected static final String TOPIC_NAME = "resources";
 

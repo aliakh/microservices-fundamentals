@@ -1,5 +1,5 @@
 #@transaction
-Feature: Upload, get and delete resources
+Feature: Uploading, getting, and deleting a resource
 
   Scenario: Upload resource
     When user makes POST request to upload file "audio1.mp3"
