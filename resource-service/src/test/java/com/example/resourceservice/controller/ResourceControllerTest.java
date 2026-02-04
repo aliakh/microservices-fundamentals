@@ -2,7 +2,6 @@ package com.example.resourceservice.controller;
 
 import com.example.resourceservice.dto.ResourceResponse;
 import com.example.resourceservice.entity.Resource;
-import com.example.resourceservice.integration.ResourceController;
 import com.example.resourceservice.service.ResourceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
