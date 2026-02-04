@@ -42,7 +42,7 @@ public class StepDefinitions {
         this.objectMapper = objectMapper;
     }
 
-    @When("user sends a POST request to create song metadata")
+    @When("user sends a POST request to create song")
     public void sendCreateSongRequest(CreateSongRequest createSongRequest) {
         createSongResponse = restTemplate.postForEntity(URL_HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
@@ -82,7 +82,7 @@ public class StepDefinitions {
         );
     }
 
-    @When("user sends a GET request to get song metadata by id={long}")
+    @When("user sends a GET request to get song by id={long}")
     public void sendGetSongRequest(long id) {
         getSongResponse = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
@@ -110,7 +110,7 @@ public class StepDefinitions {
         assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 
-    @When("user sends a DELETE request to delete song metadata by id={long}")
+    @When("user sends a DELETE request to delete song by id={long}")
     public void sendDeleteSongRequest(long id) {
         deleteSongsResponse = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),

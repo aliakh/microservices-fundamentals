@@ -54,7 +54,7 @@ public class SongControllerTest {
 
     @Test
     void shouldGetSong() throws Exception {
-        var songDto = getSongDto();
+        var songDto = buildSongDto();
         var id = songDto.id();
 
         when(songService.getSongById(id)).thenReturn(songDto);
@@ -90,7 +90,7 @@ public class SongControllerTest {
         verifyNoMoreInteractions(songService);
     }
 
-    private SongDto getSongDto() {
+    private SongDto buildSongDto() {
         return new SongDto(
             1L,
             "The song",
