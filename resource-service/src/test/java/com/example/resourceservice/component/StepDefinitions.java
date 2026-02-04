@@ -43,9 +43,9 @@ public class StepDefinitions {
     private ResponseEntity<byte[]> getResourceEntity;
     private ResponseEntity<DeleteResourcesResponse> deleteResourceEntity;
     
-    private MockMvcResponse response;
-    private UploadResourceResponse uploadResourceResponse;
-    private DeleteResourcesResponse deleteResourceResponse;
+//    private MockMvcResponse response;
+//    private UploadResourceResponse uploadResourceResponse;
+//    private DeleteResourcesResponse deleteResourceResponse;
 
     public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository) {
         this.resourceClient = resourceClient;
@@ -64,14 +64,25 @@ public class StepDefinitions {
 //        uploadResourceResponse = uploadFile(file);
     }
 
-    @And("resource uploaded response is")
-    public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<UploadResourceResponse>() {
-        });
-        assertThat(uploadResourceResponse.id()).isEqualTo(expectedResponse.id());
+    @Then("the song creation response code is {int}")
+    public void checkCreateSongResponseCode(int responseStatus) {
+        assertThat(uploadResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @Then("the following resources are saved")
+    @And("the song creation content type is {string}")
+    public void checkCreateSongResponseContentType(String contentType) {
+        assertThat(uploadResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
+    }
+
+    @And("the song creation response body is")
+    public void checkCreateSongResponseBody(String json) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(json, new TypeReference<UploadResourceResponse>() {
+        });
+        var actualResponse = uploadResourceEntity.getBody();
+        assertThat(actualResponse.id()).isEqualTo(expectedResponse.id());
+    }
+
+    @Then("the songs are saved to the database")
     public void theFollowingResourcesAreSaved(List<ResourceDto> resources) {
         resources.forEach(expectedResource -> {
                 var actualResource = resourceRepository.findById(expectedResource.id()).orElseThrow();
@@ -80,6 +91,13 @@ public class StepDefinitions {
             }
         );
     }
+
+//    @And("resource uploaded response is")
+//    public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
+//        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<UploadResourceResponse>() {
+//        });
+//        assertThat(uploadResourceResponse.id()).isEqualTo(expectedResponse.id());
+//    }
 
     @When("user gets resource by id={long}")
     public void userGetsResourceWithId(long id) {
@@ -103,36 +121,64 @@ public class StepDefinitions {
 //        assertThat(deleteResourceResponse.ids().iterator().next()).isEqualTo(id);
     }
 
-    @Then("response code is {int}")
-    public void responseCodeIs(int responseStatus) {
-        assertThat(response.getStatusCode()).isEqualTo(responseStatus);
+    @Then("the song deletion response code is {int}")
+    public void checkDeleteSongRequestResponseCode(int responseStatus) {
+        assertThat(deleteResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("response content type is {string}")
-    public void responseContentTypeIs(String contentType) {
-        assertThat(response.getContentType()).isEqualTo(contentType);
+    @And("the song deletion response content type is {string}")
+    public void checkDeleteSongRequestResponseContentType(String contentType) {
+        assertThat(deleteResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("resources deleted response is")
-    public void resourcesDeletedResponseIs(String jsonResponse) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<DeleteResourcesResponse>() {
+    @And("the song deleting response body is")
+    public void checkDeleteSongRequestResponseBody(String json) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(json, new TypeReference<DeleteResourcesResponse>() {
         });
-        assertThat(deleteResourceResponse.ids()).isEqualTo(expectedResponse.ids());
+        var actualResponse = deleteResourceEntity.getBody();
+        assertThat(actualResponse.ids()).isEqualTo(expectedResponse.ids());
+    }
+
+//    @Then("response code is {int}")
+//    public void responseCodeIs(int responseStatus) {
+//        assertThat(response.getStatusCode()).isEqualTo(responseStatus);
+//    }
+//
+//    @And("response content type is {string}")
+//    public void responseContentTypeIs(String contentType) {
+//        assertThat(response.getContentType()).isEqualTo(contentType);
+//    }
+//
+//    @And("resources deleted response is")
+//    public void resourcesDeletedResponseIs(String json) throws JsonProcessingException {
+//        var expectedResponse = objectMapper.readValue(json, new TypeReference<DeleteResourcesResponse>() {
+//        });
+//        assertThat(deleteResourceResponse.ids()).isEqualTo(expectedResponse.ids());
+//    }
+
+    @Then("the song retrieval response code is {int}")
+    public void checkGetSongRequestResponseCode(int responseStatus) {
+        assertThat(getResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
+    }
+
+    @And("the song retrieval response content type is {string}")
+    public void checkGetSongRequestResponseContentType(String contentType) {
+        assertThat(getResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
     @And("response body has size {long}")
     public void responseBodyHasSize(long fileSize) {
-        assertThat(response.asByteArray().length).isEqualTo(fileSize);
+        assertThat(getResourceEntity.getBody().length).isEqualTo(fileSize);
     }
 
-    public UploadResourceResponse uploadFile(String file) {
-        try (var is = new ClassPathResource(FILE_PATH + file).getInputStream()) {
-            response = resourceClient.uploadResource(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return response.as(new TypeRef<>() {
-        });
-    }
+//    public UploadResourceResponse uploadFile(String file) {
+//        try (var is = new ClassPathResource(FILE_PATH + file).getInputStream()) {
+//            response = resourceClient.uploadResource(is);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        return response.as(new TypeRef<>() {
+//        });
+//    }
 }
