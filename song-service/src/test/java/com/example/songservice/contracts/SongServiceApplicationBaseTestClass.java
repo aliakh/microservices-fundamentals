@@ -43,7 +43,7 @@ public abstract class SongServiceApplicationBaseTestClass {
             "The song",
             "John Doe",
             "Songs",
-            "60",
+            "12:24",
             "2020"
         );
     }
