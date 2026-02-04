@@ -82,7 +82,7 @@ public class StepDefinitions {
         );
     }
 
-    @When("user sends a GET request to retrieve song metadata by id={long}")
+    @When("user sends a GET request to get song metadata by id={long}")
     public void sendGetSongRequest(long id) {
         getSongResponse = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
