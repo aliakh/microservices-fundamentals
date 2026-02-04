@@ -67,10 +67,7 @@ public class StepDefinitions {
     @Then("the songs are saved to the database")
     public void checkDatabaseSongs(List<Song> songs) {
         songs.forEach(expectedSong -> {
-                var songOptional = songRepository.findById(expectedSong.getId());
-                assertThat(songOptional).isPresent();
-
-                var actualSong = songOptional.get();
+                var actualSong = songRepository.findById(expectedSong.getId()).orElseThrow();
                 assertThat(actualSong.getId()).isEqualTo(expectedSong.getId());
                 assertThat(actualSong.getName()).isEqualTo(expectedSong.getName());
                 assertThat(actualSong.getArtist()).isEqualTo(expectedSong.getArtist());

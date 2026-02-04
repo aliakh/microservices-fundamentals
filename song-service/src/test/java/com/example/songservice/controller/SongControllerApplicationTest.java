@@ -49,9 +49,7 @@ class SongControllerApplicationTest {
         assertNotNull(createSongResponse);
         assertNotNull(createSongResponse.id());
 
-        var foundSong = songRepository.findById(createSongResponse.id());
-        assertTrue(foundSong.isPresent());
-        var actualSong = foundSong.get();
+        var actualSong = songRepository.findById(createSongResponse.id()).orElseThrow();
         assertEquals(createSongResponse.id(), actualSong.getId());
         assertEquals(songDto.id(), actualSong.getId());
         assertEquals(songDto.name(), actualSong.getName());
@@ -97,8 +95,6 @@ class SongControllerApplicationTest {
         assertNotNull(deleteSongResponse.ids());
         assertEquals(1, deleteSongResponse.ids().size());
 
-        var foundSongs = songRepository.findAllById(deleteSongResponse.ids());
-        assertNotNull(foundSongs);
-        assertTrue(foundSongs.isEmpty());
+        assertTrue(songRepository.findAllById(deleteSongResponse.ids()).isEmpty());
     }
 }
