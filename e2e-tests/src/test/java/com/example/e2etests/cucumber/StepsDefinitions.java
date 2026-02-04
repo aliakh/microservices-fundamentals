@@ -21,48 +21,45 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StepsDefinitions {
 
+    private static final String RESOURCES_URL = "http://localhost:8083/resources";
+    private static final String SONGS_URL = "http://localhost:8084/songs";
     private static final String FILE_PATH = "/audio/audio2.mp3";
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private Integer postResourceId;
+    private Integer resourceId;
 
     public StepsDefinitions(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    @When("the user upload the resource {string} to the resource service")
-    public void upload_file_to_the_resource_service(String fileName) throws IOException {
-//        HttpEntity<MultiValueMap<String, Object>> entity = getMultipartEntity(fileName);
-        String RESOURCES_URL = "http://localhost:8083/resources";
-//        ResponseEntity<Map> response = restTemplate.postForEntity(RESOURCES_URL, entity, Map.class);
-
+    @When("the user uploads the resource {string} to the resource service")
+    public void uploadResource(String fileName) throws IOException {
         var content = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-
         var requestEntity = new HttpEntity<>(content, headers);
 
         var responseEntity = restTemplate.postForEntity(RESOURCES_URL, requestEntity, Map.class);
 
-        Map responseBody = responseEntity.getBody();
-//        assertEquals(200, responseBody.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        var responseBody = responseEntity.getBody();
         assertNotNull(responseBody);
 
-        var uploadedId = (int) responseBody.get("id");
-        postResourceId = uploadedId;
-        assertNotNull(uploadedId);
+        resourceId = (int) responseBody.get("id");
+        assertNotNull(resourceId);
     }
 
-    @Then("the user wait for the resource processor to consume the resource")
-    public void wait_for_processor_service_to_parse_data() throws InterruptedException {
+    @Then("the user waits for the resource processor to parse the resource")
+    public void waitParsing() throws InterruptedException {
 //        TimeUnit.SECONDS.sleep(60);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 60; i++) {
             try {
-                String url = "http://localhost:8084/songs/" + postResourceId;
-                ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
+                String url = SONGS_URL + "/" + resourceId;
+                ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
                 int statusCodeValue = response.getStatusCodeValue();
 
                 if (statusCodeValue == 200) {
@@ -71,53 +68,22 @@ public class StepsDefinitions {
             } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
                 System.out.println("wait");
             }
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(1);
         }
     }
 
-    @Then("the user get the song metadata from the song service")
-    public void check_data_is_saved_via_get_call_to_the_song_service(String json) throws JsonProcessingException {
-        String url = "http://localhost:8084/songs/" + postResourceId;
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
-        int statusCodeValue = response.getStatusCodeValue();
+    @Then("the user retrieves the song metadata from the song service")
+    public void retrieveSongMetadata(String json) throws JsonProcessingException {
+        var responseEntity = restTemplate.getForEntity(SONGS_URL + "/"  + resourceId, Map.class);
+        assertEquals(200, responseEntity.getStatusCodeValue());
 
         var expectedSongDto = objectMapper.readValue(json, new TypeReference<Map>() {
         });
-//        var actualSongDto = response.getBody();
 
-        var actual = response.getBody();
+        var actual = responseEntity.getBody();
 
         expectedSongDto.forEach((key, value) -> {
             assertEquals(value, actual.get(key));
         });
-//        var expected = getSongDto();
-
-//        assertEquals(200, statusCodeValue);
-//        assertNotNull(actual);
-//        assertEquals("Impact Moderato", actual.get("name"));
-//        assertEquals(expected.getArtist(), actual.getArtist());
-//        assertEquals(expected.getAlbum(), actual.getAlbum());
-//        assertEquals(expected.getLength(), actual.getLength());
-//        assertEquals(expected.getYear(), actual.getYear());
     }
-
-//    private HttpEntity<MultiValueMap<String, Object>> getMultipartEntity(String fileName) {
-//        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-//        body.add("Name", "sss");
-//        body.add("data", new ClassPathResource(fileName));
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        return new HttpEntity<>(body, headers);
-//    }
-//
-//    private SongDto getSongDto() {
-//        return new SongDto(
-//            1L,
-//            "Impact Moderato",
-//            "John Doe",
-//            "Songs",
-//            "12:34",
-//            "2020"
-//        );
-//    }
 }
