@@ -26,20 +26,15 @@ public class StepDefinitions {
 
     private static final String RESOURCES_URL = "http://localhost:8083/resources";
     private static final String SONGS_URL = "http://localhost:8084/songs";
-    private static final String FILE_PATH = "/audio/audio2.mp3";
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private Integer resourceId;
-
-    public StepDefinitions(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private Integer id;
 
     @When("user uploads the resource {string} to the resource service")
-    public void uploadResource(String fileName) throws IOException {
-        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+    public void uploadResource(String path) throws IOException {
+        var audio = new ClassPathResource(path).getInputStream().readAllBytes();
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
@@ -51,15 +46,15 @@ public class StepDefinitions {
         var responseBody = responseEntity.getBody();
         assertNotNull(responseBody);
 
-        resourceId = (int) responseBody.get("id");
-        assertNotNull(resourceId);
+        id = (int) responseBody.get("id");
+        assertNotNull(id);
     }
 
     @Then("user waits for the resource processor to parse the resource")
     public void waitResourceParsed() throws InterruptedException {
         for (var i = 0; i < 60; i++) {
             try {
-                var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + resourceId, Map.class);
+                var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + id, Map.class);
                 if (responseEntity.getStatusCode().value() == 200) {
                     break;
                 }
@@ -71,9 +66,9 @@ public class StepDefinitions {
         }
     }
 
-    @Then("user retrieves the song metadata from the song service")
-    public void retrieveSongMetadata(String json) throws JsonProcessingException {
-        var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + resourceId, Map.class);
+    @Then("user gets the song metadata from the song service")
+    public void getSongMetadata(String json) throws JsonProcessingException {
+        var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + id, Map.class);
         assertEquals(200, responseEntity.getStatusCode().value());
 
         var expectedMetadata = objectMapper.readValue(json, new TypeReference<Map<?, ?>>() {
@@ -81,8 +76,8 @@ public class StepDefinitions {
         var actualMetadata = responseEntity.getBody();
         assertNotNull(actualMetadata);
 
-        expectedMetadata.keySet().forEach(key -> {
-            assertEquals(expectedMetadata.get(key), actualMetadata.get(key));
-        });
+        expectedMetadata.keySet().forEach(key ->
+            assertEquals(expectedMetadata.get(key), actualMetadata.get(key))
+        );
     }
 }

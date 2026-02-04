@@ -1,9 +1,9 @@
-Feature: Communication between the resource service, the resource processor, and the song service
+Feature: Interaction between the resource service, the resource processor, and the song service
 
-  Scenario: Uploading a resource, parsing the resource, and retrieving song metadata
-    When user uploads the resource '/audio/audio2.mp3' to the resource service
+  Scenario: Uploading a resource, parsing the resource, and getting the song metadata
+    When user uploads the resource '/audio/audio.mp3' to the resource service
     Then user waits for the resource processor to parse the resource
-    And user retrieves the song metadata from the song service
+    And user gets the song metadata from the song service
       """
       {
         "name": "Impact Moderato",
