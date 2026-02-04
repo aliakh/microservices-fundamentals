@@ -78,18 +78,18 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
 //        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 //        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 //
-//        var resourceUploadedResponse = responseEntity.getBody();
-//        assertNotNull(resourceUploadedResponse);
-//        assertNotNull(resourceUploadedResponse.id());
+//        var uploadResourceResponse = responseEntity.getBody();
+//        assertNotNull(uploadResourceResponse);
+//        assertNotNull(uploadResourceResponse.id());
 
         var id= uploadResource(audio) ;       
         
-        var responseEntity2 = restTemplate.getForEntity(URL_PATH + "/" + id, byte[].class);
-        assertEquals(HttpStatus.OK, responseEntity2.getStatusCode());
-        assertEquals("audio/mpeg", responseEntity2.getHeaders().getContentType().toString());
+        var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + id, byte[].class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("audio/mpeg", responseEntity.getHeaders().getContentType().toString());
 
-        assertNotNull(responseEntity2.getBody());
-        assertArrayEquals(audio, responseEntity2.getBody());
+        assertNotNull(responseEntity.getBody());
+        assertArrayEquals(audio, responseEntity.getBody());
     }
 
     @Test
@@ -107,32 +107,32 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
 //        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 //        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 //
-//        var resourceUploadedResponse = responseEntity.getBody();
-//        assertNotNull(resourceUploadedResponse);
-//        assertNotNull(resourceUploadedResponse.id());
+//        var uploadResourceResponse = responseEntity.getBody();
+//        assertNotNull(uploadResourceResponse);
+//        assertNotNull(uploadResourceResponse.id());
 
         var id= uploadResource(audio) ;
 //
-//        doNothing().when(songServiceClient).deleteSong(resourceUploadedResponse.id());
+//        doNothing().when(songServiceClient).deleteSong(uploadResourceResponse.id());
 
 //        var headers2 = new HttpHeaders();
 //        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        var deleteResourceEntity = restTemplate.exchange(
+        var responseEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteResourcesResponse.class
         );
-        assertEquals(HttpStatus.OK, deleteResourceEntity.getStatusCode());
-        assertEquals(MediaType.APPLICATION_JSON, deleteResourceEntity.getHeaders().getContentType());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
-        var deleteResourceResponse = deleteResourceEntity.getBody();
+        var deleteResourceResponse = responseEntity.getBody();
         assertNotNull(deleteResourceResponse);
         assertNotNull(deleteResourceResponse.ids());
         assertEquals(1, deleteResourceResponse.ids().size());
 //
-//        verify(songServiceClient).deleteSong(resourceUploadedResponse.id());
+//        verify(songServiceClient).deleteSong(uploadResourceResponse.id());
 //        verifyNoMoreInteractions(songServiceClient);
 
         assertTrue(resourceRepository.findAllById(deleteResourceResponse.ids()).isEmpty());
@@ -140,7 +140,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
 
     private  long uploadResource(byte[] audio) throws IOException {
 //        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
 
         var requestEntity = new HttpEntity<>(audio, headers);
@@ -149,10 +149,10 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
-        var resourceUploadedResponse = responseEntity.getBody();
-        assertNotNull(resourceUploadedResponse);
-        assertNotNull(resourceUploadedResponse.id());
+        var uploadResourceResponse = responseEntity.getBody();
+        assertNotNull(uploadResourceResponse);
+        assertNotNull(uploadResourceResponse.id());
 
-        return resourceUploadedResponse.id();
+        return uploadResourceResponse.id();
     }
 }

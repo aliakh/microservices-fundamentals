@@ -34,11 +34,11 @@ public class SongServiceApplicationContractTest {
         var songDto = buildSongDto();
         var id = songDto.id();
 
-        var response = restTemplate.postForEntity(URL, songDto, CreateSongResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL, songDto, CreateSongResponse.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().id()).isEqualTo(id);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().id()).isEqualTo(id);
     }
 
     @Test
@@ -46,11 +46,11 @@ public class SongServiceApplicationContractTest {
         var songDto = buildSongDto();
         var id = songDto.id();
 
-        var response = restTemplate.getForEntity(URL + "/" + id, SongDto.class);
+        var responseEntity = restTemplate.getForEntity(URL + "/" + id, SongDto.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).isEqualTo(songDto);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody()).isEqualTo(songDto);
     }
 
     @Test
@@ -58,16 +58,16 @@ public class SongServiceApplicationContractTest {
         var id = 1L;
         var deleteResponseDto = new DeleteSongsResponse(List.of(id));
 
-        var response = restTemplate.exchange(
+        var responseEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL).queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteSongsResponse.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).isEqualTo(deleteResponseDto);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody()).isEqualTo(deleteResponseDto);
     }
 
     private SongDto buildSongDto() {

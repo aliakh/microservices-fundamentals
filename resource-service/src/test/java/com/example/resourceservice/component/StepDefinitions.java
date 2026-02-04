@@ -30,8 +30,8 @@ public class StepDefinitions {
     private final ObjectMapper objectMapper;
 
     private MockMvcResponse response;
-    private UploadResourceResponse resourceUploadedResponse;
-    private DeleteResourcesResponse resourcesDeletedResponse;
+    private UploadResourceResponse uploadResourceResponse;
+    private DeleteResourcesResponse deleteResourceResponse;
 
     public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
         this.resourceClient = resourceClient;
@@ -41,14 +41,14 @@ public class StepDefinitions {
 
     @When("user makes POST request to upload file {string}")
     public void userUploadsFile(String file) {
-        resourceUploadedResponse = uploadFile(file);
+        uploadResourceResponse = uploadFile(file);
     }
 
     @And("resource uploaded response is")
     public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
         var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<UploadResourceResponse>() {
         });
-        assertThat(resourceUploadedResponse.id()).isEqualTo(expectedResponse.id());
+        assertThat(uploadResourceResponse.id()).isEqualTo(expectedResponse.id());
     }
 
     @Then("the following resources are saved")
@@ -70,8 +70,8 @@ public class StepDefinitions {
 //    @Given("the following resources uploaded")
 //    public void theFollowingResourcesUploaded(List<Resource> resources) {
 //        resources.forEach(resource -> {
-//                var resourceUploadedResponse = uploadFile(resource.key());
-//                assertThat(resourceUploadedResponse.id()).isEqualTo(resource.id());
+//                var uploadResourceResponse = uploadFile(resource.key());
+//                assertThat(uploadResourceResponse.id()).isEqualTo(resource.id());
 //            }
 //        );
 //    }
@@ -85,17 +85,17 @@ public class StepDefinitions {
     public void userDeletesResourceWithId(long id) {
         response = resourceClient.deleteResource(id);
 
-        resourcesDeletedResponse = response.as(new TypeRef<>() {
+        deleteResourceResponse = response.as(new TypeRef<>() {
         });
-        assertThat(resourcesDeletedResponse.ids().size()).isEqualTo(1);
-        assertThat(resourcesDeletedResponse.ids().iterator().next()).isEqualTo(id);
+        assertThat(deleteResourceResponse.ids().size()).isEqualTo(1);
+        assertThat(deleteResourceResponse.ids().iterator().next()).isEqualTo(id);
     }
 
     @And("resources deleted response is")
     public void resourcesDeletedResponseIs(String jsonResponse) throws JsonProcessingException {
         var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<DeleteResourcesResponse>() {
         });
-        assertThat(resourcesDeletedResponse.ids()).isEqualTo(expectedResponse.ids());
+        assertThat(deleteResourceResponse.ids()).isEqualTo(expectedResponse.ids());
     }
 
     @Then("response code is {int}")
