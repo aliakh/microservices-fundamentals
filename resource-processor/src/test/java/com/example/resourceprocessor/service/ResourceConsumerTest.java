@@ -1,23 +1,24 @@
 package com.example.resourceprocessor.service;
 
-import com.example.resourceprocessor.dto.CreateSongDto;
 import com.example.resourceprocessor.dto.CreateSongResponse;
-import com.example.resourceprocessor.dto.ResourceDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.example.resourceprocessor.Builders.buildCreateSongDto;
+import static com.example.resourceprocessor.Builders.buildResourceDto;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ResourceConsumerTest {
 
-    @Mock
-    private ObjectMapper objectMapper;
+    @Spy
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private ResourceServiceClient resourceServiceClient;
     @Mock
@@ -29,34 +30,20 @@ class ResourceConsumerTest {
 
     @Test
     void shouldConsumeResource() throws Exception {
-        var id = 1L;
-        var key = "74bcaf90-df4f-4e55-bb63-5d84961c2f5a";
-        var message = String.format("{\"id\": %d, \"key\": \"%s\"}", id, key);
-        var resourceDto = new ResourceDto(id, key);
+        var resourceDto = buildResourceDto();
+        var id = resourceDto.id();
+        var message = objectMapper.writeValueAsString(resourceDto);
         var audio = new byte[]{0};
         var createSongDto = buildCreateSongDto(id);
 
-        when(objectMapper.readValue(message, ResourceDto.class)).thenReturn(resourceDto);
         when(resourceServiceClient.getResource(id)).thenReturn(audio);
         when(metadataService.extractSongMetadata(audio, id)).thenReturn(createSongDto);
         when(songServiceClient.createSong(createSongDto)).thenReturn(new CreateSongResponse(id));
 
         resourceConsumer.consumeResource(message);
 
-        verify(objectMapper).readValue(message, ResourceDto.class);
         verify(resourceServiceClient).getResource(id);
         verify(metadataService).extractSongMetadata(audio, id);
         verify(songServiceClient).createSong(createSongDto);
-    }
-
-    private CreateSongDto buildCreateSongDto(long id) {
-        return new CreateSongDto(
-            id,
-            "The song",
-            "John Doe",
-            "Songs",
-            "12:34",
-            "2020"
-        );
     }
 }
