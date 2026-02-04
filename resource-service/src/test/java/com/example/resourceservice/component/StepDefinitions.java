@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.resourceservice.repository.ResourceRepository;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.common.mapper.TypeRef;
@@ -21,11 +20,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StepsDefinitions {
+public class StepDefinitions {
 
     private static final String FILES_PATH = "/audio/";
 
-    private final ResourceClient2 resourceClient;
+    private final ResourceClient resourceClient;
     private final ResourceRepository resourceRepository;
     private final ObjectMapper objectMapper;
 
@@ -33,7 +32,7 @@ public class StepsDefinitions {
     private UploadResourceResponse resourceUploadedResponse;
     private DeleteResourcesResponse resourcesDeletedResponse;
 
-    public StepsDefinitions(ResourceClient2 resourceClient, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
+    public StepDefinitions(ResourceClient resourceClient, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
         this.resourceClient = resourceClient;
         this.resourceRepository = resourceRepository;
         this.objectMapper = objectMapper;

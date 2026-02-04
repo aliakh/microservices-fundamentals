@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class StepsDefinitions {
+public class StepDefinitions {
 
-    private static final Logger logger = LoggerFactory.getLogger(StepsDefinitions.class);
+    private static final Logger logger = LoggerFactory.getLogger(StepDefinitions.class);
 
     private static final String RESOURCES_URL = "http://localhost:8083/resources";
     private static final String SONGS_URL = "http://localhost:8084/songs";
@@ -33,11 +33,11 @@ public class StepsDefinitions {
 
     private Integer resourceId;
 
-    public StepsDefinitions(ObjectMapper objectMapper) {
+    public StepDefinitions(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    @When("the user uploads the resource {string} to the resource service")
+    @When("user uploads the resource {string} to the resource service")
     public void uploadResource(String fileName) throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
         var headers = new HttpHeaders();
@@ -55,7 +55,7 @@ public class StepsDefinitions {
         assertNotNull(resourceId);
     }
 
-    @Then("the user waits for the resource processor to parse the resource")
+    @Then("user waits for the resource processor to parse the resource")
     public void waitResourceParsed() throws InterruptedException {
         for (var i = 0; i < 60; i++) {
             try {
@@ -71,7 +71,7 @@ public class StepsDefinitions {
         }
     }
 
-    @Then("the user retrieves the song metadata from the song service")
+    @Then("user retrieves the song metadata from the song service")
     public void retrieveSongMetadata(String json) throws JsonProcessingException {
         var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + resourceId, Map.class);
         assertEquals(200, responseEntity.getStatusCode().value());

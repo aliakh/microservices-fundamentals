@@ -22,9 +22,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StepsDefinitions {
+public class StepDefinitions {
 
-    private static final String HOST = "http://localhost:";
+    private static final String URL_HOST = "http://localhost:";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final SongRepository songRepository;
@@ -37,14 +37,14 @@ public class StepsDefinitions {
     private ResponseEntity<SongDto> getSongResponse;
     private ResponseEntity<DeleteSongsResponse> deleteSongsResponse;
 
-    public StepsDefinitions(SongRepository songRepository, ObjectMapper objectMapper) {
+    public StepDefinitions(SongRepository songRepository, ObjectMapper objectMapper) {
         this.songRepository = songRepository;
         this.objectMapper = objectMapper;
     }
 
-    @When("the user sends a POST request to create song metadata")
+    @When("user sends a POST request to create song metadata")
     public void sendCreateSongRequest(CreateSongRequest createSongRequest) {
-        createSongResponse = restTemplate.postForEntity(HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
+        createSongResponse = restTemplate.postForEntity(URL_HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
 
     @Then("the song creation response code is {int}")
@@ -82,9 +82,9 @@ public class StepsDefinitions {
         );
     }
 
-    @When("the user sends a GET request to retrieve song metadata by id={long}")
+    @When("user sends a GET request to retrieve song metadata by id={long}")
     public void sendGetSongRequest(long id) {
-        getSongResponse = restTemplate.getForEntity(HOST + port + "/songs/" + id, SongDto.class);
+        getSongResponse = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
 
     @Then("the song retrieval response code is {int}")
@@ -110,10 +110,10 @@ public class StepsDefinitions {
         assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 
-    @When("the user sends a DELETE request to delete song metadata by id={long}")
+    @When("user sends a DELETE request to delete song metadata by id={long}")
     public void sendDeleteSongRequest(long id) {
         deleteSongsResponse = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(HOST + port + "/songs").queryParam("id", id).build().toUri(),
+            UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteSongsResponse.class

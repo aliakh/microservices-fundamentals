@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 @Component
-public class ResourceClient2 {
+public class ResourceClient {
 
     private static final String URL_PATH = "/resources";
 
