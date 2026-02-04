@@ -2,6 +2,7 @@ package com.example.songservice.controller;
 
 import com.example.songservice.dto.SongDto;
 import com.example.songservice.repository.SongRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@Testcontainers
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class SongControllerMvcTest {
 
@@ -56,8 +56,8 @@ public class SongControllerMvcTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        String CreateSongResponse = resultActions.getResponse().getContentAsString();
-        var id = JsonPath.read(CreateSongResponse, "$.id");
+        var createSongResponse = resultActions.getResponse().getContentAsString();
+        var id = JsonPath.read(createSongResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
             .andExpect(status().isOk())
@@ -79,8 +79,8 @@ public class SongControllerMvcTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        String DeleteSongsResponse = resultActions.getResponse().getContentAsString();
-        var id = JsonPath.read(DeleteSongsResponse, "$.id");
+        var createSongResponse = resultActions.getResponse().getContentAsString();
+        var id = JsonPath.read(createSongResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
             .andExpect(status().isOk())

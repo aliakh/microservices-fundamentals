@@ -45,52 +45,52 @@ class SongControllerApplicationTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
-        var CreateSongResponse = responseEntity.getBody();
-        assertNotNull(CreateSongResponse);
-        assertNotNull(CreateSongResponse.id());
+        var createSongResponse = responseEntity.getBody();
+        assertNotNull(createSongResponse);
+        assertNotNull(createSongResponse.id());
 
-        var foundSongEntity = songRepository.findById(CreateSongResponse.id());
-        assertTrue(foundSongEntity.isPresent());
+        var foundSong = songRepository.findById(createSongResponse.id());
+        assertTrue(foundSong.isPresent());
 
-        var actualSongEntity = foundSongEntity.get();
-        assertEquals(CreateSongResponse.id(), actualSongEntity.getId());
-        assertEquals(songDto.id(), actualSongEntity.getId());
-        assertEquals(songDto.name(), actualSongEntity.getName());
-        assertEquals(songDto.artist(), actualSongEntity.getArtist());
-        assertEquals(songDto.album(), actualSongEntity.getAlbum());
-        assertEquals(songDto.duration(), actualSongEntity.getDuration());
-        assertEquals(songDto.year(), actualSongEntity.getYear());
+        var actualSong = foundSong.get();
+        assertEquals(createSongResponse.id(), actualSong.getId());
+        assertEquals(songDto.id(), actualSong.getId());
+        assertEquals(songDto.name(), actualSong.getName());
+        assertEquals(songDto.artist(), actualSong.getArtist());
+        assertEquals(songDto.album(), actualSong.getAlbum());
+        assertEquals(songDto.duration(), actualSong.getDuration());
+        assertEquals(songDto.year(), actualSong.getYear());
     }
 
     @Test
     void shouldGetSong() {
-        var savedSongEntity = songRepository.save(buildSongEntity());
+        var savedSong = songRepository.save(buildSongEntity());
 
-        var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + savedSongEntity.getId(), SongDto.class);
+        var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + savedSong.getId(), SongDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
         var songDto = responseEntity.getBody();
         assertNotNull(songDto);
-        assertEquals(savedSongEntity.getId(), songDto.id());
-        assertEquals(savedSongEntity.getName(), songDto.name());
-        assertEquals(savedSongEntity.getArtist(), songDto.artist());
-        assertEquals(savedSongEntity.getAlbum(), songDto.album());
-        assertEquals(savedSongEntity.getDuration(), songDto.duration());
-        assertEquals(savedSongEntity.getYear(), songDto.year());
+        assertEquals(savedSong.getId(), songDto.id());
+        assertEquals(savedSong.getName(), songDto.name());
+        assertEquals(savedSong.getArtist(), songDto.artist());
+        assertEquals(savedSong.getAlbum(), songDto.album());
+        assertEquals(savedSong.getDuration(), songDto.duration());
+        assertEquals(savedSong.getYear(), songDto.year());
     }
 
     @Test
     void shouldDeleteSong() {
-        var savedSongEntity = songRepository.save(buildSongEntity());
+        var savedSong = songRepository.save(buildSongEntity());
 
         var headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         var responseEntity = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSongEntity.getId()).build().toUri(),
+            UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", savedSong.getId()).build().toUri(),
             HttpMethod.DELETE,
-            null/*new HttpEntity<>(headers)*/,
+            null,
             DeleteSongsResponse.class
         );
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
