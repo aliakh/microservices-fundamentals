@@ -40,7 +40,7 @@ public class StepsDefinitions {
     @When("the user uploads the resource {string} to the resource service")
     public void uploadResource(String fileName) throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
 
@@ -57,7 +57,7 @@ public class StepsDefinitions {
 
     @Then("the user waits for the resource processor to parse the resource")
     public void waitResourceParsed() throws InterruptedException {
-        for (int i = 0; i < 60; i++) {
+        for (var i = 0; i < 60; i++) {
             try {
                 var responseEntity = restTemplate.getForEntity(SONGS_URL + "/" + resourceId, Map.class);
                 if (responseEntity.getStatusCode().value() == 200) {
