@@ -2,7 +2,6 @@ package com.example.resourceservice.component;
 
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
-import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +15,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,13 +50,9 @@ public class StepDefinitions {
 
     @Then("the following resources are saved")
     public void theFollowingResourcesAreSaved(List<ResourceDto> resources) {
-        resources.forEach(resource -> {
-                Optional<Resource> foundResource = resourceRepository.findById(resource.id());
-                assertThat(foundResource).isPresent();
-
-                com.example.resourceservice.entity.Resource actualResource = foundResource.get();
-                assertThat(actualResource.getId().equals(resource.id())).isTrue();
-//                assertThat(actualResource.getBucket().equals(resource.bucket())).isTrue();
+        resources.forEach(expectedResource -> {
+                var actualResource = resourceRepository.findById(expectedResource.id()).orElseThrow();
+                assertThat(actualResource.getId()).isEqualTo(expectedResource.id());
                 assertThat(actualResource.getKey()).isNotNull();
             }
         );
