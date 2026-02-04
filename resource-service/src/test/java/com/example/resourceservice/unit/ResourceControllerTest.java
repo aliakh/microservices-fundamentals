@@ -1,10 +1,10 @@
 package com.example.resourceservice.unit;
 
-import com.example.resourceservice.integration.ResourceController;
 import com.example.resourceservice.dto.ResourceResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.integration.ResourceController;
 import com.example.resourceservice.service.ResourceService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

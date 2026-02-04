@@ -1,8 +1,8 @@
 package com.example.songservice.integration;
 
 import com.example.songservice.dto.CreateSongResponse;
-import com.example.songservice.dto.SongDto;
 import com.example.songservice.dto.DeleteSongsResponse;
+import com.example.songservice.dto.SongDto;
 import com.example.songservice.entity.Song;
 import com.example.songservice.repository.SongRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@Testcontainers
