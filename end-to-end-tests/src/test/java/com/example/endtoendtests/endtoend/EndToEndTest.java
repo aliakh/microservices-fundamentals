@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @RunWith(Cucumber.class)
 @SpringBootTest
-@ActiveProfiles("test") //TODO ?
+@ActiveProfiles("test")
 @CucumberOptions(features = "src/test/resources/features", plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
 public class EndToEndTest {
