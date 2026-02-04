@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class StepDefinitions {
 
     private static final Logger logger = LoggerFactory.getLogger(StepDefinitions.class);
+
     private static final String RESOURCES_URL = "http://localhost:8083/resources";
     private static final String SONGS_URL = "http://localhost:8084/songs";
 

@@ -41,7 +41,7 @@ public class StepDefinitions {
         this.songRepository = songRepository;
     }
 
-    @When("user sends a POST request to create a song")
+    @When("user creates a song")
     public void sendCreateSongRequest(CreateSongRequest createSongRequest) {
         createSongEntity = restTemplate.postForEntity(URL_HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
@@ -78,7 +78,7 @@ public class StepDefinitions {
         );
     }
 
-    @When("user sends a GET request to get a song by id={long}")
+    @When("user gets the song by id={long}")
     public void sendGetSongRequest(long id) {
         getSongEntity = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
     }
@@ -106,7 +106,7 @@ public class StepDefinitions {
         assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
     }
 
-    @When("user sends a DELETE request to delete a song by id={long}")
+    @When("user deletes the song by id={long}")
     public void sendDeleteSongRequest(long id) {
         deleteSongsEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),

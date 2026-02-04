@@ -1,7 +1,7 @@
 Feature: Creating, getting, and deleting a song
 
   Scenario: Create a song
-    When user sends a POST request to create a song
+    When user creates a song
       | id | name     | artist   | album | duration | year |
       | 1  | The song | John Doe | Songs | 12:34    | 2020 |
     Then the song creation response code is 200
@@ -17,7 +17,7 @@ Feature: Creating, getting, and deleting a song
       | 1  | The song | John Doe | Songs | 12:34    | 2020 |
 
   Scenario: Get a song
-    When user sends a GET request to get a song by id=1
+    When user gets the song by id=1
     Then the song retrieval response code is 200
     And the song retrieval response content type is "application/json"
     And the song retrieval response body is
@@ -33,7 +33,7 @@ Feature: Creating, getting, and deleting a song
       """
 
   Scenario: Delete a song
-    When user sends a DELETE request to delete a song by id=1
+    When user deletes the song by id=1
     Then the song deletion response code is 200
     And the song deletion response content type is "application/json"
     And the song deleting response body is

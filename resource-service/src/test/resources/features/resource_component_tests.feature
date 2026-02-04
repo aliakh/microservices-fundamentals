@@ -1,7 +1,7 @@
 #@transaction
 Feature: Uploading, getting, and deleting a resource
 
-  Scenario: Upload resource
+  Scenario: Upload a resource
     When user makes POST request to upload file "audio1.mp3"
     Then response code is 200
     And response content type is "application/json"
@@ -13,20 +13,14 @@ Feature: Uploading, getting, and deleting a resource
       | id |
       | 1  |
 
-  Scenario: Get resource
-#    Given the following resources uploaded
-#      | id | key        |
-#      | 2  | audio2.mp3 |
-    When user gets resource with id=1
+  Scenario: Get a resource
+    When user gets resource by id=1
     Then response code is 200
     And response content type is "audio/mpeg"
     And response body has size 31808
 
-  Scenario: Delete resource
-#    Given the following resources uploaded
-#      | id | key        |
-#      | 3  | audio3.mp3 |
-    When user deletes resource with id=1
+  Scenario: Delete a resource
+    When user deletes the resource by id=1
     Then response code is 200
     And response content type is "application/json"
     And resources deleted response is

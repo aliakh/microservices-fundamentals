@@ -58,12 +58,12 @@ public class StepDefinitions {
         );
     }
 
-    @When("user gets resource with id={long}")
+    @When("user gets resource by id={long}")
     public void userGetsResourceWithId(long id) {
         response = resourceClient.getResource(id);
     }
 
-    @When("user deletes resource with id={long}")
+    @When("user deletes the resource by id={long}")
     public void userDeletesResourceWithId(long id) {
         response = resourceClient.deleteResource(id);
 
@@ -71,13 +71,6 @@ public class StepDefinitions {
         });
         assertThat(deleteResourceResponse.ids().size()).isEqualTo(1);
         assertThat(deleteResourceResponse.ids().iterator().next()).isEqualTo(id);
-    }
-
-    @And("resources deleted response is")
-    public void resourcesDeletedResponseIs(String jsonResponse) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<DeleteResourcesResponse>() {
-        });
-        assertThat(deleteResourceResponse.ids()).isEqualTo(expectedResponse.ids());
     }
 
     @Then("response code is {int}")
@@ -88,6 +81,13 @@ public class StepDefinitions {
     @And("response content type is {string}")
     public void responseContentTypeIs(String contentType) {
         assertThat(response.getContentType()).isEqualTo(contentType);
+    }
+
+    @And("resources deleted response is")
+    public void resourcesDeletedResponseIs(String jsonResponse) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<DeleteResourcesResponse>() {
+        });
+        assertThat(deleteResourceResponse.ids()).isEqualTo(expectedResponse.ids());
     }
 
     @And("response body has size {long}")
