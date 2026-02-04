@@ -1,140 +1,128 @@
 package com.example.resourceservice.component;
 
-import com.example.songservice.dto.CreateSongRequest;
-import com.example.songservice.dto.CreateSongResponse;
-import com.example.songservice.dto.DeleteSongsResponse;
-import com.example.songservice.dto.SongDto;
-import com.example.songservice.entity.Song;
-import com.example.songservice.repository.SongRepository;
+import com.example.resourceservice.cucumber.definition.Resource;
+import com.example.resourceservice.dto.DeleteResourcesResponse;
+import com.example.resourceservice.dto.UploadResourceResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.resourceservice.cucumber.client.ResourceClient;
+import com.example.resourceservice.repository.ResourceRepository;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import io.restassured.common.mapper.TypeRef;
+import io.restassured.module.mockmvc.response.MockMvcResponse;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StepsDefinitions {
 
-    private static final String HOST = "http://localhost:";
+    private static final String FILES_PATH = "/audio/";
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final SongRepository songRepository;
+    private final ResourceClient2 resourceClient;
+    private final ResourceRepository resourceRepository;
     private final ObjectMapper objectMapper;
 
-    @LocalServerPort
-    private int port;
+    private MockMvcResponse response;
+    private UploadResourceResponse resourceUploadedResponse;
+    private DeleteResourcesResponse resourcesDeletedResponse;
 
-    private ResponseEntity<CreateSongResponse> createSongResponse;
-    private ResponseEntity<SongDto> getSongResponse;
-    private ResponseEntity<DeleteSongsResponse> deleteSongsResponse;
-
-    public StepsDefinitions(SongRepository songRepository, ObjectMapper objectMapper) {
-        this.songRepository = songRepository;
+    public StepsDefinitions(ResourceClient2 resourceClient, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
+        this.resourceClient = resourceClient;
+        this.resourceRepository = resourceRepository;
         this.objectMapper = objectMapper;
     }
 
-    @When("the user sends a POST request to create song metadata")
-    public void sendCreateSongRequest(CreateSongRequest createSongRequest) {
-        createSongResponse = restTemplate.postForEntity(HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
+    @When("user makes POST request to upload file {string}")
+    public void userUploadsFile(String file) {
+        resourceUploadedResponse = uploadFile(file);
     }
 
-    @Then("the song creation response code is {int}")
-    public void checkResponseCodeCreateSongRequest(int responseStatus) {
-        assertThat(createSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
-    }
-
-    @And("the song creation content type is {string}")
-    public void checkResponseContentTypeCreateSongRequest(String contentType) {
-        assertThat(createSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
-    }
-
-    @And("the song creation response is")
-    public void checkResponseCreateSongRequest(String json) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(json, new TypeReference<CreateSongResponse>() {
+    @And("resource uploaded response is")
+    public void resourceUploadedResponseIs(String jsonResponse) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<UploadResourceResponse>() {
         });
-        var actualResponse = createSongResponse.getBody();
-        assertThat(actualResponse.id()).isEqualTo(expectedResponse.id());
+        assertThat(resourceUploadedResponse.id()).isEqualTo(expectedResponse.id());
     }
 
-    @Then("the songs are saved to the database")
-    public void checkDatabaseSongs(List<Song> songs) {
-        songs.forEach(expectedSong -> {
-                var songOptional = songRepository.findById(expectedSong.getId());
-                assertThat(songOptional).isPresent();
+    @Then("the following resources are saved")
+    public void theFollowingResourcesAreSaved(List<Resource> resources) {
+        resources.forEach(resource -> {
+                Optional<com.example.resourceservice.entity.Resource> foundResource = resourceRepository.findById(resource.id());
+                assertThat(foundResource).isPresent();
 
-                var actualSong = songOptional.get();
-                assertThat(actualSong.getId().equals(expectedSong.getId())).isTrue();
-                assertThat(actualSong.getName().equals(expectedSong.getName())).isTrue();
-                assertThat(actualSong.getArtist().equals(expectedSong.getArtist())).isTrue();
-                assertThat(actualSong.getAlbum().equals(expectedSong.getAlbum())).isTrue();
-                assertThat(actualSong.getDuration().equals(expectedSong.getDuration())).isTrue();
-                assertThat(actualSong.getYear().equals(expectedSong.getYear())).isTrue();
+                com.example.resourceservice.entity.Resource actualResource = foundResource.get();
+                assertThat(actualResource.getId().equals(resource.id())).isTrue();
+//                assertThat(actualResource.getBucket().equals(resource.bucket())).isTrue();
+                assertThat(actualResource.getKey()).isNotNull();
+//                assertThat(actualResource.getName().equals(resource.name())).isTrue();
+//                assertThat(actualResource.getSize().equals(resource.size())).isTrue();
             }
         );
     }
 
-    @When("the user sends a GET request to retrieve song metadata by id={long}")
-    public void sendGetSongRequest(long id) {
-        getSongResponse = restTemplate.getForEntity(HOST + port + "/songs/" + id, SongDto.class);
-    }
-
-    @Then("the song retrieval response code is {int}")
-    public void checkResponseCodeGetSongRequest(int responseStatus) {
-        assertThat(getSongResponse.getStatusCode().value()).isEqualTo(responseStatus);
-    }
-
-    @And("the song retrieval response content type is {string}")
-    public void checkResponseContentTypeGetSongRequest(String contentType) {
-        assertThat(getSongResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
-    }
-
-    @And("the song retrieval response is")
-    public void checkResponseGetSongRequest(String json) throws JsonProcessingException {
-        var expectedSongDto = objectMapper.readValue(json, new TypeReference<SongDto>() {
-        });
-        var actualSongDto = getSongResponse.getBody();
-        assertThat(actualSongDto.id()).isEqualTo(expectedSongDto.id());
-        assertThat(actualSongDto.name()).isEqualTo(expectedSongDto.name());
-        assertThat(actualSongDto.artist()).isEqualTo(expectedSongDto.artist());
-        assertThat(actualSongDto.album()).isEqualTo(expectedSongDto.album());
-        assertThat(actualSongDto.duration()).isEqualTo(expectedSongDto.duration());
-        assertThat(actualSongDto.year()).isEqualTo(expectedSongDto.year());
-    }
-
-    @When("the user sends a DELETE request to delete song metadata by id={long}")
-    public void sendDeleteSongRequest(long id) {
-        deleteSongsResponse = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(HOST + port + "/songs").queryParam("id", id).build().toUri(),
-            HttpMethod.DELETE,
-            null,
-            DeleteSongsResponse.class
+    @Given("the following resources uploaded")
+    public void theFollowingResourcesUploaded(List<Resource> resources) {
+        resources.forEach(resource -> {
+                var resourceUploadedResponse = uploadFile(resource.key());
+                assertThat(resourceUploadedResponse.id()).isEqualTo(resource.id());
+            }
         );
     }
 
-    @Then("the song deletion response code is {int}")
-    public void checkResponseCodeDeleteSongRequest(int responseStatus) {
-        assertThat(deleteSongsResponse.getStatusCode().value()).isEqualTo(responseStatus);
+    @When("user gets resource with id={long}")
+    public void userGetsResourceWithId(long id) {
+        response = resourceClient.getResource(id);
     }
 
-    @And("the song deletion response content type is {string}")
-    public void checkResponseContentTypeDeleteSongRequest(String contentType) {
-        assertThat(deleteSongsResponse.getHeaders().getContentType().toString()).isEqualTo(contentType);
-    }
+    @When("user deletes resource with id={long}")
+    public void userDeletesResourceWithId(long id) {
+        response = resourceClient.deleteResource(id);
 
-    @And("the song deleting response is")
-    public void checkResponseDeleteSongRequest(String json) throws JsonProcessingException {
-        var expectedResponse = objectMapper.readValue(json, new TypeReference<DeleteSongsResponse>() {
+        resourcesDeletedResponse = response.as(new TypeRef<>() {
         });
-        var actualResponse = deleteSongsResponse.getBody();
-        assertThat(actualResponse.ids()).isEqualTo(expectedResponse.ids());
+        assertThat(resourcesDeletedResponse.ids().size()).isEqualTo(1);
+        assertThat(resourcesDeletedResponse.ids().iterator().next()).isEqualTo(id);
+    }
+
+    @And("resources deleted response is")
+    public void resourcesDeletedResponseIs(String jsonResponse) throws JsonProcessingException {
+        var expectedResponse = objectMapper.readValue(jsonResponse, new TypeReference<DeleteResourcesResponse>() {
+        });
+        assertThat(resourcesDeletedResponse.ids()).isEqualTo(expectedResponse.ids());
+    }
+
+    @Then("response code is {int}")
+    public void responseCodeIs(int responseStatus) {
+        assertThat(response.getStatusCode()).isEqualTo(responseStatus);
+    }
+
+    @And("response content type is {string}")
+    public void responseContentTypeIs(String contentType) {
+        assertThat(response.getContentType()).isEqualTo(contentType);
+    }
+
+    @And("response body has size {long}")
+    public void responseBodyHasSize(long fileSize) {
+        assertThat(response.asByteArray().length).isEqualTo(fileSize);
+    }
+
+    public UploadResourceResponse uploadFile(String file) {
+        try (InputStream inputStream = new ClassPathResource(FILES_PATH + file).getInputStream()) {
+            response = resourceClient.uploadResource(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return response.as(new TypeRef<>() {
+        });
     }
 }

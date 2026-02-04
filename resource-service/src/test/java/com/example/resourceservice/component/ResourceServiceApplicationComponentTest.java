@@ -1,5 +1,6 @@
 package com.example.resourceservice.component;
 
+import com.example.resourceservice.AbstractIntegrationTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.spring.CucumberContextConfiguration;
@@ -12,5 +13,5 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @CucumberOptions(features = "src/test/resources/features", plugin = {"pretty", "html:target/test-results/test/cucumber.html"})
 @CucumberContextConfiguration
-public class SongServiceApplicationComponentTest {
+public class ResourceServiceApplicationComponentTest extends AbstractIntegrationTest {
 }

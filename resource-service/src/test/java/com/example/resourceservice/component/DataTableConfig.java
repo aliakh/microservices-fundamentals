@@ -1,7 +1,6 @@
 package com.example.resourceservice.component;
 
-import com.example.songservice.dto.CreateSongRequest;
-import com.example.songservice.entity.Song;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.DataTableType;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -17,13 +16,13 @@ public class DataTableConfig {
         this.objectMapper = objectMapper;
     }
 
-    @DataTableType
-    public CreateSongRequest convertCreateSongRequest(Map<String, String> row) {
-        return objectMapper.convertValue(row, CreateSongRequest.class);
-    }
-
-    @DataTableType
-    public Song convertSong(Map<String, String> row) {
-        return objectMapper.convertValue(row, Song.class);
-    }
+//    @DataTableType
+//    public CreateSongRequest convertCreateSongRequest(Map<String, String> row) {
+//        return objectMapper.convertValue(row, CreateSongRequest.class);
+//    }
+//
+//    @DataTableType
+//    public Song convertSong(Map<String, String> row) {
+//        return objectMapper.convertValue(row, Song.class);
+//    }
 }
