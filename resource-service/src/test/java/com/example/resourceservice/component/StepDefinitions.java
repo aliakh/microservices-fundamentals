@@ -77,7 +77,7 @@ public class StepDefinitions {
         resources.forEach(expectedResource -> {
                 var actualResource = resourceRepository.findById(expectedResource.id()).orElseThrow();
                 assertThat(actualResource.getId()).isEqualTo(expectedResource.id());
-                Uuid.isValid(actualResource.getKey());
+                assertThat(Uuid.isValid(actualResource.getKey())).isTrue();
             }
         );
     }
@@ -85,7 +85,6 @@ public class StepDefinitions {
     @When("user gets resource by id={long}")
     public void userGetsResourceWithId(long id) {
         getResourceEntity = restTemplate.getForEntity(URL_HOST + port + "/resources/" + id, byte[].class);
-//        response = resourceClient.getResource(id);
     }
 
     @When("user deletes the resource by id={long}")
