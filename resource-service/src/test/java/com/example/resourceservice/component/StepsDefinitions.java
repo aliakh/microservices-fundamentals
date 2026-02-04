@@ -1,12 +1,10 @@
 package com.example.resourceservice.component;
 
-import com.example.resourceservice.cucumber.definition.Resource;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.resourceservice.cucumber.client.ResourceClient;
 import com.example.resourceservice.repository.ResourceRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -69,14 +67,14 @@ public class StepsDefinitions {
         );
     }
 
-    @Given("the following resources uploaded")
-    public void theFollowingResourcesUploaded(List<Resource> resources) {
-        resources.forEach(resource -> {
-                var resourceUploadedResponse = uploadFile(resource.key());
-                assertThat(resourceUploadedResponse.id()).isEqualTo(resource.id());
-            }
-        );
-    }
+//    @Given("the following resources uploaded")
+//    public void theFollowingResourcesUploaded(List<Resource> resources) {
+//        resources.forEach(resource -> {
+//                var resourceUploadedResponse = uploadFile(resource.key());
+//                assertThat(resourceUploadedResponse.id()).isEqualTo(resource.id());
+//            }
+//        );
+//    }
 
     @When("user gets resource with id={long}")
     public void userGetsResourceWithId(long id) {

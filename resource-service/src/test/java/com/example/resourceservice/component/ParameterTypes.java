@@ -1,6 +1,5 @@
 package com.example.resourceservice.component;
 
-import com.example.resourceservice.cucumber.definition.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.DefaultDataTableCellTransformer;

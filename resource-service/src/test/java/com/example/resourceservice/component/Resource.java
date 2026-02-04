@@ -1,4 +1,4 @@
-package com.example.resourceservice.cucumber.definition;
+package com.example.resourceservice.component;
 
 public record Resource(
     Long id,
