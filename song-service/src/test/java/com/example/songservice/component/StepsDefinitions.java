@@ -24,9 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StepsDefinitions {
 
-    private static final String URL_HOST = "http://localhost:";
+    private static final String HOST = "http://localhost:";
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
     private final SongRepository songRepository;
     private final ObjectMapper objectMapper;
 
@@ -37,15 +37,14 @@ public class StepsDefinitions {
     private ResponseEntity<SongDto> getSongResponse;
     private ResponseEntity<DeleteSongsResponse> deleteSongsResponse;
 
-    public StepsDefinitions(RestTemplate restTemplate, SongRepository songRepository, ObjectMapper objectMapper) {
-        this.restTemplate = restTemplate;
+    public StepsDefinitions(SongRepository songRepository, ObjectMapper objectMapper) {
         this.songRepository = songRepository;
         this.objectMapper = objectMapper;
     }
 
     @When("the user sends a POST request to the \\/songs endpoint")
     public void sendCreateSongRequest(CreateSongRequest createSongRequest) {
-        createSongResponse = restTemplate.postForEntity(URL_HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
+        createSongResponse = restTemplate.postForEntity(HOST + port + "/songs", createSongRequest, CreateSongResponse.class);
     }
 
     @Then("the song creation response code is {int}")
@@ -85,7 +84,7 @@ public class StepsDefinitions {
 
     @When("the user sends a GET request to the \\/songs\\/{long} endpoint")
     public void sendGetSongRequest(long id) {
-        getSongResponse = restTemplate.getForEntity(URL_HOST + port + "/songs/" + id, SongDto.class);
+        getSongResponse = restTemplate.getForEntity(HOST + port + "/songs/" + id, SongDto.class);
     }
 
     @Then("the song retrieval response code is {int}")
@@ -114,7 +113,7 @@ public class StepsDefinitions {
     @When("the user sends a DELETE request to the \\/songs?id={long} endpoint")
     public void sendDeleteSongRequest(long id) {
         deleteSongsResponse = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL_HOST + port + "/songs").queryParam("id", id).build().toUri(),
+            UriComponentsBuilder.fromUriString(HOST + port + "/songs").queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteSongsResponse.class
