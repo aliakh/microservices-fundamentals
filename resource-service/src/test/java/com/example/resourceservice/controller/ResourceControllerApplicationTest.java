@@ -5,7 +5,6 @@ import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.S3Service;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,22 +67,8 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
     @Test
     void shouldGetResource() throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-//        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-//
-//        var requestEntity = new HttpEntity<>(audio, headers);
-//
-//        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
-//
-//        var uploadResourceResponse = responseEntity.getBody();
-//        assertNotNull(uploadResourceResponse);
-//        assertNotNull(uploadResourceResponse.id());
+        var id = uploadResource(audio);
 
-        var id= uploadResource(audio) ;       
-        
         var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + id, byte[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("audio/mpeg", responseEntity.getHeaders().getContentType().toString());
@@ -95,28 +80,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
     @Test
     void shouldDeleteResource() throws IOException {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-//
-//
-//        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-//
-//        var requestEntity = new HttpEntity<>(audio, headers);
-//
-//        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
-//
-//        var uploadResourceResponse = responseEntity.getBody();
-//        assertNotNull(uploadResourceResponse);
-//        assertNotNull(uploadResourceResponse.id());
-
-        var id= uploadResource(audio) ;
-//
-//        doNothing().when(songServiceClient).deleteSong(uploadResourceResponse.id());
-
-//        var headers2 = new HttpHeaders();
-//        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        var id = uploadResource(audio);
 
         var responseEntity = restTemplate.exchange(
             UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", id).build().toUri(),
@@ -131,18 +95,13 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         assertNotNull(deleteResourceResponse);
         assertNotNull(deleteResourceResponse.ids());
         assertEquals(1, deleteResourceResponse.ids().size());
-//
-//        verify(songServiceClient).deleteSong(uploadResourceResponse.id());
-//        verifyNoMoreInteractions(songServiceClient);
 
         assertTrue(resourceRepository.findAllById(deleteResourceResponse.ids()).isEmpty());
     }
 
-    private  long uploadResource(byte[] audio) throws IOException {
-//        var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
+    private long uploadResource(byte[] audio) {
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-
         var requestEntity = new HttpEntity<>(audio, headers);
 
         var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);

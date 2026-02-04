@@ -11,16 +11,8 @@ public class DataTableConfig {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-//    public DataTableConfig(ObjectMapper objectMapper) {
-//        this.objectMapper = objectMapper;
-//    }
-
     @DataTableType
     public ResourceDto convertToResourceDto(Map<String, String> row) {
         return objectMapper.convertValue(row, ResourceDto.class);
-//        return new ResourceDto(
-//            Long.valueOf(row.get("id")),
-//            row.get("key")
-//        );
     }
 }

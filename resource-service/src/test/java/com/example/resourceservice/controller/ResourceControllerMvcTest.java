@@ -45,11 +45,11 @@ public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
     void shouldGetResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var uploadResourceActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
-        var uploadResourceResponse = uploadResourceActions.getResponse().getContentAsString();
+        var uploadResourceResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(uploadResourceResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
@@ -63,11 +63,11 @@ public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
     void shouldDeleteResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var uploadResourceActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
-        var uploadResourceResponse = uploadResourceActions.getResponse().getContentAsString();
+        var uploadResourceResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(uploadResourceResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))

@@ -51,11 +51,11 @@ public class SongControllerMvcTest {
     void shouldGetSong() throws Exception {
         var songDto = buildSongDto();
 
-        var createSongActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        var createSongResponse = createSongActions.getResponse().getContentAsString();
+        var createSongResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(createSongResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
@@ -74,11 +74,11 @@ public class SongControllerMvcTest {
     void shouldDeleteSongs() throws Exception {
         var songDto = buildSongDto();
 
-        var createSongActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(songDto))).andReturn();
-        var createSongResponse = createSongActions.getResponse().getContentAsString();
+        var createSongResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(createSongResponse, "$.id");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))

@@ -15,7 +15,6 @@ import io.restassured.module.mockmvc.response.MockMvcResponse;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,20 +60,9 @@ public class StepDefinitions {
                 assertThat(actualResource.getId().equals(resource.id())).isTrue();
 //                assertThat(actualResource.getBucket().equals(resource.bucket())).isTrue();
                 assertThat(actualResource.getKey()).isNotNull();
-//                assertThat(actualResource.getName().equals(resource.name())).isTrue();
-//                assertThat(actualResource.getSize().equals(resource.size())).isTrue();
             }
         );
     }
-
-//    @Given("the following resources uploaded")
-//    public void theFollowingResourcesUploaded(List<Resource> resources) {
-//        resources.forEach(resource -> {
-//                var uploadResourceResponse = uploadFile(resource.key());
-//                assertThat(uploadResourceResponse.id()).isEqualTo(resource.id());
-//            }
-//        );
-//    }
 
     @When("user gets resource with id={long}")
     public void userGetsResourceWithId(long id) {
@@ -114,8 +102,8 @@ public class StepDefinitions {
     }
 
     public UploadResourceResponse uploadFile(String file) {
-        try (InputStream inputStream = new ClassPathResource(FILES_PATH + file).getInputStream()) {
-            response = resourceClient.uploadResource(inputStream);
+        try (var is = new ClassPathResource(FILES_PATH + file).getInputStream()) {
+            response = resourceClient.uploadResource(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
