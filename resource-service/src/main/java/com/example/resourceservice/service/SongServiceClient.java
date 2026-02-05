@@ -1,17 +1,12 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceservice.dto.CreateSongDto;
+import com.example.resourceservice.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "song-service")
+@FeignClient(name = "song-service", configuration = FeignConfig.class)
 public interface SongServiceClient {
-
-    @PostMapping("/songs")
-    void createSong(@RequestBody CreateSongDto createSongDto);
 
     @DeleteMapping("/songs")
     void deleteSong(@RequestParam("id") Long id);
