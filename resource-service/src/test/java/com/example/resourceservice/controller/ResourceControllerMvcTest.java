@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
 
-    private static final String URL_PATH = "/resources";
+    private static final String URL = "/resources";
     private static final String FILE_PATH = "/audio/audio1.mp3";
 
     @Autowired
@@ -33,7 +33,7 @@ public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
     void shouldUploadResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        mockMvc.perform(MockMvcRequestBuilders.post(URL)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andExpect(status().isOk())
@@ -45,14 +45,14 @@ public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
     void shouldGetResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
         var uploadResourceResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(uploadResourceResponse, "$.id");
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
             .andExpect(status().isOk())
             .andExpect(content().contentType("audio/mpeg"))
             .andExpect(content().bytes(audio));
@@ -63,14 +63,14 @@ public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
     void shouldDeleteResource() throws Exception {
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
 
-        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        var resultActions = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andReturn();
         var uploadResourceResponse = resultActions.getResponse().getContentAsString();
         var id = JsonPath.read(uploadResourceResponse, "$.id");
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL).param("id", id.toString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))

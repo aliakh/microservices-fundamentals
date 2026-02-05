@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StepDefinitions {
 
-    private static final String URL_HOST = "http://localhost:";
+    private static final String HOST = "http://localhost:";
     private static final String FILE_PATH = "/audio/";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -51,7 +51,7 @@ public class StepDefinitions {
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
 
-        uploadResourceEntity = restTemplate.postForEntity(URL_HOST + port + "/resources", requestEntity, UploadResourceResponse.class);
+        uploadResourceEntity = restTemplate.postForEntity(HOST + port + "/resources", requestEntity, UploadResourceResponse.class);
     }
 
     @Then("the resource creation response code is {int}")
@@ -84,13 +84,13 @@ public class StepDefinitions {
 
     @When("user gets resource by id={long}")
     public void userGetsResourceWithId(long id) {
-        getResourceEntity = restTemplate.getForEntity(URL_HOST + port + "/resources/" + id, byte[].class);
+        getResourceEntity = restTemplate.getForEntity(HOST + port + "/resources/" + id, byte[].class);
     }
 
     @When("user deletes the resource by id={long}")
     public void userDeletesResourceWithId(long id) {
         deleteResourceEntity = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL_HOST + port + "/resources").queryParam("id", id).build().toUri(),
+            UriComponentsBuilder.fromUriString(HOST + port + "/resources").queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteResourcesResponse.class
@@ -107,7 +107,7 @@ public class StepDefinitions {
         assertThat(getResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
 
-    @And("response body has size {long}")
+    @And("the resource retrieval body has size {long}")
     public void responseBodyHasSize(long fileSize) {
         assertThat(getResourceEntity.getBody().length).isEqualTo(fileSize);
     }

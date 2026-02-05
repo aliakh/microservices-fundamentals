@@ -1,4 +1,3 @@
-#@transaction
 Feature: Uploading, getting, and deleting a resource
 
   Scenario: Upload a resource
@@ -17,7 +16,7 @@ Feature: Uploading, getting, and deleting a resource
     When user gets resource by id=1
     Then the resource retrieval response code is 200
     And the resource retrieval response content type is "audio/mpeg"
-    And response body has size 31808
+    And the resource retrieval body has size 31808
 
   Scenario: Delete a resource
     When user deletes the resource by id=1

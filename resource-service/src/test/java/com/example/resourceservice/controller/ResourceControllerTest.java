@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ResourceController.class)
 public class ResourceControllerTest {
 
-    private static final String URL_PATH = "/resources";
+    private static final String URL = "/resources";
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +40,7 @@ public class ResourceControllerTest {
 
         when(resourceService.uploadResource(audio)).thenReturn(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(URL_PATH)
+        mockMvc.perform(MockMvcRequestBuilders.post(URL)
                 .content(audio)
                 .contentType("audio/mpeg"))
             .andExpect(status().isOk())
@@ -60,7 +60,7 @@ public class ResourceControllerTest {
         var resourceResponse = new ResourceResponse(id, audio);
         when(resourceService.getResource(id)).thenReturn(resourceResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_PATH + "/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
             .andExpect(status().isOk())
             .andExpect(content().contentType("audio/mpeg"))
             .andExpect(content().bytes(audio));
@@ -74,7 +74,7 @@ public class ResourceControllerTest {
         var id = 1L;
         when(resourceService.deleteResources(String.valueOf(id))).thenReturn(List.of(id));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL_PATH).param("id", String.valueOf(id)))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL).param("id", String.valueOf(id)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.ids.length()").value(1))

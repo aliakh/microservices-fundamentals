@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 public class ResourceControllerApplicationTest extends AbstractTestcontainersTest {
 
-    private static final String URL_PATH = "/resources";
+    private static final String URL = "/resources";
     private static final String FILE_PATH = "/audio/audio1.mp3";
 
     @Autowired
@@ -52,7 +52,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
 
-        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL, requestEntity, UploadResourceResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
@@ -69,7 +69,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         var audio = new ClassPathResource(FILE_PATH).getInputStream().readAllBytes();
         var id = uploadResource(audio);
 
-        var responseEntity = restTemplate.getForEntity(URL_PATH + "/" + id, byte[].class);
+        var responseEntity = restTemplate.getForEntity(URL + "/" + id, byte[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("audio/mpeg", responseEntity.getHeaders().getContentType().toString());
 
@@ -83,7 +83,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         var id = uploadResource(audio);
 
         var responseEntity = restTemplate.exchange(
-            UriComponentsBuilder.fromUriString(URL_PATH).queryParam("id", id).build().toUri(),
+            UriComponentsBuilder.fromUriString(URL).queryParam("id", id).build().toUri(),
             HttpMethod.DELETE,
             null,
             DeleteResourcesResponse.class
@@ -104,7 +104,7 @@ public class ResourceControllerApplicationTest extends AbstractTestcontainersTes
         headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
         var requestEntity = new HttpEntity<>(audio, headers);
 
-        var responseEntity = restTemplate.postForEntity(URL_PATH, requestEntity, UploadResourceResponse.class);
+        var responseEntity = restTemplate.postForEntity(URL, requestEntity, UploadResourceResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType());
 
