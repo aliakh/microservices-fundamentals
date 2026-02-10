@@ -135,6 +135,12 @@ services:
       - '${AWS_S3_PORT}:4566'
     volumes:
       - localstack:/var/lib/localstack
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4566/_localstack/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   kafka:
     image: confluentinc/cp-kafka
