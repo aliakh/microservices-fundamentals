@@ -55,6 +55,8 @@ services:
       KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
       KAFKA_TOPIC: ${KAFKA_TOPIC}
       KAFKA_CONSUMER_GROUP: ${KAFKA_CONSUMER_GROUP}
+    ports:
+      - "${RESOURCE_PROCESSOR_PORT}:8085"
     depends_on:
       kafka:
         condition: service_healthy
