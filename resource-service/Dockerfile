@@ -12,7 +12,7 @@ RUN mvn clean package -Dmaven.test.skip=true
 
 FROM eclipse-temurin:17-jre-alpine
 
-RUN apk add --no-cache curl
+#RUN apk add --no-cache curl
 
 WORKDIR /app
 

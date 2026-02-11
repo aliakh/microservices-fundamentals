@@ -142,7 +142,7 @@ services:
     volumes:
       - localstack:/var/lib/localstack
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:4566/_localstack/health" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:4566/_localstack/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -177,8 +177,8 @@ services:
         ]
       interval: 10s
       timeout: 5s
-      retries: 12
-      start_period: 60s
+      retries: 10
+      start_period: 30s
 
 volumes:
   localstack:
