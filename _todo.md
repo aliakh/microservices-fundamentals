@@ -18,3 +18,10 @@ podman compose logs -f kafka
 
 
 podman ps --format "table {{.Names}}\t{{.Status}}"
+
+
+      test: [ "CMD-SHELL", "curl -s http://localhost:4566/_localstack/health | grep '\"s3\": \"running\"' && awslocal s3 ls | grep resource || exit 1" ]
+
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+
+
