@@ -142,7 +142,7 @@ services:
     volumes:
       - localstack:/var/lib/localstack
     healthcheck:
-      test: [ "CMD-SHELL", "curl -s http://localhost:4566/_localstack/health | grep '\"s3\": \"running\"' && awslocal s3 ls | grep resource || exit 1" ]
+      test: ["CMD-SHELL", "curl -s http://localhost:4566/_localstack/health | grep -q '\"s3\": \"running\"'"]
       interval: 10s
       timeout: 5s
       retries: 10
