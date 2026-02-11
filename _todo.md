@@ -13,4 +13,8 @@ podman compose --file compose.yaml up resource-db song-db localstack kafka
 podman compose logs -f resource-processor
 podman compose logs -f resource-service
 podman compose logs -f song-service
+podman compose logs -f eureka-server
 podman compose logs -f kafka
+
+
+podman ps --format "table {{.Names}}\t{{.Status}}"
