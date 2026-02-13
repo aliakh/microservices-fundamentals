@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "api-gateway", contextId = "resourceServiceClient", configuration = FeignConfig.class)
 public interface ResourceServiceClient {
 
-    @GetMapping("/resource-service/resources/{id}")
+    @GetMapping("/resources/{id}")
     byte[] getResource(@PathVariable Long id);
 }

@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "api-gateway", configuration = FeignConfig.class)
 public interface SongServiceClient {
 
-    @DeleteMapping("/song-service/songs")
+    @DeleteMapping("/songs")
     void deleteSong(@RequestParam("id") Long id);
 }

@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "api-gateway", contextId = "songServiceClient", configuration = FeignConfig.class)
 public interface SongServiceClient {
 
-    @PostMapping("/song-service/songs")
+    @PostMapping("/songs")
     CreateSongResponse createSong(@RequestBody CreateSongDto createSongDto);
 }
