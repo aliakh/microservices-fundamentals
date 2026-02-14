@@ -13,11 +13,4 @@ podman compose logs -f song-service
 podman compose logs -f eureka-server
 podman compose logs -f kafka
 
-
 podman ps --format "table {{.Names}}\t{{.Status}}"
-
-config
-mf0.Oleksandr_Vlasenko.m8
-! mf1.Yevhen_Lesyk
-? mf9.aleh_stsiapanau
-mf12.oleksandr_strymeneshenko
