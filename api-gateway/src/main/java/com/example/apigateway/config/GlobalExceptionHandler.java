@@ -22,10 +22,10 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
     public GlobalExceptionHandler(ErrorAttributes errorAttributes,
                                   WebProperties webProperties,
                                   ApplicationContext applicationContext,
-                                  ServerCodecConfigurer configurer) {
+                                  ServerCodecConfigurer serverCodecConfigurer) {
         super(errorAttributes, webProperties.getResources(), applicationContext);
-        this.setMessageWriters(configurer.getWriters());
-        this.setMessageReaders(configurer.getReaders());
+        this.setMessageWriters(serverCodecConfigurer.getWriters());
+        this.setMessageReaders(serverCodecConfigurer.getReaders());
     }
 
     @Override
@@ -35,19 +35,18 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
         var errorAttributes = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-        var errorCode = (int) errorAttributes.getOrDefault("status", 500);
-        var errorMessage = switch (errorCode) {
+        var status = (int) errorAttributes.getOrDefault("status", 500);
+        var message = switch (status) {
             case 404 -> "The requested service route is undefined";
             case 503 -> "Service is temporarily unavailable";
             case 504 -> "The upstream service timed out";
             default -> "An unexpected internal error occurred";
         };
-
-        return ServerResponse.status(errorCode)
+        return ServerResponse.status(status)
             .contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromValue(Map.of(
-                "errorCode", errorCode,
-                "errorMessage", errorMessage,
+                "status", status,
+                "status", message,
                 "path", request.path()
             )));
     }
