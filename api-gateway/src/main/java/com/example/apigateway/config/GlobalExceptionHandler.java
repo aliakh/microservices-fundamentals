@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
             .contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromValue(Map.of(
                 "status", status,
-                "status", message,
+                "message", message,
                 "path", request.path()
             )));
     }
