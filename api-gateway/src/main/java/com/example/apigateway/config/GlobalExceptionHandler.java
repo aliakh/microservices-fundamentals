@@ -1,4 +1,4 @@
-package com.example.apigateway.config;
+package com.example.configserver.config;
 
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
