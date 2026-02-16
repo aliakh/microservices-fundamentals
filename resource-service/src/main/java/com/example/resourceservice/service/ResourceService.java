@@ -1,9 +1,12 @@
 package com.example.resourceservice.service;
 
+import com.example.resourceservice.dto.ResourceCompletedResponse;
 import com.example.resourceservice.dto.ResourceResponse;
+import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.exception.InvalidMp3FileException;
 import com.example.resourceservice.exception.ResourceNotFoundException;
+import com.example.resourceservice.exception.StorageNotFoundException;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
@@ -70,6 +73,27 @@ public class ResourceService {
             resource.getId(),
             s3Service.getObject(storageDto.bucket(), resource.getKey())
         );
+    }
+
+    @Transactional
+    public ResourceCompletedResponse completeResourceUpload(Long id) {
+        var resourceEntity = resourceRepository.findById(id)
+            .orElseThrow(() -> new StorageNotFoundException(String.format("Resource with id %s not found", id)));
+
+        var stagingStorageDto = storageService.getStorageById(resourceEntity.getStorageId());
+
+        if (StorageType.PERMANENT.equals(stagingStorageDto.type())) {
+//            logger.warn("Resource upload already completed: {}", resourceEntity);
+        } else {
+            var permanentStorageDto = storageService.getPermanentStorage();
+            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), resourceEntity.getKey());
+            s3Service.deleteObject(stagingStorageDto.bucket(), resourceEntity.getKey());
+
+            resourceEntity.setStorageId(permanentStorageDto.id());
+            resourceRepository.save(resourceEntity);
+        }
+
+        return new ResourceCompletedResponse(resourceEntity.getId(), resourceEntity.getStorageId());
     }
 
     @Transactional

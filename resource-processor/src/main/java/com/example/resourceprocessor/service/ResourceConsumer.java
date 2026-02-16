@@ -23,6 +23,8 @@ public class ResourceConsumer {
     private MetadataService metadataService;
     @Autowired
     private SongServiceClient songServiceClient;
+    @Autowired
+    private ResourceProducer2 resourceProducer2;
 
     @Transactional
     @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
@@ -41,6 +43,9 @@ public class ResourceConsumer {
 
             var songCreatedResponse = songServiceClient.createSong(songDto);
             logger.info("Create song response: {}", songCreatedResponse);
+
+            resourceProducer2.completeResource(resourceDto.id());
+//            logger.info("Create song response: {}", songCreatedResponse);
         } catch (JsonProcessingException e) {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {

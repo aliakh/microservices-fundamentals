@@ -1,6 +1,5 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceprocessor.dto.ResourceDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -13,38 +12,43 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ResourceConsumer2 {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceConsumer2.class);
 
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private ResourceServiceClient resourceServiceClient;
-    @Autowired
-    private MetadataService metadataService;
+    private ResourceService resourceService;
+//    @Autowired
+//    private ResourceServiceClient resourceServiceClient;
+//    @Autowired
+//    private MetadataService metadataService;
     @Autowired
     private SongServiceClient songServiceClient;
 
     @Transactional
     @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
-    public void consumeResource(String message) {
+    public void consumeResource(Long resourceId) {
         try {
-            logger.info("Message received: {}", message);
+            logger.info("Message received: {}", resourceId);
 
-            var resourceDto = objectMapper.readValue(message, ResourceDto.class);
-            logger.info("Resource deserialized: {}", resourceDto);
+            var xxx = resourceService.completeResourceUpload(resourceId);
+            logger.info("Resource deserialized: {}", xxx);
 
-            var audio = resourceServiceClient.getResource(resourceDto.id());
-            logger.info("Get resource response: {} byte(s)", audio.length);
-
-            var songDto = metadataService.extractSongMetadata(audio, resourceDto.id());
-            logger.info("Song metadata extracted: {}", songDto);
-
-            var songCreatedResponse = songServiceClient.createSong(songDto);
-            logger.info("Create song response: {}", songCreatedResponse);
-        } catch (JsonProcessingException e) {
-            logger.error("Error while deserializing resource {} from JSON", message, e);
+//            var resourceDto = objectMapper.readValue(message, ResourceDto.class);
+//            logger.info("Resource deserialized: {}", resourceDto);
+//
+//            var audio = resourceServiceClient.getResource(resourceDto.id());
+//            logger.info("Get resource response: {} byte(s)", audio.length);
+//
+//            var songDto = metadataService.extractSongMetadata(audio, resourceDto.id());
+//            logger.info("Song metadata extracted: {}", songDto);
+//
+//            var songCreatedResponse = songServiceClient.createSong(songDto);
+//            logger.info("Create song response: {}", songCreatedResponse);
+//        } catch (JsonProcessingException e) {
+//            logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
-            logger.error("Failed to consume message {}", message, e);
+//            logger.error("Failed to consume message {}", message, e);
         }
     }
 }

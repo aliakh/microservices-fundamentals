@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -62,6 +63,23 @@ public class S3Service {
         logger.info("Get object response: {}", getObjectResponse);
 
         return getObjectResponse.asByteArray();
+    }
+
+    public void copyObject(String sourceBucket, String destinationBucket, String key) {
+        logger.info("Copy file {} from bucket {} to bucket {}", key, sourceBucket, destinationBucket);
+
+        createBucketIfDoesNotExist(destinationBucket);
+
+        var copyObjectRequest = CopyObjectRequest.builder()
+            .sourceBucket(sourceBucket)
+            .sourceKey(key)
+            .destinationBucket(destinationBucket)
+            .destinationKey(key)
+            .build();
+
+        logger.info("Copy object request: {}", copyObjectRequest);
+        var copyObjectResponse = s3Client.copyObject(copyObjectRequest);
+        logger.info("Copy object response: {}", copyObjectResponse);
     }
 
     public void deleteObject(String bucket, String key) {

@@ -1,7 +1,6 @@
 package com.example.resourceprocessor.service;
 
-import com.example.resourceservice.dto.KafkaProperties;
-import com.example.resourceservice.entity.Resource;
+import com.example.resourceprocessor.dto.KafkaProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class ResourceProducer2 {
     @Autowired
     private KafkaProperties kafkaProperties;
 
-    public void produceResource(Resource resource) {
+    public void completeResource(Long resourceId) {
         kafkaTemplate.send(kafkaProperties.topic(), resource.getId(), toJson(resource))
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
