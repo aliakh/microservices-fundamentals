@@ -15,7 +15,7 @@ import java.util.StringJoiner;
 
 @Entity
 @Table(name = "storages")
-public class StorageEntity {
+public class Storage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +24,13 @@ public class StorageEntity {
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private StorageType type;
+    private StorageType storageType;
 
     @Column(nullable = false)
     private String bucket;
+
+    @Column(nullable = false)
+    private String path;
 
     public Long getId() {
         return id;
@@ -37,12 +40,12 @@ public class StorageEntity {
         this.id = id;
     }
 
-    public StorageType getType() {
-        return type;
+    public StorageType getStorageType() {
+        return storageType;
     }
 
-    public void setType(StorageType type) {
-        this.type = type;
+    public void setStorageType(StorageType storageType) {
+        this.storageType = storageType;
     }
 
     public String getBucket() {
@@ -61,23 +64,25 @@ public class StorageEntity {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        StorageEntity that = (StorageEntity) obj;
+        Storage that = (Storage) obj;
         return Objects.equals(id, that.id)
-            && type == that.type
-            && Objects.equals(bucket, that.bucket);
+            && storageType == that.storageType
+            && Objects.equals(bucket, that.bucket)
+            && Objects.equals(path, that.path);
     }
-
+//TODO getters
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, bucket);
+        return Objects.hash(id, storageType, bucket, path);
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", StorageEntity.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Storage.class.getSimpleName() + "[", "]")
             .add("id=" + id)
-            .add("type=" + type)
+            .add("storageType=" + storageType)
             .add("bucket='" + bucket + "'")
+            .add("path='" + path + "'")
             .toString();
     }
 }

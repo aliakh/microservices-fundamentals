@@ -1,10 +1,8 @@
 package com.microservices.storage.service.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.*;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 public record StorageDto(
 
@@ -12,9 +10,12 @@ public record StorageDto(
     Long id,
 
     @NotNull
-    StorageType type,
+    StorageType storageType,
 
     @NotBlank
-    String bucket
+    String bucket,
+
+    @NotBlank
+    String path
 ) {
 }

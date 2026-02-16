@@ -1,0 +1,8 @@
+
+URL url = s3Client.utilities().getUrl(GetUrlRequest.builder()
+        .bucket(bucket)
+        .key(key)                 // your UUID key or any "path/to/file.ext"
+        .build());
+
+// e.g., https://my-bucket.s3.us-east-1.amazonaws.com/<key>
+String objectUrl = url.toExternalForm();
