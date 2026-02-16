@@ -83,7 +83,7 @@ public class ResourceService {
         var stagingStorageDto = storageService.getStorageById(resourceEntity.getStorageId());
 
         if (StorageType.PERMANENT.equals(stagingStorageDto.type())) {
-//            logger.warn("Resource upload already completed: {}", resourceEntity);
+//            logger.warn("Resource upload already completed: {}", resourceEntity); TODO exception
         } else {
             var permanentStorageDto = storageService.getPermanentStorage();
             s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), resourceEntity.getKey());
