@@ -35,6 +35,23 @@ services:
       retries: 10
       start_period: 30s
 
+  song-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${SONG_DB_NAME}
+      POSTGRES_USER: ${SONG_DB_USERNAME}
+      POSTGRES_PASSWORD: ${SONG_DB_PASSWORD}
+    ports:
+      - "${SONG_DB_PORT}:5432"
+    volumes:
+      - ./init-scripts/song-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${SONG_DB_USERNAME} -d ${SONG_DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   eureka-server:
     build:
       context: ./eureka-server
