@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class StorageService {
@@ -49,7 +48,7 @@ public class StorageService {
         List<StorageDto> storages = getAllStorages();
         return storages
             .stream()
-            .filter(storageDto -> StorageType.STAGING.equals(storageDto.type()))
+            .filter(storageDto -> StorageType.STAGING.equals(storageDto.storageType()))
             .findFirst()
             .orElseThrow(() -> new StorageNotFoundException(String.format("Staging storage not found in storages: %s", storages)));
     }
@@ -58,7 +57,7 @@ public class StorageService {
         List<StorageDto> storages = getAllStorages();
         return storages
             .stream()
-            .filter(storageDto -> StorageType.PERMANENT.equals(storageDto.type()))
+            .filter(storageDto -> StorageType.PERMANENT.equals(storageDto.storageType()))
             .findFirst()
             .orElseThrow(() -> new StorageNotFoundException(String.format("Permanent storage not found in storages: %s", storages)));
     }

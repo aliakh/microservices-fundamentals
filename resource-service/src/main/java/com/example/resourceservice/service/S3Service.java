@@ -15,8 +15,6 @@ import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.util.UUID;
-
 @Service
 public class S3Service {
 
@@ -25,12 +23,10 @@ public class S3Service {
     @Autowired
     private S3Client s3Client;
 
-    public S3ResourceDto putObject(byte[] audio, String bucket, String contentType) {
+    public S3ResourceDto putObject(byte[] audio, String bucket, String key, String contentType) {
         logger.info("Put object into bucket {}", bucket);
 
         createBucketIfDoesNotExist(bucket);
-
-        var key = UUID.randomUUID().toString();
 
         var putObjectRequest = PutObjectRequest.builder()
             .bucket(bucket)
@@ -66,7 +62,7 @@ public class S3Service {
     }
 
     public void copyObject(String sourceBucket, String destinationBucket, String key) {
-        logger.info("Copy file {} from bucket {} to bucket {}", key, sourceBucket, destinationBucket);
+// TODO       logger.info("Copy file {} from bucket {} to bucket {}", key, sourceBucket, destinationBucket);
 
         createBucketIfDoesNotExist(destinationBucket);
 
@@ -77,9 +73,9 @@ public class S3Service {
             .destinationKey(key)
             .build();
 
-        logger.info("Copy object request: {}", copyObjectRequest);
+//  TODO      logger.info("Copy object request: {}", copyObjectRequest);
         var copyObjectResponse = s3Client.copyObject(copyObjectRequest);
-        logger.info("Copy object response: {}", copyObjectResponse);
+//  TODO      logger.info("Copy object response: {}", copyObjectResponse);
     }
 
     public void deleteObject(String bucket, String key) {

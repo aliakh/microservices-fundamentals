@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,8 +49,9 @@ public class ResourceService {
             throw new InvalidMp3FileException("The request body is invalid MP3");
         }
 
+        var key = UUID.randomUUID().toString();
         var storageDto = storageService.getStagingStorage();
-        var s3ResourceDto = s3Service.putObject(audio, storageDto.bucket(), "audio/mpeg");
+        var s3ResourceDto = s3Service.putObject(audio, storageDto.bucket(), storageDto.path() + key, "audio/mpeg");
 
         var resource = new Resource();
         resource.setStorageId(storageDto.id());
@@ -71,29 +73,29 @@ public class ResourceService {
 
         return new ResourceResponse(
             resource.getId(),
-            s3Service.getObject(storageDto.bucket(), resource.getKey())
+            s3Service.getObject(storageDto.bucket(), storageDto.path() + resource.getKey())
         );
     }
 
     @Transactional
     public ResourceCompletedResponse completeResourceUpload(Long id) {
-        var resourceEntity = resourceRepository.findById(id)
+        var resource = resourceRepository.findById(id)
             .orElseThrow(() -> new StorageNotFoundException(String.format("Resource with id %s not found", id)));
 
-        var stagingStorageDto = storageService.getStorageById(resourceEntity.getStorageId());
+        var stagingStorageDto = storageService.getStorageById(resource.getStorageId());
 
-        if (StorageType.PERMANENT.equals(stagingStorageDto.type())) {
+        if (StorageType.PERMANENT.equals(stagingStorageDto.storageType())) {
 //            logger.warn("Resource upload already completed: {}", resourceEntity); TODO exception
         } else {
             var permanentStorageDto = storageService.getPermanentStorage();
-            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), resourceEntity.getKey());
-            s3Service.deleteObject(stagingStorageDto.bucket(), resourceEntity.getKey());
+            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
+            s3Service.deleteObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
 
-            resourceEntity.setStorageId(permanentStorageDto.id());
-            resourceRepository.save(resourceEntity);
+            resource.setStorageId(permanentStorageDto.id());
+            resourceRepository.save(resource);
         }
 
-        return new ResourceCompletedResponse(resourceEntity.getId(), resourceEntity.getStorageId());
+        return new ResourceCompletedResponse(resource.getId(), resource.getStorageId());
     }
 
     @Transactional
@@ -107,7 +109,7 @@ public class ResourceService {
             .map(Optional::get)
             .map(resource -> {
                 var storageDto = storageService.getStorageById(resource.getStorageId());
-                s3Service.deleteObject(storageDto.bucket(), resource.getKey());
+                s3Service.deleteObject(storageDto.bucket(), storageDto.path() + resource.getKey());
                 return resource.getId();
             })
             .peek(id -> resourceRepository.deleteById(id))

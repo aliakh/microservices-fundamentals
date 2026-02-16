@@ -1,6 +1,7 @@
 package com.example.resourceservice.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record StorageDto(
 
@@ -8,9 +9,12 @@ public record StorageDto(
     Long id,
 
     @NotNull
-    StorageType type,
+    StorageType storageType,
 
     @NotBlank
-    String bucket
+    String bucket,
+
+    @NotBlank
+    String path
 ) {
 }
