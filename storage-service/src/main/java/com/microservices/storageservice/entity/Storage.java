@@ -1,6 +1,6 @@
-package com.microservices.storage.service.entity;
+package com.microservices.storageservice.entity;
 
-import com.microservices.storage.service.dto.StorageType;
+import com.microservices.storageservice.dto.StorageType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

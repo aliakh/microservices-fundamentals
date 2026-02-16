@@ -1,4 +1,4 @@
-package com.microservices.storage.service.dto;
+package com.microservices.storageservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

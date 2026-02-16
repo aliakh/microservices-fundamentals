@@ -1,6 +1,6 @@
-package com.microservices.storage.service.repository;
+package com.microservices.storageservice.repository;
 
-import com.microservices.storage.service.entity.Storage;
+import com.microservices.storageservice.entity.Storage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StorageRepository extends JpaRepository<Storage, Long> {

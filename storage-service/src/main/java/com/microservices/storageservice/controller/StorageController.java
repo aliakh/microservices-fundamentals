@@ -1,9 +1,9 @@
-package com.microservices.storage.service.controller;
+package com.microservices.storageservice.controller;
 
-import com.microservices.storage.service.dto.StorageCreatedResponse;
-import com.microservices.storage.service.dto.StorageDto;
-import com.microservices.storage.service.dto.StoragesDeletedResponse;
-import com.microservices.storage.service.service.StorageService;
+import com.microservices.storageservice.dto.StorageCreatedResponse;
+import com.microservices.storageservice.dto.StorageDto;
+import com.microservices.storageservice.dto.StoragesDeletedResponse;
+import com.microservices.storageservice.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

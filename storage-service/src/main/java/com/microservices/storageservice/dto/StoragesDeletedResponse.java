@@ -1,4 +1,4 @@
-package com.microservices.storage.service.dto;
+package com.microservices.storageservice.dto;
 
 import java.util.List;
 
