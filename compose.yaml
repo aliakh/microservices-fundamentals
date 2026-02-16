@@ -35,18 +35,18 @@ services:
       retries: 10
       start_period: 30s
 
-  song-db:
+  storage-db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: ${SONG_DB_NAME}
-      POSTGRES_USER: ${SONG_DB_USERNAME}
-      POSTGRES_PASSWORD: ${SONG_DB_PASSWORD}
+      POSTGRES_DB: ${STORAGE_DB_NAME}
+      POSTGRES_USER: ${STORAGE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${STORAGE_DB_PASSWORD}
     ports:
-      - "${SONG_DB_PORT}:5432"
+      - "${STORAGE_DB_PORT}:5432"
     volumes:
-      - ./init-scripts/song-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init-scripts/storage-db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${SONG_DB_USERNAME} -d ${SONG_DB_NAME}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${STORAGE_DB_USERNAME} -d ${STORAGE_DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 10
