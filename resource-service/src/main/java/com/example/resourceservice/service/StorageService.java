@@ -30,8 +30,8 @@ public class StorageService {
         logger.warn("Failed to read storages, use a local fallback instead");
 
         return List.of(
-            new StorageDto(1L, StorageType.STAGING, "resources-staging"),
-            new StorageDto(2L, StorageType.PERMANENT, "resources-permanent")
+            new StorageDto(1L, StorageType.STAGING, "resources-staging", "staging/"),
+            new StorageDto(2L, StorageType.PERMANENT, "resources-permanent", "permanent/")
         );
     }
 

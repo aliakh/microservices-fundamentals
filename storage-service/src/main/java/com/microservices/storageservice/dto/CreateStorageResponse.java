@@ -1,6 +1,6 @@
 package com.microservices.storageservice.dto;
 
-public record StorageCreatedResponse(
+public record CreateStorageResponse(
     Long id
 ) {
 }

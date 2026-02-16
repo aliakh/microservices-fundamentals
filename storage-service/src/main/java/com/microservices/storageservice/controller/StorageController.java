@@ -1,13 +1,12 @@
 package com.microservices.storageservice.controller;
 
-import com.microservices.storageservice.dto.StorageCreatedResponse;
+import com.microservices.storageservice.dto.CreateStorageResponse;
 import com.microservices.storageservice.dto.StorageDto;
-import com.microservices.storageservice.dto.StoragesDeletedResponse;
+import com.microservices.storageservice.dto.DeleteStoragesResponse;
 import com.microservices.storageservice.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,12 +41,12 @@ public class StorageController {
         this.storageService = storageService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StorageCreatedResponse> createStorage(@RequestBody @Valid StorageDto storageDto) {
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid StorageDto storageDto) {
         return ResponseEntity.ok(storageService.createStorage(storageDto));
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<StorageDto>> getAllStorages() {
         if (simulateError) {
             logger.warn("Exception simulated");
@@ -67,8 +67,8 @@ public class StorageController {
         }
     }
 
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StoragesDeletedResponse> deleteStorages(@RequestParam List<Long> ids) {
+    @DeleteMapping(produces = "application/json")
+    public ResponseEntity<DeleteStoragesResponse> deleteStorages(@RequestParam List<Long> ids) {
         var deletedIds = storageService.deleteResponses(ids);
         return ResponseEntity.ok(deletedIds);
     }

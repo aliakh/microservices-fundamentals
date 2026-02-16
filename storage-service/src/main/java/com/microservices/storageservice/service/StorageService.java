@@ -1,8 +1,8 @@
 package com.microservices.storageservice.service;
 
-import com.microservices.storageservice.dto.StorageCreatedResponse;
+import com.microservices.storageservice.dto.CreateStorageResponse;
 import com.microservices.storageservice.dto.StorageDto;
-import com.microservices.storageservice.dto.StoragesDeletedResponse;
+import com.microservices.storageservice.dto.DeleteStoragesResponse;
 import com.microservices.storageservice.service.mapper.StorageMapper;
 import com.microservices.storageservice.repository.StorageRepository;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ public class StorageService {
         this.storageMapper = storageMapper;
     }
 
-    public StorageCreatedResponse createStorage(StorageDto storageDto) {
+    public CreateStorageResponse createStorage(StorageDto storageDto) {
         var storageEntity = storageMapper.toEntity(storageDto);
         var savedStorageEntry = storageRepository.save(storageEntity);
-        return new StorageCreatedResponse(savedStorageEntry.getId());
+        return new CreateStorageResponse(savedStorageEntry.getId());
     }
 
     public List<StorageDto> getAllStorages() {
@@ -34,7 +34,7 @@ public class StorageService {
             .collect(Collectors.toList());
     }
 
-    public StoragesDeletedResponse deleteResponses(List<Long> ids) {
+    public DeleteStoragesResponse deleteResponses(List<Long> ids) {
         var deletedIds = storageRepository.findAllById(ids)
             .stream()
             .map(storage -> {
@@ -43,6 +43,6 @@ public class StorageService {
             })
             .collect(Collectors.toList());
 
-        return new StoragesDeletedResponse(deletedIds);
+        return new DeleteStoragesResponse(deletedIds);
     }
 }
