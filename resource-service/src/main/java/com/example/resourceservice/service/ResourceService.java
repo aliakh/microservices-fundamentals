@@ -1,7 +1,6 @@
 package com.example.resourceservice.service;
 
 import com.example.resourceservice.dto.ResourceResponse;
-import com.example.resourceservice.dto.S3Properties;
 import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.exception.InvalidMp3FileException;
 import com.example.resourceservice.exception.ResourceNotFoundException;
@@ -30,7 +29,7 @@ public class ResourceService {
     @Autowired
     private S3Service s3Service;
     @Autowired
-    private S3Properties s3Properties;
+    private StorageService storageService;
     @Autowired
     private Mp3Validator mp3Validator;
     @Autowired
@@ -46,9 +45,11 @@ public class ResourceService {
             throw new InvalidMp3FileException("The request body is invalid MP3");
         }
 
-        var s3ResourceDto = s3Service.putObject(audio, s3Properties.bucket(), "audio/mpeg");
+        var storageDto = storageService.getStagingStorage();
+        var s3ResourceDto = s3Service.putObject(audio, storageDto.bucket(), "audio/mpeg");
 
         var resource = new Resource();
+        resource.setStorageId(storageDto.id());
         resource.setKey(s3ResourceDto.key());
 
         var createdResource = resourceRepository.save(resource);
@@ -63,9 +64,11 @@ public class ResourceService {
         var resource = resourceRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(id));
 
+        var storageDto = storageService.getStorageById(resource.getStorageId());
+
         return new ResourceResponse(
             resource.getId(),
-            s3Service.getObject(s3Properties.bucket(), resource.getKey())
+            s3Service.getObject(storageDto.bucket(), resource.getKey())
         );
     }
 
@@ -79,7 +82,8 @@ public class ResourceService {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(resource -> {
-                s3Service.deleteObject(s3Properties.bucket(), resource.getKey());
+                var storageDto = storageService.getStorageById(resource.getStorageId());
+                s3Service.deleteObject(storageDto.bucket(), resource.getKey());
                 return resource.getId();
             })
             .peek(id -> resourceRepository.deleteById(id))
