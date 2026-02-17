@@ -1,7 +1,9 @@
 package com.microservices.storageservice.service;
 
-import com.microservices.storageservice.dto.CreateStorageResponse;
-import com.microservices.storageservice.dto.*;
+import com.microservices.storageservice.dto.CreateStorageRequest;
+import com.microservices.storageservice.dto.StorageDto;
+import com.microservices.storageservice.entity.Storage;
+import com.microservices.storageservice.exception.StorageAlreadyExistsException;
 import com.microservices.storageservice.repository.StorageRepository;
 import com.microservices.storageservice.service.validation.CsvIdsParser;
 import com.microservices.storageservice.service.validation.CsvIdsValidator;
@@ -37,19 +39,16 @@ public class StorageService {
             throw new StorageAlreadyExistsException(createStorageRequest.id());
         }
 
-        var storage = new Storage(
-            createStorageRequest.id(),
-            createStorageRequest.name(),
-            createStorageRequest.artist(),
-            createStorageRequest.album(),
-            createStorageRequest.duration(),
-            createStorageRequest.year()
-        );
+        var storage = new Storage();
+        storage.setId(createStorageRequest.id());
+        storage.setStorageType(createStorageRequest.storageType());
+        storage.setBucket(createStorageRequest.bucket());
+        storage.setPath(createStorageRequest.path());
 
         var createdStorage = storageRepository.save(storage);
         return createdStorage.getId();
     }
-    
+
     public List<StorageDto> getAllStorages() {
         var storages = storageRepository.findAll();
         return storages.stream()
