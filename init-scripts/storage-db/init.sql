@@ -9,5 +9,5 @@ create table storages (
 insert into storages
 (storage_type, bucket, path)
 values
-('STAGING', 'resources-staging', 'staging/'),
-('PERMANENT', 'resources-permanent', 'permanent/');
+('STAGING', 'resources-staging', '/staging/'),
+('PERMANENT', 'resources-permanent', '/permanent/');
