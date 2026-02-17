@@ -61,16 +61,16 @@ public class S3Service {
         return getObjectResponse.asByteArray();
     }
 
-    public void copyObject(String sourceBucket, String destinationBucket, String key) {
+    public void copyObject(String sourceBucket, String sourceKey, String destinationBucket, String destinationKey) {
         logger.info("Copy object from bucket {} to bucket {} by key {}", sourceBucket, destinationBucket, key);
 
         createBucketIfDoesNotExist(destinationBucket);
 
         var copyObjectRequest = CopyObjectRequest.builder()
             .sourceBucket(sourceBucket)
-            .sourceKey(key)
+            .sourceKey(sourceKey)
             .destinationBucket(destinationBucket)
-            .destinationKey(key)
+            .destinationKey(destinationKey)
             .build();
 
         var copyObjectResponse = s3Client.copyObject(copyObjectRequest);

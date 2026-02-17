@@ -21,7 +21,7 @@ import java.util.HashMap;
 @EnableKafka
 @Configuration
 @EnableConfigurationProperties(value = KafkaProperties.class)
-public class KafkaProducerConfig1 {
+public class KafkaProducerConfig {
 
     @Bean
     public KafkaAdmin kafkaAdmin(KafkaProperties kafkaProperties) {
@@ -31,8 +31,8 @@ public class KafkaProducerConfig1 {
     }
 
     @Bean
-    public NewTopic newParsingResourcesTopic(KafkaProperties kafkaProperties) {
-        return TopicBuilder.name(kafkaProperties.parsingResourcesTopic()).build();
+    public NewTopic newFinalizingResourcesTopic(KafkaProperties kafkaProperties) {
+        return TopicBuilder.name(kafkaProperties.finalizingResourcesTopic()).build();
     }
 
     @Bean

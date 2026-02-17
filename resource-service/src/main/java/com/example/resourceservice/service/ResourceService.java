@@ -90,15 +90,13 @@ public class ResourceService {
             .orElseThrow(() -> new ResourceNotFoundException(id));
 
         var stagingStorageDto = storageService.getStorageById(resource.getStorageId());
-
         if (StorageType.PERMANENT.equals(stagingStorageDto.storageType())) {
             throw new ResourceAlreadyInPermanentStorageException(id);
         }
 
         var permanentStorageDto = storageService.getPermanentStorage();
-        var key = stagingStorageDto.path() + resource.getKey();
-        s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), key);
-        s3Service.deleteObject(stagingStorageDto.bucket(), key);
+        s3Service.copyObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey(), permanentStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
+        s3Service.deleteObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
 
         resource.setStorageId(permanentStorageDto.id());
         resourceRepository.save(resource);

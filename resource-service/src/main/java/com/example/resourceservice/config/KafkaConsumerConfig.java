@@ -19,10 +19,10 @@ import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 
-@EnableKafka
+@EnableKafka //TODO
 @Configuration
 @EnableConfigurationProperties(value = KafkaProperties.class)
-public class KafkaConsumerConfig1 {
+public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory(KafkaProperties kafkaProperties) {

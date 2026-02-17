@@ -16,7 +16,7 @@ public class ResourceFinalizingConsumer {
     private ResourceService resourceService;
 
     @Transactional
-    @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
+    @KafkaListener(topics = "${kafka.finalizing-resources-topic}", groupId = "${kafka.finalizing-resources-consumer-group}")
     public void finalizeResource(Long resourceId) {
         try {
             logger.info("Resource finalizing message received: {}", resourceId);
