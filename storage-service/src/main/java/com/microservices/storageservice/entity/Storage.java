@@ -1,10 +1,7 @@
 package com.microservices.storageservice.entity;
 
-import com.microservices.storageservice.dto.StorageType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +20,7 @@ public class Storage {
     private Long id;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private StorageType storageType;
+    private String storageType;
 
     @Column(nullable = false)
     private String bucket;
@@ -40,11 +36,11 @@ public class Storage {
         this.id = id;
     }
 
-    public StorageType getStorageType() {
+    public String getStorageType() {
         return storageType;
     }
 
-    public void setStorageType(StorageType storageType) {
+    public void setStorageType(String storageType) {
         this.storageType = storageType;
     }
 
@@ -74,7 +70,7 @@ public class Storage {
         }
         var that = (Storage) obj;
         return Objects.equals(getId(), that.getId())
-            && getStorageType() == that.getStorageType()
+            && Objects.equals(getStorageType(), that.getStorageType())
             && Objects.equals(getBucket(), that.getBucket())
             && Objects.equals(getPath(), that.getPath());
     }
@@ -88,7 +84,7 @@ public class Storage {
     public String toString() {
         return new StringJoiner(", ", Storage.class.getSimpleName() + "[", "]")
             .add("id=" + id)
-            .add("storageType=" + storageType)
+            .add("storageType='" + storageType + "'")
             .add("bucket='" + bucket + "'")
             .add("path='" + path + "'")
             .toString();

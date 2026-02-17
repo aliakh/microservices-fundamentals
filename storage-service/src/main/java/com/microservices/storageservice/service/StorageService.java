@@ -3,7 +3,6 @@ package com.microservices.storageservice.service;
 import com.microservices.storageservice.dto.CreateStorageRequest;
 import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.entity.Storage;
-import com.microservices.storageservice.exception.StorageAlreadyExistsException;
 import com.microservices.storageservice.repository.StorageRepository;
 import com.microservices.storageservice.service.validation.CsvIdsParser;
 import com.microservices.storageservice.service.validation.CsvIdsValidator;
@@ -32,6 +31,7 @@ public class StorageService {
 
     @Transactional
     public Long createStorage(CreateStorageRequest createStorageRequest) {
+        //TODO check name
 //        if (storageRepository.existsById(createStorageRequest.id())) {
 //            throw new StorageAlreadyExistsException(createStorageRequest.id());
 //        }

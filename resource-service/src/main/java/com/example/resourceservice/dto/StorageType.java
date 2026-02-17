@@ -1,7 +1,6 @@
 package com.example.resourceservice.dto;
 
-//TODO constants
-public enum StorageType {
-    STAGING,
-    PERMANENT
+public interface StorageType {
+    String STAGING = "STAGING";
+    String PERMANENT = "PERMANENT";
 }

@@ -48,12 +48,12 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse("Validation error", 400, details));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse> handle(MethodArgumentTypeMismatchException e) {
-        var value = e.getValue() != null ? e.getValue().toString() : "null";
-        var message = String.format("Invalid value '%s' for ID. Must be a positive integer", value);
-        return buildResponse(HttpStatus.BAD_REQUEST, message);
-    }
+//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+//    public ResponseEntity<ErrorResponse> handle(MethodArgumentTypeMismatchException e) {
+//        var value = e.getValue() != null ? e.getValue().toString() : "null";
+//        var message = String.format("Invalid value '%s' for ID. Must be a positive integer", value);
+//        return buildResponse(HttpStatus.BAD_REQUEST, message);
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {
