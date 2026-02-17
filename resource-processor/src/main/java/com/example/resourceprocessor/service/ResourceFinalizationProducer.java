@@ -28,7 +28,7 @@ public class ResourceFinalizationProducer {
                             result.getRecordMetadata().offset()
                         );
                     } else {
-                        logger.error("Failed to publish resource finalization message id={}", resourceId, throwable);
+                        logger.error("Failed to publish resource finalization message {}", resourceId, throwable);
                     }
                 }
             );
