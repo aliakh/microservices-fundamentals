@@ -3,20 +3,20 @@ package com.microservices.storageservice.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
-//TODO
 public record CreateStorageRequest(
 
-    @Null
-    Long id,
-
-    @NotNull
+    @NotNull(message = "Storage type is required")
+    @Size(min = 1, max = 100, message = "Storage type must be between 1 and 100 characters")
     StorageType storageType,
 
-    @NotBlank
+    @NotBlank(message = "Bucket is required")
+    @Size(min = 1, max = 100, message = "Bucket must be between 1 and 100 characters")
     String bucket,
 
-    @NotBlank
+    @NotBlank(message = "Path is required")
+    @Size(min = 1, max = 100, message = "Path must be between 1 and 100 characters")
     String path
 ) {
 }

@@ -1,7 +1,8 @@
 package com.microservices.storageservice.controller;
 
-import com.microservices.storageservice.dto.*;
-import com.microservices.storageservice.exception.*;
+import com.microservices.storageservice.dto.ErrorResponse;
+import com.microservices.storageservice.exception.StorageAlreadyExistsException;
+import com.microservices.storageservice.exception.StorageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

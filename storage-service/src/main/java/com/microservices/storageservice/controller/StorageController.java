@@ -1,7 +1,8 @@
 package com.microservices.storageservice.controller;
 
+import com.microservices.storageservice.dto.CreateStorageRequest;
 import com.microservices.storageservice.dto.CreateStorageResponse;
-import com.microservices.storageservice.dto.*;
+import com.microservices.storageservice.dto.DeleteStoragesResponse;
 import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.service.StorageService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class StorageController {
 
     @Value("${com.microservices.simulate.error}")
     private boolean simulateError;
-//TODO
+    //TODO
     @Value("${com.microservices.simulate.delay}")
     private boolean simulateDelay;
 
@@ -52,7 +53,7 @@ public class StorageController {
         var createdId = storageService.createStorage(createStorageRequest);
         return ResponseEntity.ok(new CreateStorageResponse(createdId));
     }
-    
+
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<StorageDto>> getAllStorages() {
         if (simulateError) {
