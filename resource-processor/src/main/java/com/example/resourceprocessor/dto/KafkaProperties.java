@@ -8,7 +8,6 @@ import java.util.Map;
 public record KafkaProperties(
     String bootstrapUrl,
     String parsingResourcesTopic,
-    String parsingResourcesConsumerGroup,
     String finalizingResourcesTopic,
     Map<String, String> properties
 ) {

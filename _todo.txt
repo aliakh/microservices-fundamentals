@@ -1,4 +1,3 @@
-send to parse properties
-send to finalize properties
+pass paramas kafka to docker images
 simulate delay
 simulate exception
