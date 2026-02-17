@@ -1,7 +1,7 @@
 package com.microservices.storageservice.controller;
 
 import com.microservices.storageservice.dto.ErrorResponse;
-import com.microservices.storageservice.exception.StorageAlreadyExistsException;
+import com.microservices.storageservice.exception.*;
 import com.microservices.storageservice.exception.StorageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 
@@ -21,15 +20,15 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler(StorageAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handle(StorageAlreadyExistsException e) {
+    @ExceptionHandler(StorageTypeAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handle(StorageTypeAlreadyExistsException e) {
         return buildResponse(HttpStatus.CONFLICT, e.getMessage());
     }
-//
-//    @ExceptionHandler(InvalidIdException.class)
-//    public ResponseEntity<ErrorResponse> handle(InvalidIdException e) {
-//        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//    }
+
+    @ExceptionHandler(InvalidIdException.class)
+    public ResponseEntity<ErrorResponse> handle(InvalidIdException e) {
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {

@@ -3,6 +3,7 @@ package com.microservices.storageservice.service;
 import com.microservices.storageservice.dto.CreateStorageRequest;
 import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.entity.Storage;
+import com.microservices.storageservice.exception.StorageTypeAlreadyExistsException;
 import com.microservices.storageservice.repository.StorageRepository;
 import com.microservices.storageservice.service.validation.CsvIdsParser;
 import com.microservices.storageservice.service.validation.CsvIdsValidator;
@@ -22,22 +23,14 @@ public class StorageService {
     private CsvIdsValidator csvIdsValidator;
     @Autowired
     private CsvIdsParser csvIdsParser;
-//
-//    public CreateStorageResponse createStorage(StorageDto storageDto) {
-//        var storageEntity = storageMapper.toEntity(storageDto);
-//        var savedStorageEntry = storageRepository.save(storageEntity);
-//        return new CreateStorageResponse(savedStorageEntry.getId());
-//    }
 
     @Transactional
     public Long createStorage(CreateStorageRequest createStorageRequest) {
-        //TODO check name
-//        if (storageRepository.existsById(createStorageRequest.id())) {
-//            throw new StorageAlreadyExistsException(createStorageRequest.id());
-//        }
+        if (storageRepository.existsByStorageType(createStorageRequest.storageType())) {
+            throw new StorageTypeAlreadyExistsException(createStorageRequest.storageType());
+        }
 
         var storage = new Storage();
-//        storage.setId(createStorageRequest.id());
         storage.setStorageType(createStorageRequest.storageType());
         storage.setBucket(createStorageRequest.bucket());
         storage.setPath(createStorageRequest.path());
