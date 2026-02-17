@@ -8,9 +8,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ResourceFinalizationProducer {
+public class ResourceFinalizingProducer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceFinalizationProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceFinalizingProducer.class);
 
     @Autowired
     private KafkaTemplate<Long, String> kafkaTemplate;
@@ -21,14 +21,14 @@ public class ResourceFinalizationProducer {
         kafkaTemplate.send(kafkaProperties.parsingResourcesTopic(), resourceId, resourceId.toString())
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
-                        logger.info("Resource finalization message with key {} and value {} was published to topic {} at offset {}",
+                        logger.info("Resource finalizing message with key {} and value {} was published to topic {} at offset {}",
                             result.getProducerRecord().key(),
                             result.getProducerRecord().value(),
                             result.getRecordMetadata().topic(),
                             result.getRecordMetadata().offset()
                         );
                     } else {
-                        logger.error("Failed to publish resource finalization message {}", resourceId, throwable);
+                        logger.error("Failed to publish resource finalizing message {}", resourceId, throwable);
                     }
                 }
             );

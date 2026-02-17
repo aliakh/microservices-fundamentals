@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ResourceFinalizationConsumer {
+public class ResourceFinalizingConsumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceFinalizationConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceFinalizingConsumer.class);
 
     @Autowired
     private ResourceService resourceService;
@@ -19,7 +19,7 @@ public class ResourceFinalizationConsumer {
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void finalizeResource(Long resourceId) {
         try {
-            logger.info("Resource finalization message received: {}", resourceId);
+            logger.info("Resource finalizing message received: {}", resourceId);
 
             var resource = resourceService.moveResourceToPermanentStorage(resourceId);
             logger.info("Resource moved to permanent storage: {}", resource);

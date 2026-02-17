@@ -24,7 +24,7 @@ public class ResourceParsingConsumer {
     @Autowired
     private SongServiceClient songServiceClient;
     @Autowired
-    private ResourceFinalizationProducer resourceFinalizationProducer;
+    private ResourceFinalizingProducer resourceFinalizingProducer;
 
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
@@ -44,8 +44,8 @@ public class ResourceParsingConsumer {
             var songCreatedResponse = songServiceClient.createSong(songDto);
             logger.info("Create song response: {}", songCreatedResponse);
 
-            resourceFinalizationProducer.finalizeResource(resourceDto.id());
-            logger.info("Sent resource finalization message");
+            resourceFinalizingProducer.finalizeResource(resourceDto.id());
+            logger.info("Sent resource finalizing message");
         } catch (JsonProcessingException e) {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
