@@ -62,7 +62,7 @@ public class S3Service {
     }
 
     public void copyObject(String sourceBucket, String sourceKey, String destinationBucket, String destinationKey) {
-        logger.info("Copy object from bucket {} to bucket {} by key {}", sourceBucket, destinationBucket, key);
+        logger.info("Copy object from bucket {} by key {} to bucket {} by key {}", sourceBucket, sourceKey, destinationBucket, destinationKey);
 
         createBucketIfDoesNotExist(destinationBucket);
 

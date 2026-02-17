@@ -95,8 +95,16 @@ public class ResourceService {
         }
 
         var permanentStorageDto = storageService.getPermanentStorage();
-        s3Service.copyObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey(), permanentStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
-        s3Service.deleteObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
+        s3Service.copyObject(
+            stagingStorageDto.bucket(),
+            stagingStorageDto.path() + resource.getKey(),
+            permanentStorageDto.bucket(),
+            permanentStorageDto.path() + resource.getKey()
+        );
+        s3Service.deleteObject(
+            stagingStorageDto.bucket(),
+            stagingStorageDto.path() + resource.getKey()
+        );
 
         resource.setStorageId(permanentStorageDto.id());
         resourceRepository.save(resource);
