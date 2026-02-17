@@ -1,6 +1,5 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceservice.dto.S3ResourceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class S3Service {
     @Autowired
     private S3Client s3Client;
 
-    public S3ResourceDto putObject(byte[] audio, String bucket, String key, String contentType) {
+    public void putObject(byte[] audio, String bucket, String key, String contentType) {
         logger.info("Put object into bucket {}", bucket);
 
         createBucketIfDoesNotExist(bucket);
@@ -40,11 +39,6 @@ public class S3Service {
             RequestBody.fromBytes(audio)
         );
         logger.info("Put object response: {}", putObjectResponse);
-
-        return new S3ResourceDto(
-            bucket,
-            key
-        );
     }
 
     public byte[] getObject(String bucket, String key) {

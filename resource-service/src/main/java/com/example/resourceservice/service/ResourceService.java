@@ -54,11 +54,11 @@ public class ResourceService {
 
         var key = UUID.randomUUID().toString();
         var storageDto = storageService.getStagingStorage();
-        var s3ResourceDto = s3Service.putObject(audio, storageDto.bucket(), storageDto.path() + key, "audio/mpeg");
+        s3Service.putObject(audio, storageDto.bucket(), storageDto.path() + key, "audio/mpeg");
 
         var resource = new Resource();
         resource.setStorageId(storageDto.id());
-        resource.setKey(s3ResourceDto.key());
+        resource.setKey(key);
 
         var createdResource = resourceRepository.save(resource);
         resourceParsingProducer.parseResource(createdResource);
