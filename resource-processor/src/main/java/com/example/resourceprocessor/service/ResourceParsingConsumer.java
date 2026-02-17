@@ -27,7 +27,7 @@ public class ResourceParsingConsumer {
     private ResourceFinalizationProducer resourceFinalizationProducer;
 
     @Transactional
-    @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.group-id}")
+    @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group-id}")
     public void parseResource(String message) {
         try {
             logger.info("Resource parsing message received: {}", message);
