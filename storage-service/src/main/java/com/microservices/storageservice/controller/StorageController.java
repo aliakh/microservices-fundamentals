@@ -8,8 +8,10 @@ import com.microservices.storageservice.service.StorageService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,26 +24,23 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//TODO
-@RequestMapping("/storages")
 @RestController
+@RequestMapping("/storages")
+@Validated
 public class StorageController {
 
     private static final Logger logger = LoggerFactory.getLogger(StorageController.class);
 
-    private final StorageService storageService;
+    @Autowired
+    private StorageService storageService;
 
-    private final AtomicInteger simulatedDelaySeconds = new AtomicInteger(0);
+    private final AtomicInteger simulateDelaySeconds = new AtomicInteger(0);
 
-    @Value("${com.microservices.simulate.error}")
+    @Value("${com.microservices.storageservice.simulate-error}")
     private boolean simulateError;
-    //TODO
-    @Value("${com.microservices.simulate.delay}")
-    private boolean simulateDelay;
 
-    public StorageController(StorageService storageService) {
-        this.storageService = storageService;
-    }
+    @Value("${com.microservices.storageservice.simulate-delay}")
+    private boolean simulateDelay;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid CreateStorageRequest createStorageRequest) {
@@ -56,8 +55,8 @@ public class StorageController {
             throw new RuntimeException("Simulated exception");
         }
         if (simulateDelay) {
-            logger.warn("Delay {} second(s) simulated", simulatedDelaySeconds.get());
-            delay(simulatedDelaySeconds.getAndIncrement());
+            logger.warn("Delay {} second(s) simulated", simulateDelaySeconds.get());
+            delay(simulateDelaySeconds.getAndIncrement());
         }
         return ResponseEntity.ok(storageService.getAllStorages());
     }
