@@ -23,7 +23,7 @@ public class ResourceParsingProducer {
     private KafkaProperties kafkaProperties;
 
     public void parseResource(Resource resource) {
-        kafkaTemplate.send(kafkaProperties.topic(), resource.getId(), toJson(resource))
+        kafkaTemplate.send(kafkaProperties.parsingResourcesTopic(), resource.getId(), toJson(resource))
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         logger.info("Resource parsing message with key {} and value {} was published to topic {} at offset {}",

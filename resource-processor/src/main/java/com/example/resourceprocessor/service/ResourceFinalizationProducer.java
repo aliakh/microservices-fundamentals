@@ -18,7 +18,7 @@ public class ResourceFinalizationProducer {
     private KafkaProperties kafkaProperties;
 
     public void finalizeResource(Long resourceId) {
-        kafkaTemplate.send(kafkaProperties.topic(), resourceId, resourceId.toString())
+        kafkaTemplate.send(kafkaProperties.parsingResourcesTopic(), resourceId, resourceId.toString())
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         logger.info("Resource finalization message with key {} and value {} was published to topic {} at offset {}",
