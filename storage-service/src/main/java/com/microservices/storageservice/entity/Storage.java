@@ -56,6 +56,14 @@ public class Storage {
         this.bucket = bucket;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -65,16 +73,15 @@ public class Storage {
             return false;
         }
         var that = (Storage) obj;
-        return Objects.equals(id, that.id)
-            && storageType == that.storageType
-            && Objects.equals(bucket, that.bucket)
-            && Objects.equals(path, that.path);
+        return Objects.equals(getId(), that.getId())
+            && getStorageType() == that.getStorageType()
+            && Objects.equals(getBucket(), that.getBucket())
+            && Objects.equals(getPath(), that.getPath());
     }
 
-    //TODO getters
     @Override
     public int hashCode() {
-        return Objects.hash(id, storageType, bucket, path);
+        return Objects.hash(getId(), getStorageType(), getBucket(), getPath());
     }
 
     @Override
