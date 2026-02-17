@@ -4,6 +4,7 @@ import com.example.resourceservice.dto.ResourceResponse;
 import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.exception.InvalidMp3FileException;
+import com.example.resourceservice.exception.ResourceAlreadyInPermanentStorageException;
 import com.example.resourceservice.exception.ResourceNotFoundException;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
@@ -91,16 +92,16 @@ public class ResourceService {
         var stagingStorageDto = storageService.getStorageById(resource.getStorageId());
 
         if (StorageType.PERMANENT.equals(stagingStorageDto.storageType())) {
-//            logger.warn("Resource upload already completed: {}", resourceEntity); TODO exception
-        } else {
-            var permanentStorageDto = storageService.getPermanentStorage();
-            var key = stagingStorageDto.path() + resource.getKey();
-            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), key);
-            s3Service.deleteObject(stagingStorageDto.bucket(), key);
-
-            resource.setStorageId(permanentStorageDto.id());
-            resourceRepository.save(resource);
+            throw new ResourceAlreadyInPermanentStorageException(id);
         }
+
+        var permanentStorageDto = storageService.getPermanentStorage();
+        var key = stagingStorageDto.path() + resource.getKey();
+        s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), key);
+        s3Service.deleteObject(stagingStorageDto.bucket(), key);
+
+        resource.setStorageId(permanentStorageDto.id());
+        resourceRepository.save(resource);
 
         return resource;
     }

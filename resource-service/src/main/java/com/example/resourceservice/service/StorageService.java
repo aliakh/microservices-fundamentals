@@ -19,13 +19,13 @@ public class StorageService {
     @Autowired
     private StorageServiceClient storageServiceClient;
 
-    @CircuitBreaker(name = "storage-service-client", fallbackMethod = "getAllStoragesFallback")
+    @CircuitBreaker(name = "storageServiceClient", fallbackMethod = "getAllStoragesFallback")
     public List<StorageDto> getAllStorages() {
         return storageServiceClient.getAllStorages();
     }
 
     private List<StorageDto> getAllStoragesFallback(Exception e) {
-        logger.warn("Failed to read storages, use a local fallback instead");
+        logger.warn("Failed to read storages, using a local fallback instead", e);
 
         return List.of(
             new StorageDto(1L, StorageType.STAGING, "resources-staging", "/staging/"),
@@ -34,29 +34,29 @@ public class StorageService {
     }
 
     public StorageDto getStorageById(long storageId) {
-        List<StorageDto> storages = getAllStorages();
+        var storages = getAllStorages();
         return storages
             .stream()
             .filter(storageDto -> storageId == storageDto.id())
             .findAny()
-            .orElseThrow(() -> new StorageNotFoundException(String.format("Storage with id %s not found", storageId)));
+            .orElseThrow(() -> new StorageNotFoundException(String.format("Storage for ID=%d not found", storageId)));
     }
 
     public StorageDto getStagingStorage() {
-        List<StorageDto> storages = getAllStorages();
+        var storages = getAllStorages();
         return storages
             .stream()
-            .filter(storageDto -> StorageType.STAGING.equals(storageDto.storageType()))
+            .filter(storage -> StorageType.STAGING.equals(storage.storageType()))
             .findFirst()
-            .orElseThrow(() -> new StorageNotFoundException(String.format("Staging storage not found in storages: %s", storages)));
+            .orElseThrow(() -> new StorageNotFoundException(String.format("Staging storage not found among storages: %s", storages)));
     }
 
     public StorageDto getPermanentStorage() {
-        List<StorageDto> storages = getAllStorages();
+        var storages = getAllStorages();
         return storages
             .stream()
-            .filter(storageDto -> StorageType.PERMANENT.equals(storageDto.storageType()))
+            .filter(storage -> StorageType.PERMANENT.equals(storage.storageType()))
             .findFirst()
-            .orElseThrow(() -> new StorageNotFoundException(String.format("Permanent storage not found in storages: %s", storages)));
+            .orElseThrow(() -> new StorageNotFoundException(String.format("Permanent storage not found among storages: %s", storages)));
     }
 }
