@@ -1,7 +1,7 @@
 package com.microservices.storageservice.controller;
 
 import com.microservices.storageservice.dto.CreateStorageResponse;
-import com.microservices.storageservice.dto.DeleteStoragesResponse;
+import com.microservices.storageservice.dto.*;
 import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.service.StorageService;
 import jakarta.validation.Valid;
@@ -41,12 +41,18 @@ public class StorageController {
     public StorageController(StorageService storageService) {
         this.storageService = storageService;
     }
+//
+//    @PostMapping(consumes = "application/json", produces = "application/json")
+//    public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid StorageDto storageDto) {
+//        return ResponseEntity.ok(storageService.createStorage(storageDto));
+//    }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid StorageDto storageDto) {
-        return ResponseEntity.ok(storageService.createStorage(storageDto));
+    public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid CreateStorageRequest createStorageRequest) {
+        var createdId = storageService.createStorage(createStorageRequest);
+        return ResponseEntity.ok(new CreateStorageResponse(createdId));
     }
-
+    
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<StorageDto>> getAllStorages() {
         if (simulateError) {
@@ -69,8 +75,8 @@ public class StorageController {
     }
 
     @DeleteMapping(produces = "application/json")
-    public ResponseEntity<DeleteStoragesResponse> deleteStorages(@RequestParam List<Long> ids) {
-        var deletedIds = storageService.deleteResponses(ids);
-        return ResponseEntity.ok(deletedIds);
+    public ResponseEntity<DeleteStoragesResponse> deleteStorages(@RequestParam("id") String csvIds) {
+        var deletedIds = storageService.deleteStorages(csvIds);
+        return ResponseEntity.ok(new DeleteStoragesResponse(deletedIds));
     }
 }
