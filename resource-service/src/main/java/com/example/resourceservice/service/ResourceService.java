@@ -1,12 +1,10 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceservice.dto.ResourceCompletedResponse;
 import com.example.resourceservice.dto.ResourceResponse;
 import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.entity.Resource;
 import com.example.resourceservice.exception.InvalidMp3FileException;
 import com.example.resourceservice.exception.ResourceNotFoundException;
-import com.example.resourceservice.exception.StorageNotFoundException;
 import com.example.resourceservice.repository.ResourceRepository;
 import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
@@ -78,9 +76,11 @@ public class ResourceService {
     }
 
     @Transactional
-    public ResourceCompletedResponse completeResourceUpload(Long id) {
+    public Resource moveResourceToPermanentStorage(Long id) {
+        idValidator.validate(id);
+
         var resource = resourceRepository.findById(id)
-            .orElseThrow(() -> new StorageNotFoundException(String.format("Resource with id %s not found", id)));
+            .orElseThrow(() -> new ResourceNotFoundException(id));
 
         var stagingStorageDto = storageService.getStorageById(resource.getStorageId());
 
@@ -88,14 +88,15 @@ public class ResourceService {
 //            logger.warn("Resource upload already completed: {}", resourceEntity); TODO exception
         } else {
             var permanentStorageDto = storageService.getPermanentStorage();
-            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
-            s3Service.deleteObject(stagingStorageDto.bucket(), stagingStorageDto.path() + resource.getKey());
+            var key = stagingStorageDto.path() + resource.getKey();
+            s3Service.copyObject(stagingStorageDto.bucket(), permanentStorageDto.bucket(), key);
+            s3Service.deleteObject(stagingStorageDto.bucket(), key);
 
             resource.setStorageId(permanentStorageDto.id());
             resourceRepository.save(resource);
         }
 
-        return new ResourceCompletedResponse(resource.getId(), resource.getStorageId());
+        return resource;
     }
 
     @Transactional

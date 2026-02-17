@@ -59,7 +59,7 @@ public class StepDefinitions {
         assertThat(uploadResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("the resource creation content storageType is {string}")
+    @And("the resource creation content type is {string}")
     public void checkCreateResourceResponseContentType(String contentType) {
         assertThat(uploadResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
@@ -102,7 +102,7 @@ public class StepDefinitions {
         assertThat(getResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("the resource retrieval response content storageType is {string}")
+    @And("the resource retrieval response content type is {string}")
     public void checkGetResourceRequestResponseContentType(String contentType) {
         assertThat(getResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }
@@ -117,7 +117,7 @@ public class StepDefinitions {
         assertThat(deleteResourceEntity.getStatusCode().value()).isEqualTo(responseStatus);
     }
 
-    @And("the resource deletion response content storageType is {string}")
+    @And("the resource deletion response content type is {string}")
     public void checkDeleteResourceRequestResponseContentType(String contentType) {
         assertThat(deleteResourceEntity.getHeaders().getContentType().toString()).isEqualTo(contentType);
     }

@@ -62,7 +62,7 @@ public class S3Service {
     }
 
     public void copyObject(String sourceBucket, String destinationBucket, String key) {
-// TODO       logger.info("Copy file {} from bucket {} to bucket {}", key, sourceBucket, destinationBucket);
+        logger.info("Copy object from bucket {} to bucket {} by key {}", sourceBucket, destinationBucket, key);
 
         createBucketIfDoesNotExist(destinationBucket);
 
@@ -73,9 +73,8 @@ public class S3Service {
             .destinationKey(key)
             .build();
 
-//  TODO      logger.info("Copy object request: {}", copyObjectRequest);
         var copyObjectResponse = s3Client.copyObject(copyObjectRequest);
-//  TODO      logger.info("Copy object response: {}", copyObjectResponse);
+        logger.info("Copy object response: {}", copyObjectResponse);
     }
 
     public void deleteObject(String bucket, String key) {

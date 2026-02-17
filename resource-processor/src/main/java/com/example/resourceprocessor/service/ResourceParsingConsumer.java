@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ResourceConsumer {
+public class ResourceParsingConsumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceParsingConsumer.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -24,11 +24,11 @@ public class ResourceConsumer {
     @Autowired
     private SongServiceClient songServiceClient;
     @Autowired
-    private ResourceProducer2 resourceProducer2;
+    private ResourceFinalizationProducer resourceFinalizationProducer;
 
     @Transactional
     @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
-    public void consumeResource(String message) {
+    public void parseResource(String message) {
         try {
             logger.info("Message received: {}", message);
 
@@ -44,12 +44,12 @@ public class ResourceConsumer {
             var songCreatedResponse = songServiceClient.createSong(songDto);
             logger.info("Create song response: {}", songCreatedResponse);
 
-            resourceProducer2.completeResource(resourceDto.id());
-//            logger.info("Create song response: {}", songCreatedResponse);
+            resourceFinalizationProducer.finalizeResource(resourceDto.id());
+            logger.info("Sent resource finalization message");
         } catch (JsonProcessingException e) {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
-            logger.error("Failed to consume message {}", message, e);
+            logger.error("Failed to parse message {}", message, e);
         }
     }
 }

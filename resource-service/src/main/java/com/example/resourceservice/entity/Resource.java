@@ -72,7 +72,7 @@ public class Resource {
     public String toString() {
         return new StringJoiner(", ", Resource.class.getSimpleName() + "[", "]")
             .add("id=" + id)
-            .add("storageId=" + storageId)
+            .add("storageId='" + storageId + "'")
             .add("key='" + key + "'")
             .toString();
     }

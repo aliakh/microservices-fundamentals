@@ -5,6 +5,7 @@ import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.exception.StorageNotFoundException;
 import org.slf4j.LoggerFactory;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +16,8 @@ public class StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
 
-    private final StorageServiceClient storageServiceClient;
-
-    public StorageService(StorageServiceClient storageServiceClient) {
-        this.storageServiceClient = storageServiceClient;
-    }
+    @Autowired
+    private StorageServiceClient storageServiceClient;
 
     @CircuitBreaker(name = "storage-service-client", fallbackMethod = "getAllStoragesFallback")
     public List<StorageDto> getAllStorages() {

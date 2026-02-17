@@ -10,19 +10,17 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ResourceProducer2 {
+public class ResourceFinalizationProducer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceProducer2.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceFinalizationProducer.class);
 
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private KafkaTemplate<Long, String> kafkaTemplate;
     @Autowired
     private KafkaProperties kafkaProperties;
 
-    public void completeResource(Long resourceId) {
-        kafkaTemplate.send(kafkaProperties.topic(), resource.getId(), toJson(resource))
+    public void finalizeResource(Long resourceId) {
+        kafkaTemplate.send(kafkaProperties.topic(), resourceId, resourceId.toString())
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         logger.info("Resource with key {} and value {} was published to topic {} at offset {}",
@@ -32,17 +30,9 @@ public class ResourceProducer2 {
                             result.getRecordMetadata().offset()
                         );
                     } else {
-                        logger.error("Failed to publish resource {}", resource, throwable);
+                        logger.error("Failed to publish resource id={}", resourceId, throwable);
                     }
                 }
             );
-    }
-
-    private String toJson(Resource resource) {
-        try {
-            return objectMapper.writeValueAsString(resource);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error while serializing resource to JSON", e);
-        }
     }
 }
