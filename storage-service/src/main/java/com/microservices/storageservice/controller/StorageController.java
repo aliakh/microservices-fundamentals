@@ -42,11 +42,6 @@ public class StorageController {
     public StorageController(StorageService storageService) {
         this.storageService = storageService;
     }
-//
-//    @PostMapping(consumes = "application/json", produces = "application/json")
-//    public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid StorageDto storageDto) {
-//        return ResponseEntity.ok(storageService.createStorage(storageDto));
-//    }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid CreateStorageRequest createStorageRequest) {
