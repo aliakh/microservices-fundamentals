@@ -154,6 +154,8 @@ services:
         condition: service_healthy
       song-service:
         condition: service_healthy
+      storage-service:
+        condition: service_healthy
       localstack:
         condition: service_healthy
     healthcheck:

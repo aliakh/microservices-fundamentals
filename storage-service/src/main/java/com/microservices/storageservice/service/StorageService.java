@@ -1,10 +1,10 @@
 package com.microservices.storageservice.service;
 
 import com.microservices.storageservice.dto.CreateStorageResponse;
-import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.dto.DeleteStoragesResponse;
-import com.microservices.storageservice.service.mapper.StorageMapper;
+import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.repository.StorageRepository;
+import com.microservices.storageservice.service.mapper.StorageMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

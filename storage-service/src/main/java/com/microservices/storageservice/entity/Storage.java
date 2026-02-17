@@ -64,13 +64,14 @@ public class Storage {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Storage that = (Storage) obj;
+        var that = (Storage) obj;
         return Objects.equals(id, that.id)
             && storageType == that.storageType
             && Objects.equals(bucket, that.bucket)
             && Objects.equals(path, that.path);
     }
-//TODO getters
+
+    //TODO getters
     @Override
     public int hashCode() {
         return Objects.hash(id, storageType, bucket, path);
