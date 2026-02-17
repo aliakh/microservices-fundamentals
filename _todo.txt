@@ -1,4 +1,4 @@
 send to parse properties
 send to finalize properties
-delay
-exceptio
+simulate delay
+simulate exception
