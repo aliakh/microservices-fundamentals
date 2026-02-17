@@ -1,3 +1,2 @@
-pass paramas kafka to docker images
 simulate delay
 simulate exception
