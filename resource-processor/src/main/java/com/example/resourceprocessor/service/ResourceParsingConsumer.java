@@ -30,7 +30,7 @@ public class ResourceParsingConsumer {
     @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
     public void parseResource(String message) {
         try {
-            logger.info("Message received: {}", message);
+            logger.info("Resource parsing message received: {}", message);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
             logger.info("Resource deserialized: {}", resourceDto);

@@ -3,13 +3,13 @@ package com.example.resourceservice.service;
 import com.example.resourceservice.dto.StorageDto;
 import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.exception.StorageNotFoundException;
-import org.slf4j.LoggerFactory;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import org.slf4j.Logger;
 
 @Service
 public class StorageService {

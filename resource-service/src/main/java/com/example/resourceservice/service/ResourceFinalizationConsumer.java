@@ -14,14 +14,12 @@ public class ResourceFinalizationConsumer {
 
     @Autowired
     private ResourceService resourceService;
-    @Autowired
-    private SongServiceClient songServiceClient;
 
     @Transactional
     @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
     public void finalizeResource(Long resourceId) {
         try {
-            logger.info("Resource id received: {}", resourceId);
+            logger.info("Resource finalization message received: {}", resourceId);
 
             var resource = resourceService.moveResourceToPermanentStorage(resourceId);
             logger.info("Resource moved to permanent storage: {}", resource);

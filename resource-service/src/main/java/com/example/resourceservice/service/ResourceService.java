@@ -10,6 +10,8 @@ import com.example.resourceservice.service.validation.CsvIdsParser;
 import com.example.resourceservice.service.validation.CsvIdsValidator;
 import com.example.resourceservice.service.validation.IdValidator;
 import com.example.resourceservice.service.validation.Mp3Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class ResourceService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResourceService.class);
+
     @Autowired
     private ResourceRepository resourceRepository;
     @Autowired
-    private ResourceProducer resourceProducer;
+    private ResourceParsingProducer resourceParsingProducer;
     @Autowired
     private SongServiceClient songServiceClient;
     @Autowired
@@ -56,7 +60,9 @@ public class ResourceService {
         resource.setKey(s3ResourceDto.key());
 
         var createdResource = resourceRepository.save(resource);
-        resourceProducer.produceResource(createdResource);
+        resourceParsingProducer.parseResource(createdResource);
+        logger.info("Sent resource parsing message");
+
         return createdResource.getId();
     }
 
