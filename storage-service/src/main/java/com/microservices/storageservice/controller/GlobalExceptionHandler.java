@@ -14,11 +14,6 @@ import java.util.HashMap;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-//
-//    @ExceptionHandler(StorageNotFoundException.class)
-//    public ResponseEntity<ErrorResponse> handle(StorageNotFoundException e) {
-//        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage());
-//    }
 
     @ExceptionHandler(StorageTypeAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handle(StorageTypeAlreadyExistsException e) {
@@ -46,13 +41,6 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse("Validation error", 400, details));
     }
-
-//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-//    public ResponseEntity<ErrorResponse> handle(MethodArgumentTypeMismatchException e) {
-//        var value = e.getValue() != null ? e.getValue().toString() : "null";
-//        var message = String.format("Invalid value '%s' for ID. Must be a positive integer", value);
-//        return buildResponse(HttpStatus.BAD_REQUEST, message);
-//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {
