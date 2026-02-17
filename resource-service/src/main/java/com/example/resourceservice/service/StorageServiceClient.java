@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@FeignClient(name = "api-gateway", configuration = FeignConfig.class)
+@FeignClient(name = "api-gateway", contextId = "storageServiceClient", configuration = FeignConfig.class)
 public interface StorageServiceClient {
 
     @GetMapping("/storages")
