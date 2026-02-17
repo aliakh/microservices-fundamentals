@@ -2,7 +2,6 @@ package com.microservices.storageservice.controller;
 
 import com.microservices.storageservice.dto.ErrorResponse;
 import com.microservices.storageservice.exception.*;
-import com.microservices.storageservice.exception.StorageNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,11 +13,11 @@ import java.util.HashMap;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(StorageNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handle(StorageNotFoundException e) {
-        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage());
-    }
+//
+//    @ExceptionHandler(StorageNotFoundException.class)
+//    public ResponseEntity<ErrorResponse> handle(StorageNotFoundException e) {
+//        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage());
+//    }
 
     @ExceptionHandler(StorageTypeAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handle(StorageTypeAlreadyExistsException e) {

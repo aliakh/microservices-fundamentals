@@ -1,6 +1,6 @@
 package com.microservices.storageservice.service.validation;
 
-import com.example.songservice.exception.InvalidIdException;
+import com.microservices.storageservice.exception.InvalidIdException;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
