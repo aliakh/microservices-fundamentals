@@ -19,19 +19,19 @@ public class StorageService {
     @Autowired
     private StorageServiceClient storageServiceClient;
 
-    @CircuitBreaker(name = "storageServiceClient", fallbackMethod = "getAllStoragesFallback")
+//    @CircuitBreaker(name = "storageServiceClient", fallbackMethod = "getAllStoragesFallback")
     public List<StorageDto> getAllStorages() {
         return storageServiceClient.getAllStorages();
     }
 
-    private List<StorageDto> getAllStoragesFallback(Exception e) {
-        logger.warn("Failed to read storages, using a local fallback instead", e);
-
-        return List.of(
-            new StorageDto(1L, StorageType.STAGING, "resources-staging", "/staging/"),
-            new StorageDto(2L, StorageType.PERMANENT, "resources-permanent", "/permanent/")
-        );
-    }
+//    private List<StorageDto> getAllStoragesFallback(Exception e) {
+//        logger.warn("Failed to read storages, using a local fallback instead", e);
+//
+//        return List.of(
+//            new StorageDto(1L, StorageType.STAGING, "resources-staging", "/staging/"),
+//            new StorageDto(2L, StorageType.PERMANENT, "resources-permanent", "/permanent/")
+//        );
+//    }
 
     public StorageDto getStorageById(long storageId) {
         var storages = getAllStorages();
