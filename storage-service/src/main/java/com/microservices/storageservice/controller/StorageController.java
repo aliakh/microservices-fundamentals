@@ -6,8 +6,6 @@ import com.microservices.storageservice.dto.DeleteStoragesResponse;
 import com.microservices.storageservice.dto.StorageDto;
 import com.microservices.storageservice.service.StorageService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,8 +23,6 @@ import java.util.List;
 @RequestMapping("/storages")
 @Validated
 public class StorageController {
-
-    private static final Logger logger = LoggerFactory.getLogger(StorageController.class);
 
     @Autowired
     private StorageService storageService;
