@@ -3,7 +3,6 @@ package com.example.resourceservice.service;
 import com.example.resourceservice.dto.StorageDto;
 import com.example.resourceservice.dto.StorageType;
 import com.example.resourceservice.exception.StorageNotFoundException;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class StorageService {
     @Autowired
     private StorageServiceClient storageServiceClient;
 
-//    @CircuitBreaker(name = "storageServiceClient", fallbackMethod = "getAllStoragesFallback")
+    //    @CircuitBreaker(name = "storageServiceClient", fallbackMethod = "getAllStoragesFallback")
     public List<StorageDto> getAllStorages() {
         return storageServiceClient.getAllStorages();
     }
