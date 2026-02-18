@@ -1,6 +1,3 @@
-simulate delay
-simulate exception
-
 podman machine start
 
 podman compose --file compose.yaml down
@@ -16,6 +13,5 @@ podman compose logs -f resource-service
 podman compose logs -f song-service
 podman compose logs -f eureka-server
 podman compose logs -f kafka
-
 
 podman ps --format "table {{.Names}}\t{{.Status}}"

@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/storages")
@@ -34,14 +31,6 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
-    private final AtomicInteger simulateDelaySeconds = new AtomicInteger(0);
-
-    @Value("${com.microservices.storageservice.simulate-error}")
-    private boolean simulateError;
-
-    @Value("${com.microservices.storageservice.simulate-delay}")
-    private boolean simulateDelay;
-
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid CreateStorageRequest createStorageRequest) {
         var createdId = storageService.createStorage(createStorageRequest);
@@ -50,23 +39,7 @@ public class StorageController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<StorageDto>> getAllStorages() {
-        if (simulateError) {
-            logger.warn("Exception simulated");
-            throw new RuntimeException("Simulated exception");
-        }
-        if (simulateDelay) {
-            logger.warn("Delay {} second(s) simulated", simulateDelaySeconds.get());
-            delay(simulateDelaySeconds.getAndIncrement());
-        }
         return ResponseEntity.ok(storageService.getAllStorages());
-    }
-
-    private void delay(int seconds) {
-        try {
-            TimeUnit.SECONDS.sleep(seconds);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @DeleteMapping(produces = "application/json")
