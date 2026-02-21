@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ResourceConsumerTest {
+class ResourceParsingConsumerTest {
 
     @Spy
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -26,10 +26,10 @@ class ResourceConsumerTest {
     @Mock
     private SongServiceClient songServiceClient;
     @InjectMocks
-    private ResourceConsumer resourceConsumer;
+    private ResourceParsingConsumer resourceParsingConsumer;
 
     @Test
-    void shouldConsumeResource() throws Exception {
+    void shouldParseResource() throws Exception {
         var resourceDto = buildResourceDto();
         var id = resourceDto.id();
         var message = objectMapper.writeValueAsString(resourceDto);
@@ -40,7 +40,7 @@ class ResourceConsumerTest {
         when(metadataService.extractSongMetadata(audio, id)).thenReturn(createSongDto);
         when(songServiceClient.createSong(createSongDto)).thenReturn(new CreateSongResponse(id));
 
-        resourceConsumer.consumeResource(message);
+        resourceParsingConsumer.parseResource(message);
 
         verify(resourceServiceClient).getResource(id);
         verify(metadataService).extractSongMetadata(audio, id);
