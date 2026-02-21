@@ -1,20 +1,18 @@
 package com.example.resourceservice.service;
 
-import com.example.resourceservice.dto.S3ResourceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
-import java.util.UUID;
 
 @Service
 public class S3Service {
@@ -24,12 +22,10 @@ public class S3Service {
     @Autowired
     private S3Client s3Client;
 
-    public S3ResourceDto putObject(byte[] audio, String bucket, String contentType) {
+    public void putObject(byte[] audio, String bucket, String key, String contentType) {
         logger.info("Put object into bucket {}", bucket);
 
         createBucketIfDoesNotExist(bucket);
-
-        var key = UUID.randomUUID().toString();
 
         var putObjectRequest = PutObjectRequest.builder()
             .bucket(bucket)
@@ -43,11 +39,6 @@ public class S3Service {
             RequestBody.fromBytes(audio)
         );
         logger.info("Put object response: {}", putObjectResponse);
-
-        return new S3ResourceDto(
-            bucket,
-            key
-        );
     }
 
     public byte[] getObject(String bucket, String key) {
@@ -62,6 +53,22 @@ public class S3Service {
         logger.info("Get object response: {}", getObjectResponse);
 
         return getObjectResponse.asByteArray();
+    }
+
+    public void copyObject(String sourceBucket, String sourceKey, String destinationBucket, String destinationKey) {
+        logger.info("Copy object from bucket {} by key {} to bucket {} by key {}", sourceBucket, sourceKey, destinationBucket, destinationKey);
+
+        createBucketIfDoesNotExist(destinationBucket);
+
+        var copyObjectRequest = CopyObjectRequest.builder()
+            .sourceBucket(sourceBucket)
+            .sourceKey(sourceKey)
+            .destinationBucket(destinationBucket)
+            .destinationKey(destinationKey)
+            .build();
+
+        var copyObjectResponse = s3Client.copyObject(copyObjectRequest);
+        logger.info("Copy object response: {}", copyObjectResponse);
     }
 
     public void deleteObject(String bucket, String key) {

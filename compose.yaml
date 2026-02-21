@@ -35,6 +35,23 @@ services:
       retries: 10
       start_period: 30s
 
+  storage-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${STORAGE_DB_NAME}
+      POSTGRES_USER: ${STORAGE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${STORAGE_DB_PASSWORD}
+    ports:
+      - "${STORAGE_DB_PORT}:5432"
+    volumes:
+      - ./init-scripts/storage-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${STORAGE_DB_USERNAME} -d ${STORAGE_DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   eureka-server:
     build:
       context: ./eureka-server
@@ -93,8 +110,9 @@ services:
     environment:
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
       KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
-      KAFKA_TOPIC: ${KAFKA_TOPIC}
-      KAFKA_CONSUMER_GROUP: ${KAFKA_CONSUMER_GROUP}
+      KAFKA_PARSING_RESOURCES_TOPIC: ${KAFKA_PARSING_RESOURCES_TOPIC}
+      KAFKA_PARSING_RESOURCES_CONSUMER_GROUP: ${KAFKA_PARSING_RESOURCES_CONSUMER_GROUP}
+      KAFKA_FINALIZING_RESOURCES_TOPIC: ${KAFKA_FINALIZING_RESOURCES_TOPIC}
     ports:
       - "${RESOURCE_PROCESSOR_PORT}:8086"
     depends_on:
@@ -123,7 +141,9 @@ services:
       AWS_S3_ACCESS_KEY_ID: ${AWS_S3_ACCESS_KEY_ID}
       AWS_S3_SECRET_ACCESS_KEY: ${AWS_S3_SECRET_ACCESS_KEY}
       KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
-      KAFKA_TOPIC: ${KAFKA_TOPIC}
+      KAFKA_PARSING_RESOURCES_TOPIC: ${KAFKA_PARSING_RESOURCES_TOPIC}
+      KAFKA_FINALIZING_RESOURCES_TOPIC: ${KAFKA_FINALIZING_RESOURCES_TOPIC}
+      KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP: ${KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP}      
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
@@ -136,6 +156,8 @@ services:
       resource-processor:
         condition: service_healthy
       song-service:
+        condition: service_healthy
+      storage-service:
         condition: service_healthy
       localstack:
         condition: service_healthy
@@ -154,10 +176,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SONG_DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SONG_DB_PASSWORD}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
-    deploy:
-      replicas: 2
     ports:
-      - "${SONG_SERVICE_PORTS}:8084"
+      - "${SONG_SERVICE_PORT}:8084"
     depends_on:
       song-db:
         condition: service_healthy
@@ -165,6 +185,28 @@ services:
         condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health | grep -q '\"status\":\"UP\"'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  storage-service:
+    build:
+      context: ./storage-service
+    environment:
+      SPRING_DATASOURCE_URL: ${STORAGE_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${STORAGE_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${STORAGE_DB_PASSWORD}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+    ports:
+      - "${STORAGE_SERVICE_PORT}:8087"
+    depends_on:
+      storage-db:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
       timeout: 5s
       retries: 10
