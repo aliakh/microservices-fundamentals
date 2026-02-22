@@ -7,8 +7,8 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "kafka")
 public record KafkaProperties(
     String bootstrapUrl,
-    String topic,
-    String groupId,
+    String parsingResourcesTopic,
+    String finalizingResourcesTopic,
     Map<String, String> properties
 ) {
 }

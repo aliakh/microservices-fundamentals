@@ -1,6 +1,6 @@
-package com.example.resourceservice.config;
+package com.example.resourceprocessor.config;
 
-import com.example.resourceservice.dto.KafkaProperties;
+import com.example.resourceprocessor.dto.KafkaProperties;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -31,8 +31,8 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public NewTopic newParsingResourcesTopic(KafkaProperties kafkaProperties) {
-        return TopicBuilder.name(kafkaProperties.parsingResourcesTopic()).build();
+    public NewTopic newFinalizingResourcesTopic(KafkaProperties kafkaProperties) {
+        return TopicBuilder.name(kafkaProperties.finalizingResourcesTopic()).build();
     }
 
     @Bean

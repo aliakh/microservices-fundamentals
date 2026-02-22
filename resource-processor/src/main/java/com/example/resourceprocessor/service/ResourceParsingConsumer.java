@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ResourceConsumer {
+public class ResourceParsingConsumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourceParsingConsumer.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -23,12 +23,14 @@ public class ResourceConsumer {
     private MetadataService metadataService;
     @Autowired
     private SongServiceClient songServiceClient;
+    @Autowired
+    private ResourceFinalizingProducer resourceFinalizingProducer;
 
     @Transactional
-    @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.group-id}")
-    public void consumeResource(String message) {
+    @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
+    public void parseResource(String message) {
         try {
-            logger.info("Message received: {}", message);
+            logger.info("Resource parsing message received: {}", message);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
             logger.info("Resource deserialized: {}", resourceDto);
@@ -41,10 +43,13 @@ public class ResourceConsumer {
 
             var songCreatedResponse = songServiceClient.createSong(songDto);
             logger.info("Create song response: {}", songCreatedResponse);
+
+            resourceFinalizingProducer.finalizeResource(resourceDto.id());
+            logger.info("Sent resource finalizing message");
         } catch (JsonProcessingException e) {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
-            logger.error("Failed to consume message {}", message, e);
+            logger.error("Failed to parse message {}", message, e);
         }
     }
 }
