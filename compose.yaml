@@ -121,6 +121,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8086/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -163,6 +169,12 @@ services:
         condition: service_healthy
       localstack:
         condition: service_healthy
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8083/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -186,6 +198,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -208,6 +226,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -276,8 +300,6 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-      - discovery-service
 
   promtail:
     image: grafana/promtail:latest
@@ -285,8 +307,6 @@ services:
       - ./config/promtail.yaml:/etc/promtail/config.yml
       - /var/run/docker.sock:/var/run/docker.sock
     command: '-config.file=/etc/promtail/config.yml -config.expand-env'
-    depends_on:
-      - discovery-service
 
   loki:
     image: grafana/loki:latest
@@ -303,7 +323,7 @@ services:
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
-    restart: unless-stopped
+#    restart: unless-stopped
     ports:
       - "3200:3200"   # Tempo HTTP API (Grafana talks to this)
       - "4317:4317"   # OTLP gRPC (app exporter)

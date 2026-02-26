@@ -182,3 +182,14 @@ Logs → Loki
 Traces → Tempo
 Metrics → Prometheus
 Dashboards → Grafana http://localhost:3000
+
+
+
+
+Trace strategy
+
+Use Micrometer Tracing (OTel bridge) to automatically create spans and inject W3C trace headers (traceparent, tracestate).
+Additionally add your custom X-Trace-Id header on every request and Kafka message.
+Enrich logs via MDC with traceId/spanId so you can search logs by just the trace ID in Grafana/Loki.
+Prometheus scrapes /actuator/prometheus.
+Tempo receives OTLP (gRPC) at tempo:4317.
