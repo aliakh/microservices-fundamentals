@@ -1232,3 +1232,14 @@ Server logs
 Loki
 Tempo traces
 Kafka messages
+
+
+management.otlp.tracing.endpoint=http://tempo:4317
+
+
+Observe:
+
+Logs → Loki
+Traces → Tempo
+Metrics → Prometheus
+Dashboards → Grafana http://localhost:3000
