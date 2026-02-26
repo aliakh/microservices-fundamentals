@@ -45,7 +45,6 @@ public class ResourceParsingProducer {
         if (messageTraceId != null) {
             producerRecord.headers().add(new RecordHeader(traceHeader, messageTraceId.getBytes(StandardCharsets.UTF_8)));
         }
-        producerRecord.headers().add(new RecordHeader("traceparent", traceId.getBytes(StandardCharsets.UTF_8)));
 
         kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
