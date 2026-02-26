@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.tracing.Tracer;
 
 @RestController
 @RequestMapping("/resources")
@@ -26,11 +28,17 @@ public class ResourceController {
 
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private Tracer tracer;
 
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
-    public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
+    public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio,
+                                                                 @RequestHeader(value = "X-Trace-Id", required = false) String traceIdHeader) {
         logger.info("Upload resource: {}", audio);
-        var createdId = resourceService.uploadResource(audio);
+        var span = tracer.currentSpan();
+        String traceId = (span != null) ? span.context().traceId() : (traceIdHeader != null ? traceIdHeader : "no-trace");
+
+        var createdId = resourceService.uploadResource(audio, traceId);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
     }
 

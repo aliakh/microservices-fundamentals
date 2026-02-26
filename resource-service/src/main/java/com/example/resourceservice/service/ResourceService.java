@@ -47,7 +47,7 @@ public class ResourceService {
     private CsvIdsParser csvIdsParser;
 
     @Transactional
-    public Long uploadResource(byte[] audio) {
+    public Long uploadResource(byte[] audio, String traceId) {
         if (!mp3Validator.valid(audio)) {
             throw new InvalidMp3FileException("The request body is invalid MP3");
         }
@@ -61,7 +61,7 @@ public class ResourceService {
         resource.setKey(key);
 
         var createdResource = resourceRepository.save(resource);
-        resourceParsingProducer.parseResource(createdResource);
+        resourceParsingProducer.parseResource(createdResource, traceId);
         logger.info("Sent resource parsing message");
 
         return createdResource.getId();

@@ -12,6 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+import io.micrometer.tracing.Tracer;
+
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -28,18 +30,15 @@ public class ResourceParsingProducer {
     @Value("${app.tracing.header:X-Trace-Id}")
     private String traceHeader;
 
-    public void parseResource(Resource resource) {
-        /*
-        String payload = "processed:" + filename + ":" + size;
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, filename, payload);
-        String toSendTrace = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();
-        if (toSendTrace != null) {
-            record.headers().add(new RecordHeader(traceHeader, toSendTrace.getBytes(StandardCharsets.UTF_8)));
-        }
+    public void parseResource(Resource resource, String traceId) {
+        var topic = kafkaProperties.parsingResourcesTopic();
+        var key = resource.getId();
+        var value = toJson(resource);
 
-         */
+        var producerRecord = new ProducerRecord<>(topic, key, value);
+        producerRecord.headers().add(new RecordHeader(traceHeader, traceId.getBytes(StandardCharsets.UTF_8)));
 
-        kafkaTemplate.send(kafkaProperties.parsingResourcesTopic(), resource.getId(), toJson(resource))
+        kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         logger.info("Resource parsing message with key {} and value {} was published to topic {} at offset {}",
