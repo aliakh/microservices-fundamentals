@@ -3,6 +3,8 @@ package com.example.resourceservice.controller;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.service.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,17 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/resources")
 public class ResourceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResourceController.class);
+
     @Autowired
     private ResourceService resourceService;
 
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
+        logger.info("Upload resource: {}", audio);
         var createdId = resourceService.uploadResource(audio);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
     }
 
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
+        logger.info("Get resource by id: {}", id);
         var resourceResponse = resourceService.getResource(id);
 
         var headers = new HttpHeaders();
@@ -45,6 +51,7 @@ public class ResourceController {
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<DeleteResourcesResponse> deleteResources(@RequestParam("id") String csvIds) {
         var deletedIds = resourceService.deleteResources(csvIds);
+        logger.info("Delete resources by ids: {}", csvIds);
         return ResponseEntity.ok(new DeleteResourcesResponse(deletedIds));
     }
 }
