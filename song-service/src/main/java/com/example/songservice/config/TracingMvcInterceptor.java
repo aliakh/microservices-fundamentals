@@ -33,16 +33,16 @@ public class TracingMvcInterceptor implements WebMvcConfigurer {
             public boolean preHandle(@NonNull HttpServletRequest request,
                                      @NonNull HttpServletResponse response,
                                      @NonNull Object handler) {
-                String incoming = request.getHeader(traceHeader);
+                String requestTraceId = request.getHeader(traceHeader);
                 String traceId = currentTraceId();
-                if (incoming != null && !incoming.isBlank()) {
-                    MDC.put("traceId", incoming);
+                if (requestTraceId != null && !requestTraceId.isBlank()) {
+                    MDC.put("traceId", requestTraceId);
                 } else if (traceId == null) {
-                    Span s = tracer.nextSpan().name("http:incoming").start();
+                    Span s = tracer.nextSpan().name("song-service:http:request").start();
                     tracer.withSpan(s);
                     traceId = s.context().traceId();
                 }
-                response.setHeader(traceHeader, (incoming != null && !incoming.isBlank()) ? incoming : (traceId != null ? traceId : UUID.randomUUID().toString()));
+                response.setHeader(traceHeader, (requestTraceId != null && !requestTraceId.isBlank()) ? requestTraceId : (traceId != null ? traceId : UUID.randomUUID().toString()));
                 return true;
             }
         });

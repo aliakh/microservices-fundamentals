@@ -1,0 +1,14 @@
+management:
+  tracing:
+    enabled: true
+  otlp:
+    tracing:
+      endpoint: ${MANAGEMENT_OTLP_TRACING_ENDPOINT:http://localhost:4317}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,loggers
+
+app:
+  tracing:
+    header: X-Trace-Id
