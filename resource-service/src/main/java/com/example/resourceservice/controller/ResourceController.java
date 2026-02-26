@@ -34,9 +34,9 @@ public class ResourceController {
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio,
                                                                  @RequestHeader(value = "X-Trace-Id", required = false) String requestTraceId) {
-        logger.info("Upload resource: {}", audio);
         var span = tracer.currentSpan();
         var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "no-trace");
+        logger.info("Upload resource: {}, traceId={}", audio, traceId);
 
         var createdId = resourceService.uploadResource(audio, traceId);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
@@ -44,7 +44,10 @@ public class ResourceController {
 
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
-        logger.info("Get resource by id: {}", id);
+        var span = tracer.currentSpan();
+        var traceId = (span != null) ? span.context().traceId() : "no-trace";
+
+        logger.info("Get resource by id: {}, traceId={}", id, traceId);
         var resourceResponse = resourceService.getResource(id);
 
         var headers = new HttpHeaders();
@@ -58,8 +61,11 @@ public class ResourceController {
 
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<DeleteResourcesResponse> deleteResources(@RequestParam("id") String csvIds) {
+        var span = tracer.currentSpan();
+        var traceId = (span != null) ? span.context().traceId() : "no-trace";
+
         var deletedIds = resourceService.deleteResources(csvIds);
-        logger.info("Delete resources by ids: {}", csvIds);
+        logger.info("Delete resources by ids: {}, traceId={}", csvIds, traceId);
         return ResponseEntity.ok(new DeleteResourcesResponse(deletedIds));
     }
 }
