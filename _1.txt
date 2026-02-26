@@ -14,7 +14,94 @@ Heads‑up: Promtail is in LTS until Mar 2, 2026; Grafana recommends migration p
 
 1) Podman Compose file
 Save as podman-compose.yml (Compose v3 syntax works with Podman’s compose wrapper). If you normally run Docker Compose files already, Podman supports that workflow with its Docker‑compatible socket/CLI. [docs.podman.io], [redhat.com], [podman-desktop.io]
-YAMLversion: "3.9"networks:  obs:volumes:  grafana_data:  prometheus_data:  loki_data:  tempo_data:services:  app:    image: yourorg/your-springboot-app:3.5.9    # or build:    # build: .    environment:      # Micrometer / OTLP exporter will use these in application.properties      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://tempo:4317      SPRING_APPLICATION_NAME: demo-service    ports:      - "8080:8080"    depends_on:      - tempo      - prometheus    networks: [obs]  prometheus:    image: prom/prometheus:latest    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=15d"]    volumes:      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro      - prometheus_data:/prometheus    ports:      - "9090:9090"    networks: [obs]  loki:    image: grafana/loki:latest    command: ["-config.file=/etc/loki/loki-config.yaml"]    volumes:      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro      - loki_data:/loki    ports:      - "3100:3100"    networks: [obs]  # Promtail tails Podman container logs and ships to Loki  promtail:    image: grafana/promtail:latest    command: ["-config.file=/etc/promtail/promtail-config.yaml", "-config.expand-env=true"]    volumes:      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro      # Rootful Podman container log path:      - /var/lib/containers/storage/overlay-containers:/var/lib/containers/storage/overlay-containers:ro      # Rootless Podman path (optional; harmless if absent):      - ${HOME}/.local/share/containers/storage/overlay-containers:${HOME}/.local/share/containers/storage/overlay-containers:ro      - /var/log:/var/log:ro    depends_on: [loki]    networks: [obs]  tempo:    image: grafana/tempo:latest    command: ["-config.file=/etc/tempo/tempo.yaml", "-config.expand-env=true"]    volumes:      - ./tempo/tempo.yaml:/etc/tempo/tempo.yaml:ro      - tempo_data:/tmp/tempo    ports:      - "3200:3200"   # Tempo HTTP API (Grafana talks to this)      - "4317:4317"   # OTLP gRPC (app exporter)      - "4318:4318"   # OTLP HTTP (optional)    networks: [obs]  grafana:    image: grafana/grafana:latest    environment:      - GF_SECURITY_ADMIN_USER=admin      - GF_SECURITY_ADMIN_PASSWORD=admin      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning      - GF_AUTH_ANONYMOUS_ENABLED=true      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin    volumes:      - grafana_data:/var/lib/grafana      - ./grafana/provisioning:/etc/grafana/provisioning:ro    ports:      - "3000:3000"    depends_on: [prometheus, loki, tempo]    networks: [obs]Show less
+version: "3.9"
+
+networks:
+  obs:
+
+volumes:
+  grafana_data:
+  prometheus_data:
+  loki_data:
+  tempo_data:
+
+services:
+  app:
+    image: yourorg/your-springboot-app:3.5.9
+    # or build:
+    # build: .
+    environment:
+      # Micrometer / OTLP exporter will use these in application.properties
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://tempo:4317
+      SPRING_APPLICATION_NAME: demo-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tempo
+      - prometheus
+    networks: [obs]
+
+  prometheus:
+    image: prom/prometheus:latest
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=15d"]
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks: [obs]
+
+  loki:
+    image: grafana/loki:latest
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - loki_data:/loki
+    ports:
+      - "3100:3100"
+    networks: [obs]
+
+  # Promtail tails Podman container logs and ships to Loki
+  promtail:
+    image: grafana/promtail:latest
+    command: ["-config.file=/etc/promtail/promtail-config.yaml", "-config.expand-env=true"]
+    volumes:
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+      # Rootful Podman container log path:
+      - /var/lib/containers/storage/overlay-containers:/var/lib/containers/storage/overlay-containers:ro
+      # Rootless Podman path (optional; harmless if absent):
+      - ${HOME}/.local/share/containers/storage/overlay-containers:${HOME}/.local/share/containers/storage/overlay-containers:ro
+      - /var/log:/var/log:ro
+    depends_on: [loki]
+    networks: [obs]
+
+  tempo:
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo/tempo.yaml", "-config.expand-env=true"]
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo/tempo.yaml:ro
+      - tempo_data:/tmp/tempo
+    ports:
+      - "3200:3200"   # Tempo HTTP API (Grafana talks to this)
+      - "4317:4317"   # OTLP gRPC (app exporter)
+      - "4318:4318"   # OTLP HTTP (optional)
+    networks: [obs]
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+    depends_on: [prometheus, loki, tempo]
+    networks: [obs]
 Notes
 
 Podman Compose is a thin wrapper; using Compose v3 YAML like above is fine. [docs.podman.io]
@@ -23,12 +110,80 @@ We mount both rootful and rootless Podman container log directories so Promtail 
 
 2) Loki config (loki/loki-config.yaml)
 A minimal single‑binary Loki using local filesystem storage (good for dev/test). This mirrors Grafana’s quickstart pattern. [grafana.com]
-YAMLauth_enabled: falseserver:  http_listen_port: 3100common:  ring:    instance_addr: 127.0.0.1  path_prefix: /loki  storage:    filesystem:      chunks_directory: /loki/chunks      rules_directory: /loki/rulesschema_config:  configs:    - from: 2025-01-01      store: tsdb      object_store: filesystem      schema: v13      index:        prefix: index_        period: 24hruler:  storage:    type: local    local:      directory: /loki/rules  rule_path: /loki/rules-temp  alertmanager_url: http://alertmanager:9093  ring:    kvstore:      store: inmemory``Show more lines
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+common:
+  ring:
+    instance_addr: 127.0.0.1
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+
+schema_config:
+  configs:
+    - from: 2025-01-01
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /loki/rules
+  rule_path: /loki/rules-temp
+  alertmanager_url: http://alertmanager:9093
+  ring:
+    kvstore:
+      store: inmemory
+``
 
 3) Promtail config (promtail/promtail-config.yaml)
 Tails system logs and Podman’s ctr.log files and pushes to Loki.
 (If you only run rootless/rootful, you can remove the other glob.)
-YAMLserver:  http_listen_port: 9080  grpc_listen_port: 0positions:  filename: /tmp/positions.yamlclients:  - url: http://loki:3100/loki/api/v1/pushscrape_configs:  # Tail system logs as an example  - job_name: varlogs    static_configs:      - targets: [localhost]        labels:          job: varlogs          __path__: /var/log/*.log  # Tail Podman ROOTFUL container logs (ctr.log)  - job_name: podman-rootful    static_configs:      - targets: [localhost]        labels:          job: podman          # ctr.log files live under overlay-containers/*/userdata/          __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log  # Tail Podman ROOTLESS container logs (ctr.log)  - job_name: podman-rootless    static_configs:      - targets: [localhost]        labels:          job: podman          __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.logShow less
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Tail system logs as an example
+  - job_name: varlogs
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: varlogs
+          __path__: /var/log/*.log
+
+  # Tail Podman ROOTFUL container logs (ctr.log)
+  - job_name: podman-rootful
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: podman
+          # ctr.log files live under overlay-containers/*/userdata/
+          __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log
+
+  # Tail Podman ROOTLESS container logs (ctr.log)
+  - job_name: podman-rootless
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: podman
+          __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.log
 
 Why these paths? Podman writes stdout/stderr to ctr.log; the exact path varies. Red Hat’s guidance and distro KBs document overlay-containers/<id>/userdata/ctr.log for rootful/rootless.
 Promtail tips: config reference & service discovery overview (we’re using static file discovery here). [access.redhat.com], [stackoverflow.com], [support.scc.suse.com] [grafana.com], [grafana.com]
@@ -36,25 +191,146 @@ Promtail tips: config reference & service discovery overview (we’re using stat
 
 4) Tempo config (tempo/tempo.yaml)
 Enable OTLP gRPC (4317) and HTTP (4318) receivers; local filesystem storage; single‑binary mode. Grafana’s Tempo docs show gRPC 4317 as the modern default. [grafana.com], [github.com]
-YAMLserver:  http_listen_port: 3200distributor:  receivers:    otlp:      protocols:        grpc:          endpoint: 0.0.0.0:4317        http:          endpoint: 0.0.0.0:4318    zipkin:    jaeger:      protocols:        thrift_http:querier:  frontend_worker:    frontend_address: 127.0.0.1:9095query_frontend:  search:    max_duration: 1hstorage:  trace:    backend: local    local:      path: /tmp/tempo    wal:      path: /tmp/tempo/walcompactor:  compaction:    block_retention: 24hShow less
+server:
+  http_listen_port: 3200
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+    zipkin:
+    jaeger:
+      protocols:
+        thrift_http:
+
+querier:
+  frontend_worker:
+    frontend_address: 127.0.0.1:9095
+
+query_frontend:
+  search:
+    max_duration: 1h
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo
+    wal:
+      path: /tmp/tempo/wal
+
+compactor:
+  compaction:
+    block_retention: 24h
+
 
 Tempo’s quickstart and configuration show enabling both otlp.grpc and otlp.http receivers, with Grafana connecting via Tempo’s HTTP API on 3200. [grafana.com], [grafana.com]
 
 
 5) Prometheus config (prometheus/prometheus.yml)
 Scrape the Spring Boot app’s /actuator/prometheus endpoint and (optionally) Loki/Tempo/Promtail internal metrics. Spring Boot’s actuator endpoint and Micrometer Prometheus registry are the standard way to expose metrics. [docs.spring.io], [docs.micrometer.io]
-YAMLglobal:  scrape_interval: 15s  evaluation_interval: 15sscrape_configs:  - job_name: spring-app    static_configs:      - targets: ["app:8080"]    metrics_path: /actuator/prometheus  - job_name: loki    static_configs:      - targets: ["loki:3100"]  - job_name: tempo    static_configs:      - targets: ["tempo:3200"]  - job_name: promtail    static_configs:      - targets: ["promtail:9080"]Show more lines
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: spring-app
+    static_configs:
+      - targets: ["app:8080"]
+    metrics_path: /actuator/prometheus
+
+  - job_name: loki
+    static_configs:
+      - targets: ["loki:3100"]
+
+  - job_name: tempo
+    static_configs:
+      - targets: ["tempo:3200"]
+
+  - job_name: promtail
+    static_configs:
+      - targets: ["promtail:9080"]
 
 6) Grafana provisioning (data sources)
 Put these under grafana/provisioning/datasources/datasources.yml. Grafana provisioning system is YAML-based; this creates Prometheus (default), Loki (with derived field that links logs to Tempo traces), and Tempo data sources. [grafana.com], [grafana.com], [grafana.com]
-YAMLapiVersion: 1datasources:  - name: Prometheus    type: prometheus    access: proxy    url: http://prometheus:9090    isDefault: true    jsonData:      httpMethod: POST  - name: Loki    type: loki    access: proxy    url: http://loki:3100    jsonData:      maxLines: 1000      # Link logs to traces via traceId extracted from log line      derivedFields:        - name: TraceID          matcherRegex: "traceId=(\\w+)"   # matches our Spring log pattern below          datasourceUid: tempo_ds          # must match Tempo's uid          url: "$${__value.raw}"           # pass traceId to Tempo datasource  - name: Tempo    uid: tempo_ds    type: tempo    access: proxy    url: http://tempo:3200    jsonData:      tracesToLogsV2:        # optional: let Tempo link back to logs in Loki using the same traceId label        datasourceUid: loki        filterByTraceID: true        spanStartTimeShift: "-1h"        spanEndTimeShift: "1h"Show less
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      httpMethod: POST
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      # Link logs to traces via traceId extracted from log line
+      derivedFields:
+        - name: TraceID
+          matcherRegex: "traceId=(\\w+)"   # matches our Spring log pattern below
+          datasourceUid: tempo_ds          # must match Tempo's uid
+          url: "$${__value.raw}"           # pass traceId to Tempo datasource
+
+  - name: Tempo
+    uid: tempo_ds
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    jsonData:
+      tracesToLogsV2:
+        # optional: let Tempo link back to logs in Loki using the same traceId label
+        datasourceUid: loki
+        filterByTraceID: true
+        spanStartTimeShift: "-1h"
+        spanEndTimeShift: "1h"
 
 References: Grafana provisioning docs and Loki derivedFields to build the log→trace link; the Tempo data source docs for querying traces. [grafana.com], [grafana.com], [grafana.com]
 
 
 7) Spring Boot: Maven pom.xml
 These dependencies enable Actuator metrics, Prometheus registry, Micrometer Tracing with OpenTelemetry bridge, and the OTLP exporter that sends traces to Tempo. This matches Spring Boot’s tracing guidance (Micrometer + OTLP). Do not set versions; let Spring Boot’s BOM manage them. [docs.spring.io], [baeldung.com]
-XML<dependencies>  <!-- Actuator endpoints, including /actuator/prometheus -->  <dependency>    <groupId>org.springframework.boot</groupId>    <artifactId>spring-boot-starter-actuator</artifactId>  </dependency>  <!-- Micrometer Prometheus registry -->  <dependency>    <groupId>io.micrometer</groupId>    <artifactId>micrometer-registry-prometheus</artifactId>  </dependency>  <!-- Micrometer Tracing with OpenTelemetry bridge -->  <dependency>    <groupId>io.micrometer</groupId>    <artifactId>micrometer-tracing-bridge-otel</artifactId>  </dependency>  <!-- OpenTelemetry OTLP exporter (traces) -->  <dependency>    <groupId>io.opentelemetry</groupId>    <artifactId>opentelemetry-exporter-otlp</artifactId>  </dependency>  <!-- Your web starter, etc. -->  <dependency>    <groupId>org.springframework.boot</groupId>    <artifactId>spring-boot-starter-web</artifactId>  </dependency>  <!-- (Optional) JDBC, JPA, etc. --></dependencies>Show less
+<dependencies>
+  <!-- Actuator endpoints, including /actuator/prometheus -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+  </dependency>
+
+  <!-- Micrometer Prometheus registry -->
+  <dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+  </dependency>
+
+  <!-- Micrometer Tracing with OpenTelemetry bridge -->
+  <dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing-bridge-otel</artifactId>
+  </dependency>
+
+  <!-- OpenTelemetry OTLP exporter (traces) -->
+  <dependency>
+    <groupId>io.opentelemetry</groupId>
+    <artifactId>opentelemetry-exporter-otlp</artifactId>
+  </dependency>
+
+  <!-- Your web starter, etc. -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+
+  <!-- (Optional) JDBC, JPA, etc. -->
+</dependencies>
 
 Spring Boot 3.x exposes Prometheus metrics when you include Actuator + Micrometer Prometheus; Micrometer Tracing + OTLP exporter is the standard for OpenTelemetry/Tempo. [docs.spring.io], [docs.micrometer.io], [baeldung.com]
 
@@ -65,6 +341,25 @@ Expose /actuator/prometheus
 Enable tracing, set sampling rate for validation
 Send spans via OTLP/gRPC to tempo:4317
 Add log correlation pattern (traceId, spanId) so Grafana/Loki can create a clickable link to Tempo using the derived field.
+
+# --- Basics ---
+spring.application.name=demo-service
+
+# --- Actuator / Prometheus ---
+management.endpoints.web.exposure.include=health,info,metrics,prometheus
+management.endpoint.health.show-details=always
+
+# --- Micrometer Tracing ---
+management.tracing.enabled=true
+# For local validation; in prod use 0.1-0.3 typically
+management.tracing.sampling.probability=1.0
+
+# --- OpenTelemetry / OTLP exporter (Tempo @ gRPC 4317) ---
+management.otlp.tracing.endpoint=http://tempo:4317
+
+# --- Log correlation (SLF4J MDC adds traceId/spanId to logs) ---
+# This ensures lines like: INFO [demo-service,abc123...,def456...] ...
+logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
 
 Plain Textproperties isn’t fully supported. Syntax highlighting is based on Plain Text.# --- Basics ---spring.application.name=demo-service# --- Actuator / Prometheus ---management.endpoints.web.exposure.include=health,info,metrics,prometheusmanagement.endpoint.health.show-details=always# --- Micrometer Tracing ---management.tracing.enabled=true# For local validation; in prod use 0.1-0.3 typicallymanagement.tracing.sampling.probability=1.0# --- OpenTelemetry / OTLP exporter (Tempo @ gRPC 4317) ---management.otlp.tracing.endpoint=http://tempo:4317# --- Log correlation (SLF4J MDC adds traceId/spanId to logs) ---# This ensures lines like: INFO [demo-service,abc123...,def456...] ...logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]Show less
 
