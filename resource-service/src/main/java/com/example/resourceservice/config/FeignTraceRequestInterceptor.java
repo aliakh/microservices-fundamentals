@@ -22,7 +22,7 @@ public class FeignTraceRequestInterceptor {
         return (RequestTemplate template) -> {
             String traceId = currentTraceId(tracer);
             if (traceId == null) {
-                traceId = "resource-service:feign:"+ UUID.randomUUID();
+                traceId = "resource-service:feign:" + UUID.randomUUID();
             }
             template.header(traceHeader, traceId);
         };

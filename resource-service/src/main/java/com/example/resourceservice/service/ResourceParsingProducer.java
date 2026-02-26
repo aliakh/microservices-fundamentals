@@ -16,6 +16,7 @@ import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
+
 import java.nio.charset.StandardCharsets;
 
 @Service
