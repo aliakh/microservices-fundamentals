@@ -15,34 +15,34 @@ scrape_configs:
   - job_name: 'api-gateway-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'api-gateway-service:8090' ]
+      - targets: [ 'api-gateway-service:8080' ]
         labels:
           application: 'api-gateway-service'
 
   - job_name: 'resource-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'resource-service:8081' ]
+      - targets: [ 'resource-service:8083' ]
         labels:
           application: 'resource-service'
 
   - job_name: 'song-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'song-service:8082' ]
+      - targets: [ 'song-service:8084' ]
         labels:
           application: 'song-service'
 
   - job_name: 'resource-processor'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'resource-processor:8083' ]
+      - targets: [ 'resource-processor:8086' ]
         labels:
           application: 'resource-processor'
 
   - job_name: 'storage-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'storage-service:8084' ]
+      - targets: [ 'storage-service:8087' ]
         labels:
           application: 'storage-service'
