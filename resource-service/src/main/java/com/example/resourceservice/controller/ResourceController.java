@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.tracing.Tracer;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
@@ -35,7 +37,7 @@ public class ResourceController {
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio,
                                                                  @RequestHeader(value = "X-Trace-Id", required = false) String requestTraceId) {
         var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "no-trace");
+        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:"+ UUID.randomUUID());
         logger.info("Upload resource: {}, traceId={}", audio, traceId);
 
         var createdId = resourceService.uploadResource(audio, traceId);
@@ -45,7 +47,7 @@ public class ResourceController {
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
         var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : "no-trace";
+        var traceId = (span != null) ? span.context().traceId() : "resource-service:controller:get-resource:"+ UUID.randomUUID();
 
         logger.info("Get resource by id: {}, traceId={}", id, traceId);
         var resourceResponse = resourceService.getResource(id);
@@ -62,7 +64,7 @@ public class ResourceController {
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<DeleteResourcesResponse> deleteResources(@RequestParam("id") String csvIds) {
         var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : "no-trace";
+        var traceId = (span != null) ? span.context().traceId() : "resource-service:controller:delete-resource:"+ UUID.randomUUID();
 
         var deletedIds = resourceService.deleteResources(csvIds);
         logger.info("Delete resources by ids: {}, traceId={}", csvIds, traceId);
