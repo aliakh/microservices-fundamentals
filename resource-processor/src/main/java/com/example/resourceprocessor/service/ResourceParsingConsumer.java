@@ -46,10 +46,10 @@ public class ResourceParsingConsumer {
                               @Header(name = "X-Trace-Id", required = false) String messageTraceId) {
         var span = tracer.nextSpan().name("resource-processor:kafka:consume:parse-resource").start();
         try (var ws = tracer.withSpan(span)) {
-            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
-            if (traceId != null) {
-                MDC.put("traceId", traceId);
+            if (messageTraceId != null && !messageTraceId.isBlank()) {
+                MDC.put("traceId", messageTraceId);
             }
+            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
             logger.info("Resource parsing message received: {}, traceId={}", message, traceId);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
