@@ -44,22 +44,12 @@ public class ResourceParsingConsumer {
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void parseResource(String message,
                               @Header(name = "X-Trace-Id", required = false) String messageTraceId) {
-
-        // Start a new span and bind MDC with the propagated trace id if present
-        Span span = tracer.nextSpan().name("kafka:consume:files.process").start();
-        try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
-            if (messageTraceId != null && !messageTraceId.isBlank()) {
-                MDC.put("traceId", messageTraceId);
+        var span = tracer.nextSpan().name("resource-processor:kafka:consume:parse-resource").start();
+        try (var ws = tracer.withSpan(span)) {
+            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
+            if (traceId != null) {
+                MDC.put("traceId", traceId);
             }
-            String traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
-            log.info("Consumed Kafka message, key={}, payload='{}', traceId={}", key, payload,
-                traceId);
-        } finally {
-            span.end();
-            MDC.remove("traceId");
-        }
-
-        try {
             logger.info("Resource parsing message received: {}, traceId={}", message, traceId);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
@@ -80,6 +70,9 @@ public class ResourceParsingConsumer {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
             logger.error("Failed to parse message {}", message, e);
+        } finally {
+            span.end();
+            MDC.remove("traceId");
         }
     }
 }

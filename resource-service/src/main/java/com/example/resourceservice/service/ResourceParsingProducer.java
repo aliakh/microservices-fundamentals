@@ -12,7 +12,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
-
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -26,6 +29,8 @@ public class ResourceParsingProducer {
     private KafkaTemplate<Long, String> kafkaTemplate;
     @Autowired
     private KafkaProperties kafkaProperties;
+    @Autowired
+    private Tracer tracer;
     @Value("${app.tracing.header:X-Trace-Id}")
     private String traceHeader;
 
@@ -35,7 +40,11 @@ public class ResourceParsingProducer {
         var value = toJson(resource);
 
         var producerRecord = new ProducerRecord<>(topic, key, value);
-        producerRecord.headers().add(new RecordHeader(traceHeader, traceId.getBytes(StandardCharsets.UTF_8)));
+        String toSendTrace = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();
+        if (toSendTrace != null) {
+            producerRecord.headers().add(new RecordHeader(traceHeader, toSendTrace.getBytes(StandardCharsets.UTF_8)));
+        }
+        producerRecord.headers().add(new RecordHeader("traceparent", ...));
 
         kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
@@ -59,5 +68,10 @@ public class ResourceParsingProducer {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error while serializing resource to JSON", e);
         }
+    }
+
+    private String currentTraceId() {
+        Span span = tracer.currentSpan();
+        return span != null ? span.context().traceId() : null;
     }
 }
