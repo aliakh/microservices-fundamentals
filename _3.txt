@@ -1,19 +1,4 @@
 
-Prometheus config — prometheus/prometheus.yml
-
-global:
-  scrape_interval: 10s
-
-scrape_configs:
-  - job_name: 'client-service'
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: [ 'client-service:8081' ]
-
-  - job_name: 'server-service'
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: [ 'server-service:8082' ]
 
 Grafana datasources — grafana/provisioning/datasources/datasource.yml
 

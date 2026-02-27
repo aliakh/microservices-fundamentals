@@ -1,29 +1,5 @@
 
 
-5) Prometheus config (prometheus/prometheus.yml)
-Scrape the Spring Boot app’s /actuator/prometheus endpoint and (optionally) Loki/Tempo/Promtail internal metrics. Spring Boot’s actuator endpoint and Micrometer Prometheus registry are the standard way to expose metrics. [docs.spring.io], [docs.micrometer.io]
-global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
-
-scrape_configs:
-  - job_name: spring-app
-    static_configs:
-      - targets: ["app:8080"]
-    metrics_path: /actuator/prometheus
-
-  - job_name: loki
-    static_configs:
-      - targets: ["loki:3100"]
-
-  - job_name: tempo
-    static_configs:
-      - targets: ["tempo:3200"]
-
-  - job_name: promtail
-    static_configs:
-      - targets: ["promtail:9080"]
-
 6) Grafana provisioning (data sources)
 Put these under grafana/provisioning/datasources/datasources.yml. Grafana provisioning system is YAML-based; this creates Prometheus (default), Loki (with derived field that links logs to Tempo traces), and Tempo data sources. [grafana.com], [grafana.com], [grafana.com]
 apiVersion: 1
