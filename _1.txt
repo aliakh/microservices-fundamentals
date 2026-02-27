@@ -1,47 +1,4 @@
 
-3) Promtail config (promtail/promtail-config.yaml)
-Tails system logs and Podman’s ctr.log files and pushes to Loki.
-(If you only run rootless/rootful, you can remove the other glob.)
-server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
-
-positions:
-  filename: /tmp/positions.yaml
-
-clients:
-  - url: http://loki:3100/loki/api/v1/push
-
-scrape_configs:
-  # Tail system logs as an example
-  - job_name: varlogs
-    static_configs:
-      - targets: [localhost]
-        labels:
-          job: varlogs
-          __path__: /var/log/*.log
-
-  # Tail Podman ROOTFUL container logs (ctr.log)
-  - job_name: podman-rootful
-    static_configs:
-      - targets: [localhost]
-        labels:
-          job: podman
-          # ctr.log files live under overlay-containers/*/userdata/
-          __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log
-
-  # Tail Podman ROOTLESS container logs (ctr.log)
-  - job_name: podman-rootless
-    static_configs:
-      - targets: [localhost]
-        labels:
-          job: podman
-          __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.log
-
-Why these paths? Podman writes stdout/stderr to ctr.log; the exact path varies. Red Hat’s guidance and distro KBs document overlay-containers/<id>/userdata/ctr.log for rootful/rootless.
-Promtail tips: config reference & service discovery overview (we’re using static file discovery here). [access.redhat.com], [stackoverflow.com], [support.scc.suse.com] [grafana.com], [grafana.com]
-
-
 4) Tempo config (tempo/tempo.yaml)
 Enable OTLP gRPC (4317) and HTTP (4318) receivers; local filesystem storage; single‑binary mode. Grafana’s Tempo docs show gRPC 4317 as the modern default. [grafana.com], [github.com]
 server:

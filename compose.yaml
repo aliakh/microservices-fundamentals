@@ -307,6 +307,8 @@ services:
       - ./config/promtail.yaml:/etc/promtail/config.yml
       - /var/run/docker.sock:/var/run/docker.sock
     command: '-config.file=/etc/promtail/config.yml -config.expand-env'
+    ports:
+      - "9080:9080"
 
   loki:
     image: grafana/loki:latest

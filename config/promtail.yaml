@@ -9,16 +9,39 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: docker
+  - job_name: podman-rootful
+    static_configs:
+      - targets: [ localhost ]
+        labels:
+          job: podman
+          __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log
     pipeline_stages:
-      - docker: { }
-    docker_sd_configs:
-      - host: unix:///var/run/docker.sock
-        refresh_interval: 5s
-        filters:
-          - name: label
-            values: [ "scrap-logs=true" ]
-    relabel_configs:
-      - source_labels: [ '__meta_docker_container_name' ]
-        regex: '/docker-(.*)'
-        target_label: 'container'
+      - cri: {}
+      - regex:
+          source: "filename"
+          expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
+      - labels:
+          container_id:
+      - template:
+          source: stream
+          template: '{{ if eq .Value "stderr" }}error{{ else }}info{{ end }}'
+      - labels:
+          stream:
+  - job_name: podman-rootless
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: podman
+          __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.log
+    pipeline_stages:
+      - cri: {}
+      - regex:
+          source: "filename"
+          expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
+      - labels:
+          container_id:
+      - template:
+          source: stream
+          template: '{{ if eq .Value "stderr" }}error{{ else }}info{{ end }}'
+      - labels:
+          stream:
