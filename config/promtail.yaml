@@ -9,40 +9,18 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: podman-rootful
+  - job_name: docker
     static_configs:
       - targets: [ localhost ]
         labels:
-          job: podman
-          __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log
+          job: docker
+          __path__: /var/lib/docker/containers/*/*-json.log
     pipeline_stages:
-      - cri: { }
-      - regex:
-          source: filename
-          expression: '.*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\.log$'
-      - labels:
-          container_id:
-      - template:
-          source: stream
-          template: '{{ if eq .Value "stderr" }}error{{ else }}info{{ end }}'
+      - json:
+          expressions:
+            stream: stream
+            attrs: attrs
       - labels:
           stream:
-
-  - job_name: podman-rootless
-    static_configs:
-      - targets: [ localhost ]
-        labels:
-          job: podman
-          __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.log
-    pipeline_stages:
-      - cri: { }
-      - regex:
-          source: filename
-          expression: '.*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\.log$'
-      - labels:
-          container_id:
-      - template:
-          source: stream
-          template: '{{ if eq .Value "stderr" }}error{{ else }}info{{ end }}'
-      - labels:
-          stream:
+      - output:
+          source: log
