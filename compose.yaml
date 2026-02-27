@@ -335,7 +335,7 @@ services:
     volumes:
       - ./config/grafana/provisioning:/etc/grafana/provisioning/
       - ./config/grafana/dashboards:/var/lib/grafana/dashboards
-      - grafana-storage:/var/lib/grafana
+      - grafana:/var/lib/grafana
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -351,4 +351,4 @@ services:
 
 volumes:
   localstack:
-  grafana-storage:
+  grafana:
