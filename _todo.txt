@@ -20,7 +20,7 @@ podman ps --format "table {{.Names}}\t{{.Status}}"
 
 Run tests
 ```
-./gradlew clean test -p discovery-service
+./gradlew clean test -p eureka-server
 ./gradlew clean test -p api-gateway
 ./gradlew clean test -p song-service
 ./gradlew clean test -p storage-service
@@ -42,7 +42,7 @@ Run BDD tests
 
 Build jars
 ```
-./gradlew clean build -p discovery-service
+./gradlew clean build -p eureka-server
 ./gradlew clean build -p api-gateway
 ./gradlew clean build -x test -p song-service
 ./gradlew clean build -x test -p storage-service
@@ -81,7 +81,7 @@ curl -s localhost:8761/eureka/apps | jq -r .applications.application[].instance[
 
 Get logs
 ```
-podman compose logs -f discovery-service
+podman compose logs -f eureka-server
 podman compose logs -f api-gateway
 podman compose logs -f song-service
 podman compose logs -f storage-service
