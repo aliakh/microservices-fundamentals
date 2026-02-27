@@ -16,9 +16,9 @@ scrape_configs:
           job: podman
           __path__: /var/lib/containers/storage/overlay-containers/*/userdata/ctr.log
     pipeline_stages:
-      - cri: {}
+      - cri: { }
       - regex:
-          source: "filename"
+          source: filename
           expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
       - labels:
           container_id:
@@ -27,16 +27,17 @@ scrape_configs:
           template: '{{ if eq .Value "stderr" }}error{{ else }}info{{ end }}'
       - labels:
           stream:
+
   - job_name: podman-rootless
     static_configs:
-      - targets: [localhost]
+      - targets: [ localhost ]
         labels:
           job: podman
           __path__: ${HOME}/.local/share/containers/storage/overlay-containers/*/userdata/ctr.log
     pipeline_stages:
-      - cri: {}
+      - cri: { }
       - regex:
-          source: "filename"
+          source: filename
           expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
       - labels:
           container_id:
