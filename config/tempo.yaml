@@ -5,29 +5,12 @@ server:
 
 distributor:
   receivers:
-    jaeger:
-      protocols:
-        thrift_http:
-        grpc:
-        thrift_binary:
-        thrift_compact:
-    zipkin:
     otlp:
       protocols:
-        http:
         grpc:
-    opencensus:
-
-ingester:
-  trace_idle_period: 10s
-  max_block_duration: 5m
-
-compactor:
-  compaction:
-    compaction_window: 1h
-    max_compaction_objects: 1000000
-    block_retention: 2h
-    compacted_block_retention: 10m
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
 
 storage:
   trace:
@@ -36,6 +19,3 @@ storage:
       path: /tmp/tempo/wal
     local:
       path: /tmp/tempo/blocks
-    pool:
-      max_workers: 100
-      queue_depth: 10000

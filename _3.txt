@@ -1,32 +1,4 @@
 
-Tempo config — tempo/tempo-config.yaml
-
-server:
-  http_listen_port: 3200
-
-distributor:
-  receivers:
-    otlp:
-      protocols:
-        grpc:            # listen on 0.0.0.0:4317 for OTLP gRPC
-        http:
-
-storage:
-  trace:
-    backend: local
-    block:
-      bloom_filter_false_positive: 0.05
-      index_downsample_bytes: 1000
-      size: 1_000_000
-    wal:
-      path: /var/tempo/wal
-    local:
-      path: /var/tempo/traces
-compactor:
-  compaction:
-    block_retention: 48h
-
-
 Prometheus config — prometheus/prometheus.yml
 
 global:
