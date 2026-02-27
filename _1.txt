@@ -1,43 +1,4 @@
 
-
-2) Loki config (loki/loki-config.yaml)
-A minimal single‑binary Loki using local filesystem storage (good for dev/test). This mirrors Grafana’s quickstart pattern. [grafana.com]
-auth_enabled: false
-
-server:
-  http_listen_port: 3100
-
-common:
-  ring:
-    instance_addr: 127.0.0.1
-  path_prefix: /loki
-  storage:
-    filesystem:
-      chunks_directory: /loki/chunks
-      rules_directory: /loki/rules
-
-schema_config:
-  configs:
-    - from: 2025-01-01
-      store: tsdb
-      object_store: filesystem
-      schema: v13
-      index:
-        prefix: index_
-        period: 24h
-
-ruler:
-  storage:
-    type: local
-    local:
-      directory: /loki/rules
-  rule_path: /loki/rules-temp
-  alertmanager_url: http://alertmanager:9093
-  ring:
-    kvstore:
-      store: inmemory
-``
-
 3) Promtail config (promtail/promtail-config.yaml)
 Tails system logs and Podman’s ctr.log files and pushes to Loki.
 (If you only run rootless/rootful, you can remove the other glob.)
