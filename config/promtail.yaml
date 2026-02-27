@@ -19,7 +19,7 @@ scrape_configs:
       - cri: { }
       - regex:
           source: filename
-          expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
+          expression: '.*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\.log$'
       - labels:
           container_id:
       - template:
@@ -38,7 +38,7 @@ scrape_configs:
       - cri: { }
       - regex:
           source: filename
-          expression: ".*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\\.log$"
+          expression: '.*/overlay-containers/(?P<container_id>[^/]+)/userdata/ctr\.log$'
       - labels:
           container_id:
       - template:
