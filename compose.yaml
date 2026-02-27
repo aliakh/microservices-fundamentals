@@ -325,18 +325,10 @@ services:
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
-#    restart: unless-stopped
     ports:
       - "3200:3200"
       - "4317:4317"
       - "4318:4318"
-#      - "4317"
-#      - "4318"
-#      - "9411"
-#      - "14268:14268"
-#      - "14250:14250"
-#      - "55680:55680"
-#      - "3200:3200"
 
   grafana:
     image: grafana/grafana:latest
@@ -349,7 +341,7 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SERVER_ROOT_URL=http://localhost:8090/grafana/
+      - GF_SERVER_ROOT_URL=http://localhost:3000/
     ports:
       - "3000:3000"
     depends_on:

@@ -12,7 +12,7 @@ datasources:
     url: http://prometheus:9090
     basicAuth: false
     orgId: 1
-    isDefault: false
+    isDefault: false   # set true if you want it as default
     version: 1
     editable: false
 
@@ -26,7 +26,6 @@ datasources:
     isDefault: false
     version: 1
     editable: false
-    apiVersion: 1
 
   - name: Loki
     type: loki
@@ -37,10 +36,9 @@ datasources:
     isDefault: false
     version: 1
     editable: false
-    apiVersion: 1
     jsonData:
       derivedFields:
         - name: TraceID
           matcherRegex: \[.+,(.+),.+\]
-          url: $${__value.raw}
+          url: ${__value.raw}
           datasourceUid: tempo
