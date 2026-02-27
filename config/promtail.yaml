@@ -24,3 +24,4 @@ scrape_configs:
           stream:
       - output:
           source: log
+
