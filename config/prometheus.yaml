@@ -12,12 +12,12 @@ scrape_configs:
     eureka_sd_configs:
       - server: http://discovery-service:8761/eureka
 
-  - job_name: 'api-gateway-service'
+  - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'api-gateway-service:8080' ]
+      - targets: [ 'api-gateway:8080' ]
         labels:
-          application: 'api-gateway-service'
+          application: 'api-gateway'
 
   - job_name: 'resource-service'
     metrics_path: '/actuator/prometheus'

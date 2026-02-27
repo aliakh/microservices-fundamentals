@@ -21,7 +21,7 @@ podman ps --format "table {{.Names}}\t{{.Status}}"
 Run tests
 ```
 ./gradlew clean test -p discovery-service
-./gradlew clean test -p api-gateway-service
+./gradlew clean test -p api-gateway
 ./gradlew clean test -p song-service
 ./gradlew clean test -p storage-service
 ./gradlew clean test -p resource-processor
@@ -43,7 +43,7 @@ Run BDD tests
 Build jars
 ```
 ./gradlew clean build -p discovery-service
-./gradlew clean build -p api-gateway-service
+./gradlew clean build -p api-gateway
 ./gradlew clean build -x test -p song-service
 ./gradlew clean build -x test -p storage-service
 ./gradlew clean build -x test -p resource-processor
@@ -52,10 +52,10 @@ Build jars
 
 Run Docker Compose
 ```
-docker-compose build
-docker-compose up
-docker-compose down
-docker-compose rm -svf
+podman compose build
+podman compose up
+podman compose down
+podman compose rm -svf
 docker system prune -a
 ```
 
@@ -81,15 +81,15 @@ curl -s localhost:8761/eureka/apps | jq -r .applications.application[].instance[
 
 Get logs
 ```
-docker-compose logs -f discovery-service
-docker-compose logs -f api-gateway-service
-docker-compose logs -f song-service
-docker-compose logs -f storage-service
-docker-compose logs -f resource-processor
-docker-compose logs -f resource-service
-docker-compose logs -f grafana
-docker-compose logs -f prometheus
-docker-compose logs -f promtail
-docker-compose logs -f tempo
-docker-compose logs -f loki
+podman compose logs -f discovery-service
+podman compose logs -f api-gateway
+podman compose logs -f song-service
+podman compose logs -f storage-service
+podman compose logs -f resource-processor
+podman compose logs -f resource-service
+podman compose logs -f grafana
+podman compose logs -f prometheus
+podman compose logs -f promtail
+podman compose logs -f tempo
+podman compose logs -f loki
 ```

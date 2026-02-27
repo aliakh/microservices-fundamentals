@@ -2864,8 +2864,8 @@
       {
         "current": {
           "selected": false,
-          "text": "api-gateway-service",
-          "value": "api-gateway-service"
+          "text": "api-gateway",
+          "value": "api-gateway"
         },
         "datasource": {
           "type": "prometheus",
@@ -2895,8 +2895,8 @@
         "allFormat": "glob",
         "current": {
           "selected": false,
-          "text": "api-gateway-service:8090",
-          "value": "api-gateway-service:8090"
+          "text": "api-gateway:8090",
+          "value": "api-gateway:8090"
         },
         "datasource": {
           "type": "prometheus",
