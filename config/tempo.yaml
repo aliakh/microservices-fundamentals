@@ -22,7 +22,7 @@ ingester:
   lifecycler:
     ring:
       replication_factor: 1
-    interface_names: [ "eth0" ]
+#    interface_names: [ "eth0" ]
   partition_ring:
     # instance_addr and interface_names are NOT allowed here
     kvstore:

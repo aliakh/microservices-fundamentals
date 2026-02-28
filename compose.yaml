@@ -246,7 +246,6 @@ services:
 
   localstack:
     image: localstack/localstack
-    container_name: localstack
     environment:
       - SERVICES=s3
       - AWS_DEFAULT_REGION=${AWS_S3_REGION}
@@ -266,7 +265,6 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka
-    container_name: kafka
     ports:
       - "9092:9092"
       - "9094:9094"
