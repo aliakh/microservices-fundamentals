@@ -26,6 +26,8 @@ datasources:
     isDefault: false
     version: 1
     editable: false
+    jsonData:
+      grpcAddress: "tempo:9095"
 
   - name: Loki
     type: loki

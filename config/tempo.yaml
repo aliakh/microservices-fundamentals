@@ -24,6 +24,7 @@ ingester:
       replication_factor: 1
     interface_names: [ "eth0" ]   # OK for lifecycler, but not for partition_ring
   partition_ring:
+    instance_addr: tempo
     kvstore:
       store: memberlist           # explicit for clarity
 
