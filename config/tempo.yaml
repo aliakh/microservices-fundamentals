@@ -5,18 +5,9 @@ server:
 
 distributor:
   receivers:
-    jaeger:
-      protocols:
-        thrift_http:
-        grpc:
-        thrift_binary:
-        thrift_compact:
-    zipkin:
     otlp:
       protocols:
         http:
-        grpc:
-    opencensus:
 
 ingester:
   trace_idle_period: 10s
