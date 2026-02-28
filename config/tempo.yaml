@@ -2,37 +2,32 @@ auth_enabled: false
 
 server:
   http_listen_port: 3200
-  grpc_listen_port: 9095
-
-memberlist:
-  bind_port: 7946
-  # Optional if name resolution is flaky:
-  # advertise_addr: 172.20.0.10
 
 distributor:
   receivers:
+    jaeger:
+      protocols:
+        thrift_http:
+        grpc:
+        thrift_binary:
+        thrift_compact:
+    zipkin:
     otlp:
       protocols:
-        grpc:
-          endpoint: 0.0.0.0:4317
         http:
-          endpoint: 0.0.0.0:4318
+        grpc:
+    opencensus:
 
 ingester:
-  lifecycler:
-    ring:
-      replication_factor: 1
-#    interface_names: [ "eth0" ]
-  partition_ring:
-    # instance_addr and interface_names are NOT allowed here
-    kvstore:
-      store: memberlist
+  trace_idle_period: 10s
+  max_block_duration: 5m
 
-live_store:
-  ring:
-#    instance_addr: tempo
-    kvstore:
-      store: memberlist
+compactor:
+  compaction:
+    compaction_window: 1h
+    max_compaction_objects: 1000000
+    block_retention: 2h
+    compacted_block_retention: 10m
 
 storage:
   trace:
@@ -41,3 +36,6 @@ storage:
       path: /tmp/tempo/wal
     local:
       path: /tmp/tempo/blocks
+    pool:
+      max_workers: 100
+      queue_depth: 10000

@@ -331,9 +331,13 @@ services:
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
     ports:
+      - "4317"
+      - "4318"
+      - "9411"
+      - "14268:14268"
+      - "14250:14250"
+      - "55680:55680"
       - "3200:3200"
-      - "4317:4317"
-      - "4318:4318"
 
   grafana:
     image: grafana/grafana:latest
