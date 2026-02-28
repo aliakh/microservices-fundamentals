@@ -10,10 +10,43 @@ clients:
 
 scrape_configs:
   - job_name: docker
-    static_configs:
-      - targets: [ localhost ]
-        labels:
-          job: docker
-          __path__: /var/lib/docker/containers/*/*-json.log
+    # Discover running containers via Docker socket
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+
+    # Drop noisy / high-cardinality or irrelevant labels first
+    relabel_configs:
+      # Keep only running containers
+      - source_labels: [ __meta_docker_container_state ]
+        regex: running
+        action: keep
+
+      # Optional: drop filename if Docker engine also exposes it
+      - action: labeldrop
+        regex: filename
+
+      # Map Docker Compose service label to "service_name" (if using compose)
+      - source_labels: [ __meta_docker_container_label_com_docker_compose_service ]
+        target_label: service_name
+        action: replace
+
+      # Fallback: if no compose label, use container name (without leading "/")
+      - source_labels: [ __meta_docker_container_name ]
+        regex: ^/(.+)$
+        target_label: service_name
+        action: replace
+
+      # (Nice to have) Keep container id as a stable reference
+      - source_labels: [ __meta_docker_container_id ]
+        target_label: container_id
+        action: replace
+
+      # Set a stable job label
+      - target_label: job
+        replacement: docker
+        action: replace
+
     pipeline_stages:
+      # Properly parse Docker JSON logs; adds `stream` label (stdout|stderr)
       - docker: { }
