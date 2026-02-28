@@ -22,15 +22,15 @@ ingester:
   lifecycler:
     ring:
       replication_factor: 1
-    interface_names: [ "eth0" ]   # OK for lifecycler, but not for partition_ring
+    interface_names: [ "eth0" ]
   partition_ring:
-    instance_addr: tempo
+    # instance_addr and interface_names are NOT allowed here
     kvstore:
-      store: memberlist           # explicit for clarity
+      store: memberlist
 
 live_store:
   ring:
-    instance_addr: tempo
+#    instance_addr: tempo
     kvstore:
       store: memberlist
 
