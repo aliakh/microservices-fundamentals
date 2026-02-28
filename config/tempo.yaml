@@ -29,9 +29,9 @@ storage:
       queue_depth: 10000
 
 
-#querier:
-#  frontend_worker:
-#    frontend_address: 127.0.0.1:9095
+querier:
+  frontend_worker:
+    frontend_address: 127.0.0.1:3200
 
 #overrides:
 #  defaults:
