@@ -28,6 +28,10 @@ datasources:
     editable: false
     jsonData:
       grpcAddress: "tempo:9095"
+      streaming:
+        searchEnabled: false
+        metricsEnabled: false
+        tracesEnabled: false  # optional
 
   - name: Loki
     type: loki
