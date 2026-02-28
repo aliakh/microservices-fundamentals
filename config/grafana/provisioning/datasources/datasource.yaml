@@ -20,12 +20,14 @@ datasources:
     type: tempo
     uid: tempo
     access: proxy
-    url: grpc://tempo:9095
+    url: http://tempo:9095
     basicAuth: false
     orgId: 1
     isDefault: false
     version: 1
     editable: false
+    jsonData:
+      useGRPC: true              # ← tell Grafana to use gRPC transport
 
   - name: Loki
     type: loki
