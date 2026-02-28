@@ -33,9 +33,9 @@ storage:
 #  frontend_worker:
 #    frontend_address: 127.0.0.1:9095
 
-overrides:
-  defaults:
-    search_enabled: true
+#overrides:
+#  defaults:
+#    search_enabled: true
 
 # --- Ring/cluster backing store (memberlist works well for single-node) ---
 memberlist:
