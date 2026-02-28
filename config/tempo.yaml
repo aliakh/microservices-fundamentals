@@ -2,12 +2,11 @@ auth_enabled: false
 
 server:
   http_listen_port: 3200
-  grpc_listen_port: 9095      # needed for internal gRPC worker in single-binary
+  grpc_listen_port: 9095
 
-# Memberlist backs Tempo's rings (KV)
 memberlist:
   bind_port: 7946
-  # If interface discovery fails in your env, you can set an explicit IP via:
+  # Optional if name resolution is flaky:
   # advertise_addr: 172.20.0.10
 
 distributor:
@@ -19,20 +18,21 @@ distributor:
         http:
           endpoint: 0.0.0.0:4318
 
-# The ingester's partition ring configuration (MUST be under 'ingester')
 ingester:
   lifecycler:
     ring:
       replication_factor: 1
-    interface_names:
-      - eth0
+    interface_names: [ "eth0" ]   # OK for lifecycler, but not for partition_ring
+  partition_ring:
+    instance_addr: tempo          # ✅ valid; use service name on the Compose network
+    kvstore:
+      store: memberlist           # explicit for clarity
 
-# Live (recent) data store and its ring
 live_store:
   ring:
-    instance_interface_names: [ "eth0" ]
-    # Or:
-    # instance_addr: 172.20.0.10
+    instance_addr: tempo
+    kvstore:
+      store: memberlist
 
 storage:
   trace:
