@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 public class FeignTraceRequestInterceptor {
 
+    private static final AtomicInteger idx = new AtomicInteger(0);
     @Value("${app.tracing.header:X-Trace-Id}")
     private String traceHeader;
 
@@ -22,7 +24,7 @@ public class FeignTraceRequestInterceptor {
         return (RequestTemplate template) -> {
             String traceId = currentTraceId(tracer);
             if (traceId == null) {
-                traceId = "resource-service:feign:" + UUID.randomUUID();
+                traceId = "resource-service:feign:" + idx.getAndIncrement();
             }
             template.header(traceHeader, traceId);
         };

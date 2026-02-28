@@ -13,9 +13,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 public class TracingMvcInterceptor implements WebMvcConfigurer {
+
+    private static final AtomicInteger idx = new AtomicInteger(0);
 
     private final Tracer tracer;
     private final String traceHeader;
@@ -42,7 +45,7 @@ public class TracingMvcInterceptor implements WebMvcConfigurer {
                     tracer.withSpan(s);
                     traceId = s.context().traceId();
                 }
-                response.setHeader(traceHeader, (requestTraceId != null && !requestTraceId.isBlank()) ? requestTraceId : (traceId != null ? traceId : UUID.randomUUID().toString()));
+                response.setHeader(traceHeader, (requestTraceId != null && !requestTraceId.isBlank()) ? requestTraceId : (traceId != null ? traceId : String.valueOf(idx.getAndIncrement())));
                 return true;
             }
         });
