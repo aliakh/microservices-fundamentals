@@ -31,7 +31,7 @@ storage:
 
 querier:
   frontend_worker:
-    frontend_address: 127.0.0.1:3200
+    frontend_address: 127.0.0.1:9095
 
 #overrides:
 #  defaults:
