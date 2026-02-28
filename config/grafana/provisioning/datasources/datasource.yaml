@@ -20,16 +20,12 @@ datasources:
     type: tempo
     uid: tempo
     access: proxy
-    url: http://tempo:9095
+    url: http://tempo:3200
     basicAuth: false
     orgId: 1
     isDefault: false
     version: 1
     editable: false
-    jsonData:
-      streamingEnabled: true  # Recommended for modern versions (2.2+)
-      search:
-        hide: false
 
   - name: Loki
     type: loki
