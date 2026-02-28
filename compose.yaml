@@ -58,7 +58,6 @@ services:
 
   eureka-server:
     <<: *logging
-    container_name: eureka-server
     build:
       context: ./eureka-server
     environment:
@@ -74,7 +73,6 @@ services:
 
   api-gateway:
     <<: *logging
-    container_name: api-gateway
     build:
       context: ./api-gateway
     environment:
@@ -97,7 +95,6 @@ services:
 
   config-server:
     <<: *logging
-    container_name: config-server
     build:
       context: ./config-server
     environment:
@@ -120,7 +117,6 @@ services:
 
   resource-processor:
     <<: *logging
-    container_name: resource-processor
     build:
       context: ./resource-processor
     environment:
@@ -152,7 +148,6 @@ services:
 
   resource-service:
     <<: *logging
-    container_name: resource-service
     build:
       context: ./resource-service
     environment:
@@ -202,7 +197,6 @@ services:
 
   song-service:
     <<: *logging
-    container_name: song-service
     build:
       context: ./song-service
     environment:
@@ -233,7 +227,6 @@ services:
 
   storage-service:
     <<: *logging
-    container_name: storage-service
     build:
       context: ./storage-service
     environment:
