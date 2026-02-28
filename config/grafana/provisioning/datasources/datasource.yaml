@@ -27,7 +27,9 @@ datasources:
     version: 1
     editable: false
     jsonData:
-      useGRPC: true              # ← tell Grafana to use gRPC transport
+      streamingEnabled: true  # Recommended for modern versions (2.2+)
+      search:
+        hide: false
 
   - name: Loki
     type: loki
