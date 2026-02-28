@@ -2,12 +2,12 @@ auth_enabled: false
 
 server:
   http_listen_port: 3200
-  grpc_listen_port: 9095   # add gRPC for the internal worker in single-binary
+  grpc_listen_port: 9095      # needed for internal gRPC worker in single-binary
 
-# Backing store for rings (gossip)
+# Memberlist backs Tempo's rings (KV)
 memberlist:
   bind_port: 7946
-  # If you prefer explicit IPs, you can set advertise_addr instead:
+  # If interface discovery fails in your env, you can set an explicit IP via:
   # advertise_addr: 172.20.0.10
 
 distributor:
@@ -19,18 +19,20 @@ distributor:
         http:
           endpoint: 0.0.0.0:4318
 
-# Live (recent) data path ring — required for recent queries/search
-live_store:
-  ring:
-    instance_interface_names: [ "eth0" ]  # <- critical in Docker
-    # Or, alternatively:
+# The ingester's partition ring configuration (MUST be under 'ingester')
+ingester:
+  partition_ring:
+    # In containers, advertise the container's interface instead of 127.0.0.1
+    instance_interface_names: [ "eth0" ]
+    # Alternatively:
     # instance_addr: 172.20.0.10
 
-# Partition ring backs the search/tag APIs
-partition_ring:
-  instance_interface_names: [ "eth0" ]
-  # Or:
-  # instance_addr: 172.20.0.10
+# Live (recent) data store and its ring
+live_store:
+  ring:
+    instance_interface_names: [ "eth0" ]
+    # Or:
+    # instance_addr: 172.20.0.10
 
 storage:
   trace:
