@@ -125,12 +125,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
-#      prometheus:
-#        condition: service_started
-#      loki:
-#        condition: service_started
-#      tempo:
-#        condition: service_started
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8086/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -173,12 +173,12 @@ services:
         condition: service_healthy
       localstack:
         condition: service_healthy
-#      prometheus:
-#        condition: service_started
-#      loki:
-#        condition: service_started
-#      tempo:
-#        condition: service_started
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8083/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -202,12 +202,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
-#      prometheus:
-#        condition: service_started
-#      loki:
-#        condition: service_started
-#      tempo:
-#        condition: service_started
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -231,12 +231,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
-#      prometheus:
-#        condition: service_started
-#      loki:
-#        condition: service_started
-#      tempo:
-#        condition: service_started
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -314,10 +314,11 @@ services:
     ports:
       - "3100:3100"
 
+
   promtail:
     image: grafana/promtail:latest
     volumes:
-      - ./config/promtail.yaml:/etc/promtail/config.yml
+      - ./config/promtail.yaml:/etc/promtail/config.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./promtail-positions:/tmp
     command: '-config.file=/etc/promtail/config.yml -config.expand-env'

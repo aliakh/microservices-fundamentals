@@ -10,12 +10,50 @@ clients:
 
 scrape_configs:
   - job_name: docker
-    pipeline_stages:
-      - docker: { }
     docker_sd_configs:
       - host: unix:///var/run/docker.sock
         refresh_interval: 5s
+
+    pipeline_stages:
+      - docker: {}
+
     relabel_configs:
-      - source_labels: [ '__meta_docker_container_name' ]
-        regex: '/docker-(.*)'
-        target_label: 'container'
+      - source_labels: [__meta_docker_container_state]
+        regex: running
+        action: keep
+
+      - action: labeldrop
+        regex: filename
+
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+        regex: (.+)
+        target_label: service_name
+        action: replace
+
+      - source_labels: [service_name, __meta_docker_container_name]
+        separator: ;
+        regex: ^$;^/?(.+)$
+        target_label: service_name
+        replacement: $1
+        action: replace
+
+      - source_labels: [service_name, __meta_docker_container_label_org_opencontainers_image_title]
+        separator: ;
+        regex: ^$;(.+)
+        target_label: service_name
+        replacement: $1
+        action: replace
+
+      - source_labels: [service_name]
+        regex: ^$
+        replacement: unknown_service
+        target_label: service_name
+        action: replace
+
+      - source_labels: [__meta_docker_container_id]
+        target_label: container_id
+        action: replace
+
+      - target_label: job
+        replacement: docker
+        action: replace
