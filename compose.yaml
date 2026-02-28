@@ -350,9 +350,9 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_SERVER_ROOT_URL=http://localhost:3000/
-      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
     ports:
       - "3000:3000"
     depends_on:
