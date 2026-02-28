@@ -325,7 +325,7 @@ services:
       - loki
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:2.4.1
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
@@ -334,13 +334,13 @@ services:
       - "4318:4318"
       - "3200:3200"
       - "9095:9095"
-      - "9411:9411"
-      - "7946:7946"
-      - "14268:14268"
-      - "14250:14250"
-      - "55680:55680"
+#      - "9411:9411"
+#      - "7946:7946"
+#      - "14268:14268"
+#      - "14250:14250"
+#      - "55680:55680"
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.3.1
     volumes:
       - ./config/grafana/provisioning:/etc/grafana/provisioning/
       - ./config/grafana/dashboards:/var/lib/grafana/dashboards

@@ -24,14 +24,14 @@ storage:
       path: /tmp/tempo/wal
     local:
       path: /tmp/tempo/blocks
-    pool:
-      max_workers: 100
-      queue_depth: 10000
+#    pool:
+#      max_workers: 100
+#      queue_depth: 10000
 
 
-querier:
-  frontend_worker:
-    frontend_address: 127.0.0.1:9095
+#querier:
+#  frontend_worker:
+#    frontend_address: 127.0.0.1:9095
 
 #overrides:
 #  defaults:
