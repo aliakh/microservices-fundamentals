@@ -1,9 +1,5 @@
 version: "3.7"
 
-x-logging: &logging
-  labels:
-    - "scrap-logs=true"
-
 services:
   resource-db:
     image: postgres:17-alpine
@@ -57,7 +53,6 @@ services:
       start_period: 30s
 
   eureka-server:
-    <<: *logging
     build:
       context: ./eureka-server
     environment:
@@ -72,7 +67,6 @@ services:
       start_period: 30s
 
   api-gateway:
-    <<: *logging
     build:
       context: ./api-gateway
     environment:
@@ -94,7 +88,6 @@ services:
       start_period: 30s
 
   config-server:
-    <<: *logging
     build:
       context: ./config-server
     environment:
@@ -116,7 +109,6 @@ services:
       start_period: 30s
 
   resource-processor:
-    <<: *logging
     build:
       context: ./resource-processor
     environment:
@@ -147,7 +139,6 @@ services:
       start_period: 30s
 
   resource-service:
-    <<: *logging
     build:
       context: ./resource-service
     environment:
@@ -196,7 +187,6 @@ services:
       start_period: 30s
 
   song-service:
-    <<: *logging
     build:
       context: ./song-service
     environment:
@@ -226,7 +216,6 @@ services:
       start_period: 30s
 
   storage-service:
-    <<: *logging
     build:
       context: ./storage-service
     environment:
