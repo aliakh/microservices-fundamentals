@@ -38,12 +38,12 @@ storage:
 #    search_enabled: true
 
 # --- Ring/cluster backing store (memberlist works well for single-node) ---
-memberlist:
-  # Make it usable inside container networks
-  bind_addr: 0.0.0.0
-  # Advertise the container's hostname or IP; in single binary simple setups, loopback works too
-  advertise_addr: 127.0.0.1
-  # Don’t fail if we can’t form a cluster (we’re single-node)
-  abort_if_cluster_join_fails: false
-  # Empty join_members is fine for single-node; you can also set ["127.0.0.1"]
-  join_members: []
+#memberlist:
+#  # Make it usable inside container networks
+#  bind_addr: 0.0.0.0
+#  # Advertise the container's hostname or IP; in single binary simple setups, loopback works too
+#  advertise_addr: 127.0.0.1
+#  # Don’t fail if we can’t form a cluster (we’re single-node)
+#  abort_if_cluster_join_fails: false
+#  # Empty join_members is fine for single-node; you can also set ["127.0.0.1"]
+#  join_members: []
