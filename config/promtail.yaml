@@ -10,43 +10,55 @@ clients:
 
 scrape_configs:
   - job_name: docker
-    # Discover running containers via Docker socket
     docker_sd_configs:
       - host: unix:///var/run/docker.sock
         refresh_interval: 5s
 
-    # Drop noisy / high-cardinality or irrelevant labels first
     relabel_configs:
       # Keep only running containers
-      - source_labels: [ __meta_docker_container_state ]
+      - source_labels: [__meta_docker_container_state]
         regex: running
         action: keep
 
-      # Optional: drop filename if Docker engine also exposes it
+      # Drop high-cardinality 'filename' (not useful for queries)
       - action: labeldrop
         regex: filename
 
-      # Map Docker Compose service label to "service_name" (if using compose)
-      - source_labels: [ __meta_docker_container_label_com_docker_compose_service ]
+      # 1) If using docker compose, map compose service to 'service_name'
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
         target_label: service_name
         action: replace
 
-      # Fallback: if no compose label, use container name (without leading "/")
-      - source_labels: [ __meta_docker_container_name ]
-        regex: ^/(.+)$
+      # 2) Fallback to image title if defined (OCI label)
+      - source_labels: [__meta_docker_container_label_org_opencontainers_image_title]
+        regex: (.+)
         target_label: service_name
         action: replace
 
-      # (Nice to have) Keep container id as a stable reference
-      - source_labels: [ __meta_docker_container_id ]
+      # 3) Fallback to container name (handles both "/name" and "name")
+      - source_labels: [__meta_docker_container_name]
+        regex: ^/?(.+)$
+        replacement: $1
+        target_label: service_name
+        action: replace
+
+      # 4) If still empty, force a default
+      - source_labels: [service_name]
+        regex: ^$
+        replacement: unknown_service
+        target_label: service_name
+        action: replace
+
+      # (Nice to have) container id for pinpointing a specific container instance
+      - source_labels: [__meta_docker_container_id]
         target_label: container_id
         action: replace
 
-      # Set a stable job label
+      # Stable job label for your queries
       - target_label: job
         replacement: docker
         action: replace
 
     pipeline_stages:
-      # Properly parse Docker JSON logs; adds `stream` label (stdout|stderr)
-      - docker: { }
+      # Parses Docker JSON logs and adds 'stream' (stdout|stderr)
+      - docker: {}
