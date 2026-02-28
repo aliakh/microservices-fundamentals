@@ -8,11 +8,12 @@ deleteDatasources:
 datasources:
   - name: Prometheus
     type: prometheus
+    uid: DS_PROMETHEUS
     access: proxy
     url: http://prometheus:9090
     basicAuth: false
     orgId: 1
-    isDefault: false   # set true if you want it as default
+    isDefault: false
     version: 1
     editable: false
 

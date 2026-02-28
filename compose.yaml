@@ -318,7 +318,9 @@ services:
     image: grafana/promtail:latest
     volumes:
       - ./config/promtail.yaml:/etc/promtail/config.yml
-      - /var/run/docker.sock:/var/run/docker.sock
+#      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail-positions:/tmp
     command: '-config.file=/etc/promtail/config.yml -config.expand-env'
     ports:
       - "9080:9080"
