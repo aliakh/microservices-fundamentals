@@ -7,7 +7,7 @@ distributor:
   receivers:
     otlp:
       protocols:
-        http:
+        http: {}
 
 ingester:
   trace_idle_period: 10s
