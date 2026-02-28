@@ -312,7 +312,6 @@ services:
     ports:
       - "3100:3100"
 
-
   promtail:
     image: grafana/promtail:latest
     volumes:
@@ -333,12 +332,13 @@ services:
     ports:
       - "4317:4317"
       - "4318:4318"
+      - "3200:3200"
+      - "9095:9095"
       - "9411:9411"
       - "7946:7946"
       - "14268:14268"
       - "14250:14250"
       - "55680:55680"
-      - "3200:3200"
 
   grafana:
     image: grafana/grafana:latest
@@ -350,7 +350,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
+#      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_SERVER_ROOT_URL=http://localhost:3000/
     ports:

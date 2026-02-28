@@ -26,8 +26,6 @@ datasources:
     isDefault: false
     version: 1
     editable: false
-    jsonData:
-      httpMethod: GET
 
   - name: Loki
     type: loki
