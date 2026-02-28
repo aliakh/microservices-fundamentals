@@ -38,7 +38,7 @@ public class ResourceController {
                                                                  @RequestHeader(value = "X-Trace-Id", required = false) String requestTraceId) {
         var span = tracer.currentSpan();
         var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:" + UUID.randomUUID());
-        logger.info("Upload resource: {}, traceId={}", audio, traceId);
+        logger.info("Upload resource: {} byte(s), traceId={}", audio.length, traceId);
 
         var createdId = resourceService.uploadResource(audio, traceId);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
