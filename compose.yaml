@@ -331,9 +331,10 @@ services:
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
     ports:
-      - "4317"
-      - "4318"
-      - "9411"
+      - "4317:4317"
+      - "4318:4318"
+      - "9411:9411"
+      - "7946:7946"
       - "14268:14268"
       - "14250:14250"
       - "55680:55680"
@@ -351,6 +352,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_SERVER_ROOT_URL=http://localhost:3000/
+      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
     ports:
       - "3000:3000"
     depends_on:

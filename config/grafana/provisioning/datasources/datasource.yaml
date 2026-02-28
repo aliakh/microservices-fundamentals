@@ -26,6 +26,12 @@ datasources:
     isDefault: false
     version: 1
     editable: false
+    jsonData:
+      httpMethod: GET
+      tracesToLogs:
+        datasourceUid: loki
+        mappedTags: [ { key: "service.name", value: "service" } ]
+        mapTagNamesEnabled: true
 
   - name: Loki
     type: loki
