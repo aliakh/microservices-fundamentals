@@ -36,7 +36,7 @@ public class ResourceParsingConsumer {
     private SongServiceClient songServiceClient;
     @Autowired
     private ResourceFinalizingProducer resourceFinalizingProducer;
-    @Autowired
+//    @Autowired
 //    private Tracer tracer;
 //    @Value("${app.tracing.header:X-Trace-Id}")
 //    private String traceHeader;

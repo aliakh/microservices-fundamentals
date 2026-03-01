@@ -317,7 +317,7 @@ services:
     volumes:
       - ./config/promtail.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./promtail-positions:/tmp
+#      - ./promtail-positions:/tmp
     command: '-config.file=/etc/promtail/config.yaml -config.expand-env'
     ports:
       - "9080:9080"

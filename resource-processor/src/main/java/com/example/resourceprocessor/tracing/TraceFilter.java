@@ -19,19 +19,22 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(TraceFilter.class);
+//    private static final Logger log = LoggerFactory.getLogger(TraceFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String incoming = request.getHeader(TraceConstants.TRACE_ID_HEADER);
-        if (incoming == null || incoming.isBlank()) {
-            incoming = TraceContext.getOrCreateTraceId();
+        String traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
+        if (traceId == null || traceId.isBlank()) {
+            traceId = TraceContext.getOrCreateTraceId();
         } else {
-            TraceContext.setTraceId(incoming);
+            TraceContext.setTraceId(traceId);
         }
+
+        logger.info("Filter traceId2="+ traceId);
+
         // Add to response as well
-        response.setHeader(TraceConstants.TRACE_ID_HEADER, incoming);
+        response.setHeader(TraceConstants.TRACE_ID_HEADER, traceId);
 
         try {
             filterChain.doFilter(request, response);
