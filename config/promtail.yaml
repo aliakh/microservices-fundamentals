@@ -20,10 +20,10 @@ scrape_configs:
     pipeline_stages:
       - docker: { }
       - regex:
-          expression: '^(?P<ts>\d{4}-\d{2}-\d{2}T\S+)'
+          expression: '^(?P<ts>\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2},\d{3})'
       - timestamp:
           source: ts
-          format: RFC3339Nano  # RFC3339 also works for millisecond precision
+          format: "2006-01-02 15:04:05,000"
       - regex:
           expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
       - labels:
