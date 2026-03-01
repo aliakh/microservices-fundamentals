@@ -18,57 +18,45 @@ scrape_configs:
             values: [ "scrap-logs=true" ]
 
     pipeline_stages:
-      - docker: {}
-        pipeline_stages:
-          - regex:
-              expression: '^(?P<ts>\d{4}-\d{2}-\d{2}T\S+)'
-          - timestamp:
-              source: ts
-              format: RFC3339Nano   # RFC3339 would also be fine for ms precision
-          - regex:
-              expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
-##      - regex:
-#          expression: 'spanId=(?P<spanId>(?i:[0-9a-f]{16}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
-      # (OPTIONAL) Promote to labels to enable queries like {traceId="..."} across services
-      # Comment these out to avoid high cardinality in Loki
+      - docker: { }
+      - regex:
+          expression: '^(?P<ts>\d{4}-\d{2}-\d{2}T\S+)'
+      - timestamp:
+          source: ts
+          format: RFC3339Nano  # RFC3339 also works for millisecond precision
+      - regex:
+          expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
       - labels:
           traceId:
-#          spanId:
 
     relabel_configs:
-      # (optional but sensible) only keep running containers
-      - source_labels: [__meta_docker_container_state]
+      - source_labels: [ __meta_docker_container_state ]
         regex: running
         action: keep
 
-      # compose service -> service_name
-      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+      - source_labels: [ __meta_docker_container_label_com_docker_compose_service ]
         regex: (.+)
         target_label: service_name
         action: replace
 
-      # also keep project if you want (handy in multi‑project hosts)
-      - source_labels: [__meta_docker_container_label_com_docker_compose_project]
+      - source_labels: [ __meta_docker_container_label_com_docker_compose_project ]
         regex: (.+)
         target_label: project
         action: replace
 
-      # name fallback: only if service_name is still empty (containers not from compose)
-      - source_labels: [service_name, __meta_docker_container_name]
+      - source_labels: [ service_name, __meta_docker_container_name ]
         separator: ;
         regex: ^$;^/?(.+)$
         target_label: service_name
         replacement: $1
         action: replace
 
-      # last resort default
-      - source_labels: [service_name]
+      - source_labels: [ service_name ]
         regex: ^$
         replacement: unknown_service
         target_label: service_name
         action: replace
 
-      # stable job
       - target_label: job
         replacement: docker
         action: replace
