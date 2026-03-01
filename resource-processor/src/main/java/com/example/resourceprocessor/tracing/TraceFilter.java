@@ -21,7 +21,7 @@ public class TraceFilter extends OncePerRequestFilter {
         HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
         var traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
-        if (traceId == null || traceId.isBlank()) {
+        if (traceId == null) {
             traceId = TraceContext.getTraceIdOrCreate();
         } else {
             TraceContext.setTraceId(traceId);

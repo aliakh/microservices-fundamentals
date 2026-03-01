@@ -23,12 +23,12 @@ public class ResourceFinalizingConsumer {
                                  @Header(name = "X-Trace-Id", required = true) String traceId) {
         logger.info("ResourceFinalizingConsumer traceId2={}", traceId);
 //        if (traceId!= null && !traceId.isBlank()) {
-            TraceContext.setTraceId(traceId);
+        TraceContext.setTraceId(traceId);
 //        } else {
 //            TraceContext.getTraceIdOrCreate();
 //        }
         try {
-            logger.info("Resource finalizing message received: {} traceId2={}", resourceId,traceId);
+            logger.info("Resource finalizing message received: {} traceId2={}", resourceId, traceId);
 
             var resource = resourceService.moveResourceToPermanentStorage(resourceId);
             logger.info("Resource moved to permanent storage: {}", resource);

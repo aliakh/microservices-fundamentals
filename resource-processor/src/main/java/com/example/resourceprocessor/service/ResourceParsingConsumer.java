@@ -8,18 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import io.micrometer.tracing.Span;
-import io.micrometer.tracing.Tracer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Component;
 
 @Service
 public class ResourceParsingConsumer {
@@ -43,11 +34,11 @@ public class ResourceParsingConsumer {
                               @Header(name = "X-Trace-Id", required = true) String traceId) {
         logger.info("ResourceParsingConsumer traceId2={}", traceId);
 //        if (traceId!= null && !traceId.isBlank()) {
-            TraceContext.setTraceId(traceId);
+        TraceContext.setTraceId(traceId);
 //        } else {
 //            TraceContext.getTraceIdOrCreate();
 //        }
-        try  {
+        try {
 //            if (messageTraceId != null && !messageTraceId.isBlank()) {
 //                MDC.put("traceId", messageTraceId);
 //            }
