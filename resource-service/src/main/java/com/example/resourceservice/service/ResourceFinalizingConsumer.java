@@ -1,5 +1,6 @@
 package com.example.resourceservice.service;
 
+import com.example.resourceservice.tracing.TraceConstants;
 import com.example.resourceservice.tracing.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +20,12 @@ public class ResourceFinalizingConsumer {
 
     @Transactional
     @KafkaListener(topics = "${kafka.finalizing-resources-topic}", groupId = "${kafka.finalizing-resources-consumer-group}")
-    public void finalizeResource(Long resourceId,
-                                 @Header(name = "X-Trace-Id", required = true) String traceId) {
+    public void finalizeResource(Long resourceId, @Header(name = TraceConstants.TRACE_ID_HEADER) String traceId) {
         logger.info("ResourceFinalizingConsumer traceId2={}", traceId);
-//        if (traceId!= null && !traceId.isBlank()) {
         TraceContext.setTraceId(traceId);
-//        } else {
-//            TraceContext.getTraceIdOrCreate();
-//        }
+
         try {
-            logger.info("Resource finalizing message received: {} traceId2={}", resourceId, traceId);
+            logger.info("Resource finalizing message received: {}", resourceId);
 
             var resource = resourceService.moveResourceToPermanentStorage(resourceId);
             logger.info("Resource moved to permanent storage: {}", resource);

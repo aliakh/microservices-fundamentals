@@ -3,7 +3,6 @@ package com.example.resourceservice.controller;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.service.ResourceService;
-import com.example.resourceservice.tracing.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class ResourceController {
 
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
-        logger.info("Upload resource: {} byte(s), traceId2={}", audio.length, TraceContext.getTraceIdOrThrow());
+        logger.info("Upload resource: {} byte(s)", audio.length);
 
         var createdId = resourceService.uploadResource(audio);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
@@ -38,7 +37,7 @@ public class ResourceController {
 
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
-        logger.info("Get resource by id: {}, traceId={}", id, TraceContext.getTraceIdOrThrow());
+        logger.info("Get resource by id: {}", id);
         var resourceResponse = resourceService.getResource(id);
 
         var headers = new HttpHeaders();

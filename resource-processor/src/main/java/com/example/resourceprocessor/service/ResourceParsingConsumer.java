@@ -1,6 +1,7 @@
 package com.example.resourceprocessor.service;
 
 import com.example.resourceprocessor.dto.ResourceDto;
+import com.example.resourceprocessor.tracing.TraceConstants;
 import com.example.resourceprocessor.tracing.TraceContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,20 +31,12 @@ public class ResourceParsingConsumer {
 
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
-    public void parseResource(String message,
-                              @Header(name = "X-Trace-Id", required = true) String traceId) {
+    public void parseResource(String message, @Header(name = TraceConstants.TRACE_ID_HEADER) String traceId) {
         logger.info("ResourceParsingConsumer traceId2={}", traceId);
-//        if (traceId!= null && !traceId.isBlank()) {
         TraceContext.setTraceId(traceId);
-//        } else {
-//            TraceContext.getTraceIdOrCreate();
-//        }
+
         try {
-//            if (messageTraceId != null && !messageTraceId.isBlank()) {
-//                MDC.put("traceId", messageTraceId);
-//            }
-//            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
-            logger.info("Resource parsing message received: {}, traceId={}", message, traceId);
+            logger.info("Resource parsing message received: {}", message);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
             logger.info("Resource deserialized: {}", resourceDto);
