@@ -11,9 +11,9 @@ public final class TraceContext {
 
     public static String getTraceId() {
         String id = TRACE_ID.get();
-        if (id == null) {
-            id = MDC.get(TraceConstants.MDC_TRACE_ID_KEY);
-        }
+//        if (id == null) {
+//            id = MDC.get(TraceConstants.MDC_TRACE_ID_KEY);
+//        }
         return id;
     }
 
@@ -28,15 +28,15 @@ public final class TraceContext {
 
     public static void setTraceId(String traceId) {
         TRACE_ID.set(traceId);
-        if (traceId != null) {
-            MDC.put(TraceConstants.MDC_TRACE_ID_KEY, traceId);
-        } else {
-            MDC.remove(TraceConstants.MDC_TRACE_ID_KEY);
-        }
+//        if (traceId != null) {
+//            MDC.put(TraceConstants.MDC_TRACE_ID_KEY, traceId);
+//        } else {
+//            MDC.remove(TraceConstants.MDC_TRACE_ID_KEY);
+//        }
     }
 
     public static void clear() {
         TRACE_ID.remove();
-        MDC.remove(TraceConstants.MDC_TRACE_ID_KEY);
+//        MDC.remove(TraceConstants.MDC_TRACE_ID_KEY);
     }
 }

@@ -31,7 +31,7 @@ public class TraceFilter extends OncePerRequestFilter {
             TraceContext.setTraceId(traceId);
         }
 
-        logger.info("Filter traceId2="+ traceId);
+//        logger.info("Filter traceId2="+ traceId);
 
         // Add to response as well
         response.setHeader(TraceConstants.TRACE_ID_HEADER, traceId);
