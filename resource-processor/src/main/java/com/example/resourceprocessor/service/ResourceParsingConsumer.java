@@ -36,9 +36,9 @@ public class ResourceParsingConsumer {
     @Autowired
     private ResourceFinalizingProducer resourceFinalizingProducer;
     @Autowired
-    private Tracer tracer;
-    @Value("${app.tracing.header:X-Trace-Id}")
-    private String traceHeader;
+//    private Tracer tracer;
+//    @Value("${app.tracing.header:X-Trace-Id}")
+//    private String traceHeader;
 
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")

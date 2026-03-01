@@ -2,6 +2,8 @@ package com.example.resourceservice.service;
 
 import com.example.resourceservice.dto.KafkaProperties;
 import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.tracing.TraceConstants;
+import com.example.resourceservice.tracing.TraceContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -30,21 +32,25 @@ public class ResourceParsingProducer {
     private KafkaTemplate<Long, String> kafkaTemplate;
     @Autowired
     private KafkaProperties kafkaProperties;
-    @Autowired
-    private Tracer tracer;
-    @Value("${app.tracing.header:X-Trace-Id}")
-    private String traceHeader;
+//    @Autowired
+//    private Tracer tracer;
+//    @Value("${app.tracing.header:X-Trace-Id}")
+//    private String traceHeader;
 
-    public void parseResource(Resource resource, String traceId) {
+    public void parseResource(Resource resource) {
         var topic = kafkaProperties.parsingResourcesTopic();
         var key = resource.getId();
         var value = toJson(resource);
 
         var producerRecord = new ProducerRecord<>(topic, key, value);
-        String messageTraceId = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();
-        if (messageTraceId != null) {
-            producerRecord.headers().add(new RecordHeader(traceHeader, messageTraceId.getBytes(StandardCharsets.UTF_8)));
-        }
+
+        var traceId = TraceContext.getOrCreateTraceId();
+        producerRecord.headers().add(new RecordHeader(TraceConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8)));
+
+//        String messageTraceId = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();
+//        if (messageTraceId != null) {
+//            producerRecord.headers().add(new RecordHeader(traceHeader, messageTraceId.getBytes(StandardCharsets.UTF_8)));
+//        }
 
         kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
@@ -70,8 +76,8 @@ public class ResourceParsingProducer {
         }
     }
 
-    private String currentTraceId() {
-        Span span = tracer.currentSpan();
-        return span != null ? span.context().traceId() : null;
-    }
+//    private String currentTraceId() {
+//        Span span = tracer.currentSpan();
+//        return span != null ? span.context().traceId() : null;
+//    }
 }

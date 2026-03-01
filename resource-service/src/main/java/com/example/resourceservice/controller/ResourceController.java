@@ -36,13 +36,12 @@ public class ResourceController {
     private Tracer tracer;
 
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
-    public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio,
-                                                                 @RequestHeader(value = "X-Trace-Id", required = false) String requestTraceId) {
-        var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:" + idx.getAndIncrement());
-        logger.info("Upload resource: {} byte(s), traceId={}", audio.length, traceId);
+    public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
+//        var span = tracer.currentSpan();
+//        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:" + idx.getAndIncrement());
+        logger.info("Upload resource: {} byte(s)", audio.length);
 
-        var createdId = resourceService.uploadResource(audio, traceId);
+        var createdId = resourceService.uploadResource(audio);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
     }
 
