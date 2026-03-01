@@ -19,14 +19,20 @@ scrape_configs:
 
     pipeline_stages:
       - docker: {}
-#      - regex:
-#          expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
+        pipeline_stages:
+          - regex:
+              expression: '^(?P<ts>\d{4}-\d{2}-\d{2}T\S+)'
+          - timestamp:
+              source: ts
+              format: RFC3339Nano   # RFC3339 would also be fine for ms precision
+          - regex:
+              expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
 ##      - regex:
 #          expression: 'spanId=(?P<spanId>(?i:[0-9a-f]{16}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
       # (OPTIONAL) Promote to labels to enable queries like {traceId="..."} across services
       # Comment these out to avoid high cardinality in Loki
-#      - labels:
-#          traceId:
+      - labels:
+          traceId:
 #          spanId:
 
     relabel_configs:
