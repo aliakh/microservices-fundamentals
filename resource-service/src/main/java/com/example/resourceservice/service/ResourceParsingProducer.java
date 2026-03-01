@@ -45,6 +45,7 @@ public class ResourceParsingProducer {
         var producerRecord = new ProducerRecord<>(topic, key, value);
 
         var traceId = TraceContext.getOrCreateTraceId();
+        logger.info("Producer traceId2={}", traceId);
         producerRecord.headers().add(new RecordHeader(TraceConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8)));
 
 //        String messageTraceId = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();

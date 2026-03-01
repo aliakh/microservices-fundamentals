@@ -1,7 +1,7 @@
 package com.example.resourceprocessor.tracing;
 
-import com.example.resourceservice.tracing.TraceConstants;
-import com.example.resourceservice.tracing.TraceContext;
+import com.example.resourceprocessor.tracing.TraceConstants;
+import com.example.resourceprocessor.tracing.TraceContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

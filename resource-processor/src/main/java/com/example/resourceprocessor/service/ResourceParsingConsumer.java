@@ -45,7 +45,8 @@ public class ResourceParsingConsumer {
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void parseResource(String message,
                               @Header(name = "X-Trace-Id", required = false) String traceId) {
-        if (traceId!= null && traceId.isBlank()) {
+        logger.info("Consumer traceId2={}", traceId);
+        if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
         } else {
             TraceContext.getOrCreateTraceId();

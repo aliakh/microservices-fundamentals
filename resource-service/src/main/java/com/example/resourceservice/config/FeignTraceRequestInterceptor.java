@@ -6,6 +6,8 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class FeignTraceRequestInterceptor {
 
+    private static final Logger logger = LoggerFactory.getLogger(FeignTraceRequestInterceptor.class);
 //    private static final AtomicInteger idx = new AtomicInteger(0);
 //    @Value("${app.tracing.header:X-Trace-Id}")
 //    private String traceHeader;
@@ -25,6 +28,9 @@ public class FeignTraceRequestInterceptor {
     public RequestInterceptor requestInterceptor(/*Tracer tracer*/) {
         return (RequestTemplate template) -> {
             String traceId = TraceContext.getOrCreateTraceId();
+
+            logger.info("Feign traceId2={}", traceId);
+
 //            String traceId = currentTraceId(tracer);
 //            if (traceId == null) {
 //                traceId = "resource-service:feign:" + idx.getAndIncrement();
