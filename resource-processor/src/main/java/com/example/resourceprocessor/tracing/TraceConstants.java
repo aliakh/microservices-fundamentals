@@ -1,8 +1,7 @@
 package com.example.resourceprocessor.tracing;
 
-public final class TraceConstants {
-    private TraceConstants() {}
+public interface TraceConstants {
 
-    public static final String TRACE_ID_HEADER = "X-Trace-Id";
-    public static final String MDC_TRACE_ID_KEY = "xTraceId";
+    String TRACE_ID_HEADER = "X-Trace-Id";
+    String TRACE_ID_MDC = "xTraceId";
 }

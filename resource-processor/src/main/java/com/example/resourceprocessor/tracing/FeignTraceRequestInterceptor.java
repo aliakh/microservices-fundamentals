@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class FeignTraceRequestInterceptor {
 
     @Bean
-    public RequestInterceptor requestInterceptor(/*Tracer tracer*/) {
+    public RequestInterceptor requestInterceptor() {
         return (RequestTemplate template) -> {
             var traceId = TraceContext.getOrCreateTraceId();
             template.header(TraceConstants.TRACE_ID_HEADER, traceId);
