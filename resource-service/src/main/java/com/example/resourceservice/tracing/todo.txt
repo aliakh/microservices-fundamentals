@@ -4,7 +4,7 @@
         RestTemplate rt = new RestTemplate();
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>(rt.getInterceptors());
         interceptors.add((request, body, execution) -> {
-            String traceId = TraceContext.getOrCreateTraceId();
+            String traceId = TraceContext.getTraceIdOrCreate();
             request.getHeaders().set(TraceConstants.TRACE_ID_HEADER, traceId);
             return execution.execute(request, body);
         });
@@ -19,7 +19,7 @@
             if (headerVal instanceof String s && !s.isBlank()) {
                 TraceContext.setTraceId(s);
             } else {
-                TraceContext.getOrCreateTraceId();
+                TraceContext.getTraceIdOrCreate();
             }
             try {
                 resourceService.resourceProcessed(msg.getPayload());
@@ -31,7 +31,7 @@
 }
 
     public void publishResourceCreated(Long resourceId) {
-        String traceId = TraceContext.getOrCreateTraceId();
+        String traceId = TraceContext.getTraceIdOrCreate();
         streamBridge.send(
                 "resourceCreated-out-0", // binding name
                 MessageBuilder.withPayload(resourceId)

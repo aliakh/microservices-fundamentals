@@ -11,7 +11,7 @@ public class FeignTraceRequestInterceptor {
     @Bean
     public RequestInterceptor requestInterceptor() {
         return (RequestTemplate template) -> {
-            var traceId = TraceContext.getOrCreateTraceId();
+            var traceId = TraceContext.getTraceIdOrCreate();
             template.header(TraceConstants.TRACE_ID_HEADER, traceId);
         };
     }

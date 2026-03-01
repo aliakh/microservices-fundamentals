@@ -25,7 +25,7 @@ public class ResourceFinalizingConsumer {
         if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
         } else {
-            TraceContext.getOrCreateTraceId();
+            TraceContext.getTraceIdOrCreate();
         }
         try {
             logger.info("Resource finalizing message received: {} traceId2={}", resourceId,traceId);

@@ -15,14 +15,12 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceFilter extends OncePerRequestFilter {
 
-//    private static final Logger logger = LoggerFactory.getLogger(TraceFilter.class);
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
         String traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
         if (traceId == null || traceId.isBlank()) {
-            traceId = TraceContext.getOrCreateTraceId();
+            traceId = TraceContext.getTraceIdOrCreate();
         } else {
             TraceContext.setTraceId(traceId);
         }

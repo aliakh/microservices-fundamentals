@@ -1,40 +1,40 @@
 package com.example.resourceprocessor.tracing;
 
-//import org.slf4j.MDC;
-
 import org.slf4j.MDC;
 
 import java.util.UUID;
 
 public final class TraceContext {
+
     private static final ThreadLocal<String> TRACE_ID = new ThreadLocal<>();
 
-    private TraceContext() {}
-
-    public static String getTraceId() {
-        String id = TRACE_ID.get();
-//        if (id == null) {
-//            id = MDC.get(TraceConstants.TRACE_ID_MDC);
-//        }
-        return id;
+    private TraceContext() {
     }
 
-    public static String getOrCreateTraceId() {
-        String id = getTraceId();
-        if (id == null || id.isEmpty()) {
-            id = UUID.randomUUID().toString();
-            setTraceId(id);
+    public static String getTraceIdOrThrow() {
+        var traceId = TRACE_ID.get();
+        if (traceId == null || traceId.isEmpty()) {
+            throw new RuntimeException("The thread-local trace id is blank");
         }
-        return id;
+        return traceId;
+    }
+
+    public static String getTraceIdOrCreate() {
+        var traceId = TRACE_ID.get();
+        if (traceId == null || traceId.isEmpty()) {
+            traceId = UUID.randomUUID().toString();
+            setTraceId(traceId);
+        }
+        return traceId;
     }
 
     public static void setTraceId(String traceId) {
+        if (traceId == null || traceId.isEmpty()) {
+            throw new RuntimeException("The parameter trace id is blank");
+        }
+
         TRACE_ID.set(traceId);
-//        if (traceId != null) {
-            MDC.put(TraceConstants.TRACE_ID_MDC, traceId);
-//        } else {
-//            MDC.remove(TraceConstants.TRACE_ID_MDC);
-//        }
+        MDC.put(TraceConstants.TRACE_ID_MDC, traceId);
     }
 
     public static void clear() {

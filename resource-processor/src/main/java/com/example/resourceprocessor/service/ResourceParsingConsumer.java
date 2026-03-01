@@ -49,7 +49,7 @@ public class ResourceParsingConsumer {
         if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
         } else {
-            TraceContext.getOrCreateTraceId();
+            TraceContext.getTraceIdOrCreate();
         }
         try  {
 //            if (messageTraceId != null && !messageTraceId.isBlank()) {
@@ -85,7 +85,7 @@ public class ResourceParsingConsumer {
 //            if (headerVal instanceof String s && !s.isBlank()) {
 //        TraceContext.setTraceId(s);
 //    } else {
-//        TraceContext.getOrCreateTraceId();
+//        TraceContext.getTraceIdOrCreate();
 //    }
 //            try {
 //        resourceService.resourceProcessed(msg.getPayload());
