@@ -21,7 +21,7 @@ public class ResourceFinalizingConsumer {
     @KafkaListener(topics = "${kafka.finalizing-resources-topic}", groupId = "${kafka.finalizing-resources-consumer-group}")
     public void finalizeResource(Long resourceId,
                                  @Header(name = "X-Trace-Id", required = false) String traceId) {
-        logger.info("Consumer traceId2={}", traceId);
+        logger.info("ResourceFinalizingConsumer traceId2={}", traceId);
         if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
         } else {

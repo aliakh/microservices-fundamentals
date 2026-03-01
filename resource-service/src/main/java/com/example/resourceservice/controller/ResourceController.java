@@ -3,6 +3,7 @@ package com.example.resourceservice.controller;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.service.ResourceService;
+import com.example.resourceservice.tracing.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class ResourceController {
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
 //        var span = tracer.currentSpan();
 //        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:" + idx.getAndIncrement());
-        logger.info("Upload resource: {} byte(s)", audio.length);
+        logger.info("Upload resource: {} byte(s), traceId2={}", audio.length, TraceContext.getTraceId());
 
         var createdId = resourceService.uploadResource(audio);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
