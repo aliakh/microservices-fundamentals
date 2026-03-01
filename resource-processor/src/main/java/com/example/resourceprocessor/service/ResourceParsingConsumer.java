@@ -1,6 +1,7 @@
 package com.example.resourceprocessor.service;
 
 import com.example.resourceprocessor.dto.ResourceDto;
+import com.example.resourceprocessor.tracing.TraceContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -43,13 +44,17 @@ public class ResourceParsingConsumer {
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void parseResource(String message,
-                              @Header(name = "X-Trace-Id", required = false) String messageTraceId) {
-        var span = tracer.nextSpan().name("resource-processor:kafka:consume:parse-resource").start();
-        try (var ws = tracer.withSpan(span)) {
-            if (messageTraceId != null && !messageTraceId.isBlank()) {
-                MDC.put("traceId", messageTraceId);
-            }
-            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
+                              @Header(name = "X-Trace-Id", required = false) String traceId) {
+        if (traceId!= null && traceId.isBlank()) {
+            TraceContext.setTraceId(traceId);
+        } else {
+            TraceContext.getOrCreateTraceId();
+        }
+        try  {
+//            if (messageTraceId != null && !messageTraceId.isBlank()) {
+//                MDC.put("traceId", messageTraceId);
+//            }
+//            var traceId = messageTraceId != null ? messageTraceId : span.context().traceId();
             logger.info("Resource parsing message received: {}, traceId={}", message, traceId);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
@@ -71,8 +76,19 @@ public class ResourceParsingConsumer {
         } catch (RuntimeException e) {
             logger.error("Failed to parse message {}", message, e);
         } finally {
-            span.end();
-            MDC.remove("traceId");
+            TraceContext.clear();
         }
     }
+
+//    Object headerVal = msg.getHeaders().get(TraceConstants.TRACE_ID_HEADER);
+//            if (headerVal instanceof String s && !s.isBlank()) {
+//        TraceContext.setTraceId(s);
+//    } else {
+//        TraceContext.getOrCreateTraceId();
+//    }
+//            try {
+//        resourceService.resourceProcessed(msg.getPayload());
+//    } finally {
+//        TraceContext.clear();
+//    }
 }
