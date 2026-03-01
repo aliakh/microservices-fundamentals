@@ -16,18 +16,17 @@ import java.io.IOException;
 public class TraceFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
-        String traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
+    protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
+        var traceId = request.getHeader(TraceConstants.TRACE_ID_HEADER);
         if (traceId == null || traceId.isBlank()) {
             traceId = TraceContext.getTraceIdOrCreate();
         } else {
             TraceContext.setTraceId(traceId);
         }
 
-//        logger.info("Filter traceId2="+ traceId);
-
-        // Add to response as well
         response.setHeader(TraceConstants.TRACE_ID_HEADER, traceId);
 
         try {

@@ -29,18 +29,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ResourceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceController.class);
-    private static final AtomicInteger idx = new AtomicInteger(0);
 
     @Autowired
     private ResourceService resourceService;
-    @Autowired
-    private Tracer tracer;
 
     @PostMapping(consumes = "audio/mpeg", produces = "application/json")
     public ResponseEntity<UploadResourceResponse> uploadResource(@RequestBody byte[] audio) {
-//        var span = tracer.currentSpan();
-//        var traceId = (span != null) ? span.context().traceId() : (requestTraceId != null ? requestTraceId : "resource-service:controller:upload-resource:" + idx.getAndIncrement());
-        logger.info("Upload resource: {} byte(s), traceId2={}", audio.length, TraceContext.getTraceId());
+        logger.info("Upload resource: {} byte(s), traceId2={}", audio.length, TraceContext.getTraceIdOrThrow());
 
         var createdId = resourceService.uploadResource(audio);
         return ResponseEntity.ok(new UploadResourceResponse(createdId));
@@ -48,10 +43,7 @@ public class ResourceController {
 
     @GetMapping(value = "/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
-        var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : "resource-service:controller:get-resource:" + idx.getAndIncrement();
-
-        logger.info("Get resource by id: {}, traceId={}", id, traceId);
+        logger.info("Get resource by id: {}, traceId={}", id, TraceContext.getTraceIdOrThrow());
         var resourceResponse = resourceService.getResource(id);
 
         var headers = new HttpHeaders();
@@ -65,11 +57,8 @@ public class ResourceController {
 
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<DeleteResourcesResponse> deleteResources(@RequestParam("id") String csvIds) {
-        var span = tracer.currentSpan();
-        var traceId = (span != null) ? span.context().traceId() : "resource-service:controller:delete-resource:" + idx.getAndIncrement();
-
         var deletedIds = resourceService.deleteResources(csvIds);
-        logger.info("Delete resources by ids: {}, traceId={}", csvIds, traceId);
+        logger.info("Delete resources by ids: {}", csvIds);
         return ResponseEntity.ok(new DeleteResourcesResponse(deletedIds));
     }
 }

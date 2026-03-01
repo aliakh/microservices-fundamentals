@@ -13,15 +13,15 @@ public final class TraceContext {
 
     public static String getTraceIdOrThrow() {
         var traceId = TRACE_ID.get();
-        if (traceId == null || traceId.isEmpty()) {
-            throw new RuntimeException("The thread-local trace id is blank");
+        if (traceId == null) {
+            throw new RuntimeException("The thread-local trace id is null");
         }
         return traceId;
     }
 
     public static String getTraceIdOrCreate() {
         var traceId = TRACE_ID.get();
-        if (traceId == null || traceId.isEmpty()) {
+        if (traceId == null) {
             traceId = UUID.randomUUID().toString();
             setTraceId(traceId);
         }
@@ -29,8 +29,8 @@ public final class TraceContext {
     }
 
     public static void setTraceId(String traceId) {
-        if (traceId == null || traceId.isEmpty()) {
-            throw new RuntimeException("The parameter trace id is blank");
+        if (traceId == null) {
+            throw new RuntimeException("The parameter trace id is null");
         }
 
         TRACE_ID.set(traceId);

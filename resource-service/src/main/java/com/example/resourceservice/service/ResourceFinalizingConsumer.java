@@ -20,13 +20,13 @@ public class ResourceFinalizingConsumer {
     @Transactional
     @KafkaListener(topics = "${kafka.finalizing-resources-topic}", groupId = "${kafka.finalizing-resources-consumer-group}")
     public void finalizeResource(Long resourceId,
-                                 @Header(name = "X-Trace-Id", required = false) String traceId) {
+                                 @Header(name = "X-Trace-Id", required = true) String traceId) {
         logger.info("ResourceFinalizingConsumer traceId2={}", traceId);
-        if (traceId!= null && !traceId.isBlank()) {
+//        if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
-        } else {
-            TraceContext.getTraceIdOrCreate();
-        }
+//        } else {
+//            TraceContext.getTraceIdOrCreate();
+//        }
         try {
             logger.info("Resource finalizing message received: {} traceId2={}", resourceId,traceId);
 

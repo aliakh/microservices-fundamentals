@@ -36,21 +36,17 @@ public class ResourceParsingConsumer {
     private SongServiceClient songServiceClient;
     @Autowired
     private ResourceFinalizingProducer resourceFinalizingProducer;
-//    @Autowired
-//    private Tracer tracer;
-//    @Value("${app.tracing.header:X-Trace-Id}")
-//    private String traceHeader;
 
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void parseResource(String message,
-                              @Header(name = "X-Trace-Id", required = false) String traceId) {
+                              @Header(name = "X-Trace-Id", required = true) String traceId) {
         logger.info("ResourceParsingConsumer traceId2={}", traceId);
-        if (traceId!= null && !traceId.isBlank()) {
+//        if (traceId!= null && !traceId.isBlank()) {
             TraceContext.setTraceId(traceId);
-        } else {
-            TraceContext.getTraceIdOrCreate();
-        }
+//        } else {
+//            TraceContext.getTraceIdOrCreate();
+//        }
         try  {
 //            if (messageTraceId != null && !messageTraceId.isBlank()) {
 //                MDC.put("traceId", messageTraceId);
@@ -80,16 +76,4 @@ public class ResourceParsingConsumer {
             TraceContext.clear();
         }
     }
-
-//    Object headerVal = msg.getHeaders().get(TraceConstants.TRACE_ID_HEADER);
-//            if (headerVal instanceof String s && !s.isBlank()) {
-//        TraceContext.setTraceId(s);
-//    } else {
-//        TraceContext.getTraceIdOrCreate();
-//    }
-//            try {
-//        resourceService.resourceProcessed(msg.getPayload());
-//    } finally {
-//        TraceContext.clear();
-//    }
 }
