@@ -1,4 +1,4 @@
-package com.microservices.storageservice.exception;
+package com.example.storageservice.exception;
 
 public class InvalidIdException extends RuntimeException {
 

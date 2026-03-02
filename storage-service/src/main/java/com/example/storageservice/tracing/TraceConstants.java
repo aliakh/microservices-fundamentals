@@ -1,4 +1,4 @@
-package com.microservices.storageservice.tracing;
+package com.example.storageservice.tracing;
 
 public interface TraceConstants {
 

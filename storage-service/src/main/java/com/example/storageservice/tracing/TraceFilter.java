@@ -1,4 +1,4 @@
-package com.microservices.storageservice.tracing;
+package com.example.storageservice.tracing;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.microservices.storageservice.dto;
+package com.example.storageservice.dto;
 
 public record CreateStorageResponse(Long id) {
 }

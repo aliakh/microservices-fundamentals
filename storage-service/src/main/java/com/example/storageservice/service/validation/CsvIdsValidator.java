@@ -1,6 +1,6 @@
-package com.microservices.storageservice.service.validation;
+package com.example.storageservice.service.validation;
 
-import com.microservices.storageservice.exception.InvalidIdException;
+import com.example.storageservice.exception.InvalidIdException;
 import org.springframework.stereotype.Component;
 
 @Component

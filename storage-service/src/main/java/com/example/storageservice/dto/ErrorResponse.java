@@ -1,4 +1,4 @@
-package com.microservices.storageservice.dto;
+package com.example.storageservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

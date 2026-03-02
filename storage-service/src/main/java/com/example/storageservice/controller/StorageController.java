@@ -1,10 +1,10 @@
-package com.microservices.storageservice.controller;
+package com.example.storageservice.controller;
 
-import com.microservices.storageservice.dto.CreateStorageRequest;
-import com.microservices.storageservice.dto.CreateStorageResponse;
-import com.microservices.storageservice.dto.DeleteStoragesResponse;
-import com.microservices.storageservice.dto.StorageDto;
-import com.microservices.storageservice.service.StorageService;
+import com.example.storageservice.dto.CreateStorageRequest;
+import com.example.storageservice.dto.CreateStorageResponse;
+import com.example.storageservice.dto.DeleteStoragesResponse;
+import com.example.storageservice.dto.StorageDto;
+import com.example.storageservice.service.StorageService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

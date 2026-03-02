@@ -1,12 +1,12 @@
-package com.microservices.storageservice.service;
+package com.example.storageservice.service;
 
-import com.microservices.storageservice.dto.CreateStorageRequest;
-import com.microservices.storageservice.dto.StorageDto;
-import com.microservices.storageservice.entity.Storage;
-import com.microservices.storageservice.exception.StorageTypeAlreadyExistsException;
-import com.microservices.storageservice.repository.StorageRepository;
-import com.microservices.storageservice.service.validation.CsvIdsParser;
-import com.microservices.storageservice.service.validation.CsvIdsValidator;
+import com.example.storageservice.dto.CreateStorageRequest;
+import com.example.storageservice.dto.StorageDto;
+import com.example.storageservice.entity.Storage;
+import com.example.storageservice.exception.StorageTypeAlreadyExistsException;
+import com.example.storageservice.repository.StorageRepository;
+import com.example.storageservice.service.validation.CsvIdsParser;
+import com.example.storageservice.service.validation.CsvIdsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

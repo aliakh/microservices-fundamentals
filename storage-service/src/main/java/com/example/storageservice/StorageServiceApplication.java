@@ -1,4 +1,4 @@
-package com.microservices.storageservice;
+package com.example.storageservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

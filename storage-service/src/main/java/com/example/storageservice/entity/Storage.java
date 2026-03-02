@@ -1,4 +1,4 @@
-package com.microservices.storageservice.entity;
+package com.example.storageservice.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
