@@ -26,8 +26,6 @@ datasources:
     isDefault: false
     version: 1
     editable: false
-#    jsonData:
-#      httpMethod: GET
 
   - name: Loki
     type: loki
@@ -41,6 +39,6 @@ datasources:
     jsonData:
       derivedFields:
         - name: TraceID
-          matcherRegex: \[.+,(.+),.+\]
-          url: ${__value.raw}
+          matcherRegex: 'xTraceId=([A-Za-z0-9]+)'
+          url: '${__value.raw}'
           datasourceUid: tempo
