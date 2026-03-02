@@ -29,4 +29,4 @@ scrape_configs:
           traceId:
     relabel_configs:
       - source_labels: [ '__meta_docker_container_label_com_docker_compose_service' ]
-        target_label: 'container'
+        target_label: 'service_name'
