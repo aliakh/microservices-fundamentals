@@ -11,12 +11,21 @@ podman compose --file compose.yaml up resource-db song-db localstack kafka
 podman compose logs -f resource-processor
 podman compose logs -f resource-service
 podman compose logs -f song-service
+podman compose logs -f storage-service
 podman compose logs -f eureka-server
+podman compose logs -f api-gateway
 podman compose logs -f kafka
+podman compose logs -f grafana
+podman compose logs -f prometheus
+podman compose logs -f promtail
+podman compose logs -f tempo
+podman compose logs -f loki
 
 podman ps --format "table {{.Names}}\t{{.Status}}"
 
+{service_name=~".+"} |= "AAA14"
 
+curl http://localhost:9080/service-discovery
 
 Run tests
 ```
