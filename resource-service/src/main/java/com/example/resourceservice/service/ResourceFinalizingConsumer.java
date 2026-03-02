@@ -21,8 +21,9 @@ public class ResourceFinalizingConsumer {
     @Transactional
     @KafkaListener(topics = "${kafka.finalizing-resources-topic}", groupId = "${kafka.finalizing-resources-consumer-group}")
     public void finalizeResource(Long resourceId, @Header(name = TraceConstants.TRACE_ID_HEADER) String traceId) {
+        TraceContext.setTraceId(traceId);
+
         try {
-            TraceContext.setTraceId(traceId);
             logger.info("Resource finalizing message received: {}", resourceId);
 
             var resource = resourceService.moveResourceToPermanentStorage(resourceId);

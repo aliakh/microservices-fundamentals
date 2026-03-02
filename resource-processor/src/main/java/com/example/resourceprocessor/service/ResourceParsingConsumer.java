@@ -32,8 +32,9 @@ public class ResourceParsingConsumer {
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
     public void parseResource(String message, @Header(name = TraceConstants.TRACE_ID_HEADER) String traceId) {
+        TraceContext.setTraceId(traceId);
+
         try {
-            TraceContext.setTraceId(traceId);
             logger.info("Resource parsing message received: {}", message);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
