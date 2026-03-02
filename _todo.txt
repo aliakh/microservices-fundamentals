@@ -94,3 +94,6 @@ podman compose logs -f tempo
 podman compose logs -f loki
 ```
 {service_name="unknown_service"} |= "c6d40df1e537e869ec0ef03a8417c868"
+{service_name=~".+"} |= "AAA14"
+
+ curl http://localhost:9080/service-discovery
