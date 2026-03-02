@@ -6,6 +6,8 @@ import com.example.storageservice.dto.DeleteStoragesResponse;
 import com.example.storageservice.dto.StorageDto;
 import com.example.storageservice.service.StorageService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,22 +26,27 @@ import java.util.List;
 @Validated
 public class StorageController {
 
+    private static final Logger logger = LoggerFactory.getLogger(StorageController.class);
+
     @Autowired
     private StorageService storageService;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<CreateStorageResponse> createStorage(@RequestBody @Valid CreateStorageRequest createStorageRequest) {
+        logger.info("Create storage: {}", createStorageRequest);
         var createdId = storageService.createStorage(createStorageRequest);
         return ResponseEntity.ok(new CreateStorageResponse(createdId));
     }
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<StorageDto>> getAllStorages() {
+        logger.info("Get all storages");
         return ResponseEntity.ok(storageService.getAllStorages());
     }
 
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<DeleteStoragesResponse> deleteStorages(@RequestParam("id") String csvIds) {
+        logger.info("Delete storages by ids: {}", csvIds);
         var deletedIds = storageService.deleteStorages(csvIds);
         return ResponseEntity.ok(new DeleteStoragesResponse(deletedIds));
     }

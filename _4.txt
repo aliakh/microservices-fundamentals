@@ -1,0 +1,195 @@
+Observability
+
+Grafana: http://localhost:3000 (admin / admin)
+
+Data sources are pre-provisioned (Prometheus, Loki, Tempo).
+Explore → Loki: query app="client-service" or app="server-service" and filter by traceId=....
+Explore → Tempo: search traces by Service or paste a traceId.
+
+
+Prometheus: http://localhost:9090
+Loki API: http://localhost:3100
+Tempo API: http://localhost:3200
+
+
+How trace ID is propagated
+
+
+Incoming HTTP (client & server)
+
+MVC interceptor (TracingMvcInterceptor) reads X-Trace-Id header if provided and ensures it’s in MDC and response header.
+If missing, it ensures a trace exists (Micrometer/OTel), and returns X-Trace-Id back.
+
+
+
+Outgoing HTTP (client → server)
+
+OpenFeign RequestInterceptor injects X-Trace-Id header using the current span (Micrometer Tracer).
+Additionally, Micrometer + OTel instrumentation automatically injects W3C trace headers (traceparent, tracestate) for end-to-end traces in Tempo.
+
+
+
+Kafka
+
+Producer adds X-Trace-Id as a Kafka message header.
+Consumer reads X-Trace-Id header, sets it into MDC, and logs with trace correlation. It also starts a span for consumption to keep the trace continuity.
+
+
+
+Logs
+
+Logback pattern includes %X{traceId} and %X{spanId} so all logs are searchable by traceId in Loki.
+
+
+
+Metrics & Traces
+
+Metrics exposed at /actuator/prometheus and scraped by Prometheus.
+Traces exported via OTLP gRPC to Tempo (management.otlp.tracing.endpoint).
+
+Notes / Tips
+
+If you prefer JSON logs for easier parsing, swap to logstash-logback-encoder and update the Promtail pipeline accordingly. For this demo, a simple pattern with MDC is sufficient.
+This example uses Bitnami Kafka in KRaft mode (no Zookeeper) for simplicity.
+The shared /logs volume avoids host-specific Podman log scraping issues and keeps Promtail config trivial.
+To view end-to-end traces in Grafana (Tempo), use Explore → Tempo and filter by service.name (client-service or server-service). You can jump from Logs (Loki) to Traces (Tempo) using the traceId from the log line.
+Multipart upload in Feign is done with Resource to avoid MultipartFile creation on the client side.
+
+Client Service (client-service)
+
+server.port=8081
+spring.application.name=client-service
+
+# Multipart
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=50MB
+
+# Feign config
+spring.cloud.openfeign.okhttp.enabled=true
+spring.cloud.openfeign.compression.request.enabled=true
+spring.cloud.openfeign.compression.response.enabled=true
+feign.client.config.default.loggerLevel=full
+
+# Tracing
+management.tracing.enabled=true
+management.otlp.tracing.endpoint=${MANAGEMENT_OTLP_TRACING_ENDPOINT:http://localhost:4317}
+management.endpoints.web.exposure.include=health,info,prometheus,metrics,loggers
+
+# Downstream service
+app.server-url=${SERVER_SERVICE_URL:http://localhost:8082}
+
+# Custom trace header
+app.tracing.header=X-Trace-Id
+
+Server Service (server-service)
+server.port=8081
+spring.application.name=client-service
+
+# Multipart
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=50MB
+
+# Feign config
+spring.cloud.openfeign.okhttp.enabled=true
+spring.cloud.openfeign.compression.request.enabled=true
+spring.cloud.openfeign.compression.response.enabled=true
+feign.client.config.default.loggerLevel=full
+
+# Tracing
+management.tracing.enabled=true
+management.otlp.tracing.endpoint=${MANAGEMENT_OTLP_TRACING_ENDPOINT:http://localhost:4317}
+management.endpoints.web.exposure.include=health,info,prometheus,metrics,loggers
+
+# Downstream service
+app.server-url=${SERVER_SERVICE_URL:http://localhost:8082}
+
+# Custom trace header
+app.tracing.header=X-Trace-Id
+
+
+3. 🔗 Trace ID Propagation Model
+3.1 Incoming HTTP
+
+MVC interceptor extracts X-Trace-Id (if present)
+If missing, Micrometer/OTel generates a new span → new trace ID
+The trace ID is added to MDC (%X{traceId})
+Response always returns X-Trace-Id
+
+
+3.2 Outgoing Feign requests
+
+Feign RequestInterceptor reads:
+
+Tracer.currentSpan().traceId OR
+MDC traceId
+
+
+Injects into header:
+
+X-Trace-Id: <trace-id>
+
+
+Micrometer automatically injects:
+
+traceparent: <W3C-format>
+tracestate: ...
+
+
+3.3 Kafka Producer
+Each message includes headers:
+X-Trace-Id: <trace-id>
+traceparent (optional)
+
+
+3.4 Kafka Consumer
+
+Extract header
+Put into MDC
+Start new span
+Logs contain the same traceId
+
+
+4. 📊 Observability Pipeline (Podman Compose)
+You already have the full compose file with:
+✔ Kafka
+✔ Prometheus
+✔ Grafana
+✔ Tempo (OTLP gRPC 4317)
+✔ Loki
+✔ Promtail
+✔ Client Service
+✔ Server Service
+No changes required except environment variables (already shown in .properties).
+
+5. 🧪 Testing
+Upload a file
+Shellcurl -F "file=@/etc/hosts" http://localhost:8081/upload -vShow more lines
+Look for X-Trace-Id: in:
+
+Client logs
+Server logs
+Loki
+Tempo traces
+Kafka messages
+
+
+management.otlp.tracing.endpoint=http://tempo:4317
+
+
+Observe:
+
+Logs → Loki
+Traces → Tempo
+Metrics → Prometheus
+Dashboards → Grafana http://localhost:3000
+
+
+
+
+Trace strategy
+
+Use Micrometer Tracing (OTel bridge) to automatically create spans and inject W3C trace headers (traceparent, tracestate).
+Additionally add your custom X-Trace-Id header on every request and Kafka message.
+Enrich logs via MDC with traceId/spanId so you can search logs by just the trace ID in Grafana/Loki.
+Prometheus scrapes /actuator/prometheus.
+Tempo receives OTLP (gRPC) at tempo:4317.

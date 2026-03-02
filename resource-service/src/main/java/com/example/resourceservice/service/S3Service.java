@@ -50,7 +50,7 @@ public class S3Service {
             .build();
 
         var getObjectResponse = s3Client.getObjectAsBytes(getObjectRequest);
-        logger.info("Get object response: {}", getObjectResponse);
+        //logger.info("Get object response: {}", getObjectResponse);
 
         return getObjectResponse.asByteArray();
     }

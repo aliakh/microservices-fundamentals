@@ -1,12 +1,15 @@
 package com.example.resourceprocessor.service;
 
 import com.example.resourceprocessor.dto.ResourceDto;
+import com.example.resourceprocessor.tracing.TraceConstants;
+import com.example.resourceprocessor.tracing.TraceContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +31,9 @@ public class ResourceParsingConsumer {
 
     @Transactional
     @KafkaListener(topics = "${kafka.parsing-resources-topic}", groupId = "${kafka.parsing-resources-consumer-group}")
-    public void parseResource(String message) {
+    public void parseResource(String message, @Header(name = TraceConstants.TRACE_ID_HEADER) String traceId) {
         try {
+            TraceContext.setTraceId(traceId);
             logger.info("Resource parsing message received: {}", message);
 
             var resourceDto = objectMapper.readValue(message, ResourceDto.class);
@@ -50,6 +54,8 @@ public class ResourceParsingConsumer {
             logger.error("Error while deserializing resource {} from JSON", message, e);
         } catch (RuntimeException e) {
             logger.error("Failed to parse message {}", message, e);
+        } finally {
+            TraceContext.clear();
         }
     }
 }

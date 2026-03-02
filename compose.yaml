@@ -1,5 +1,9 @@
 version: "3.7"
 
+x-logging: &logging
+  labels:
+    - "scrap-logs=true"
+
 services:
   resource-db:
     image: postgres:17-alpine
@@ -53,8 +57,11 @@ services:
       start_period: 30s
 
   eureka-server:
+    <<: *logging
     build:
       context: ./eureka-server
+    environment:
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${EUREKA_SERVER_PORT}:8761"
     healthcheck:
@@ -65,11 +72,13 @@ services:
       start_period: 30s
 
   api-gateway:
+    <<: *logging
     build:
       context: ./api-gateway
     environment:
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
       CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${API_GATEWAY_PORT}:8080"
     depends_on:
@@ -85,6 +94,7 @@ services:
       start_period: 30s
 
   config-server:
+    <<: *logging
     build:
       context: ./config-server
     environment:
@@ -92,6 +102,7 @@ services:
       CONFIG_SERVER_GIT_URI: ${CONFIG_SERVER_GIT_URI}
       CONFIG_SERVER_GIT_USERNAME: ${CONFIG_SERVER_GIT_USERNAME}
       CONFIG_SERVER_GIT_PASSWORD: ${CONFIG_SERVER_GIT_PASSWORD}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${CONFIG_SERVER_PORT}:8888"
     depends_on:
@@ -105,6 +116,7 @@ services:
       start_period: 30s
 
   resource-processor:
+    <<: *logging
     build:
       context: ./resource-processor
     environment:
@@ -113,6 +125,7 @@ services:
       KAFKA_PARSING_RESOURCES_TOPIC: ${KAFKA_PARSING_RESOURCES_TOPIC}
       KAFKA_PARSING_RESOURCES_CONSUMER_GROUP: ${KAFKA_PARSING_RESOURCES_CONSUMER_GROUP}
       KAFKA_FINALIZING_RESOURCES_TOPIC: ${KAFKA_FINALIZING_RESOURCES_TOPIC}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${RESOURCE_PROCESSOR_PORT}:8086"
     depends_on:
@@ -120,6 +133,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8086/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -128,6 +147,7 @@ services:
       start_period: 30s
 
   resource-service:
+    <<: *logging
     build:
       context: ./resource-service
     environment:
@@ -143,7 +163,8 @@ services:
       KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
       KAFKA_PARSING_RESOURCES_TOPIC: ${KAFKA_PARSING_RESOURCES_TOPIC}
       KAFKA_FINALIZING_RESOURCES_TOPIC: ${KAFKA_FINALIZING_RESOURCES_TOPIC}
-      KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP: ${KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP}      
+      KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP: ${KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
@@ -161,6 +182,12 @@ services:
         condition: service_healthy
       localstack:
         condition: service_healthy
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8083/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -169,6 +196,7 @@ services:
       start_period: 30s
 
   song-service:
+    <<: *logging
     build:
       context: ./song-service
     environment:
@@ -176,6 +204,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SONG_DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SONG_DB_PASSWORD}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${SONG_SERVICE_PORT}:8084"
     depends_on:
@@ -183,6 +212,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -191,6 +226,7 @@ services:
       start_period: 30s
 
   storage-service:
+    <<: *logging
     build:
       context: ./storage-service
     environment:
@@ -198,6 +234,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${STORAGE_DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${STORAGE_DB_PASSWORD}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
     ports:
       - "${STORAGE_SERVICE_PORT}:8087"
     depends_on:
@@ -205,6 +242,12 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+    #      prometheus:
+    #        condition: service_started
+    #      loki:
+    #        condition: service_started
+    #      tempo:
+    #        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -214,7 +257,6 @@ services:
 
   localstack:
     image: localstack/localstack
-    container_name: localstack
     environment:
       - SERVICES=s3
       - AWS_DEFAULT_REGION=${AWS_S3_REGION}
@@ -234,7 +276,6 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka
-    container_name: kafka
     ports:
       - "9092:9092"
       - "9094:9094"
@@ -264,5 +305,71 @@ services:
       retries: 10
       start_period: 30s
 
+  prometheus:
+    image: prom/prometheus:latest
+    hostname: prometheus
+    ports:
+      - '9090:9090'
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./config/loki.yaml:/etc/loki/config.yaml
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./config/promtail.yaml:/etc/promtail/config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - ./promtail-positions:/tmp
+    command: '-config.file=/etc/promtail/config.yaml -config.expand-env'
+    ports:
+      - "9080:9080"
+    depends_on:
+      - loki
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "3200:3200"
+      - "9095:9095"
+#      - "9411:9411"
+#      - "7946:7946"
+#      - "14268:14268"
+#      - "14250:14250"
+#      - "55680:55680"
+  grafana:
+    image: grafana/grafana:10.3.1
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning/
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana:/var/lib/grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+#      - GF_FEATURE_TOGGLES_ENABLE=traceQLStreaming=false
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_ROOT_URL=http://localhost:3000/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+
 volumes:
   localstack:
+  grafana:
