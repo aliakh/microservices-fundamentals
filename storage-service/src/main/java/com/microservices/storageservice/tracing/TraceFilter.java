@@ -1,6 +1,5 @@
 package com.microservices.storageservice.tracing;
 
-import com.example.songservice.tracing.TraceConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

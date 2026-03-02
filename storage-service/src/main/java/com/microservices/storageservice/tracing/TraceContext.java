@@ -1,6 +1,5 @@
 package com.microservices.storageservice.tracing;
 
-import com.example.songservice.tracing.TraceConstants;
 import org.slf4j.MDC;
 
 import java.util.UUID;
