@@ -16,7 +16,6 @@ scrape_configs:
         filters:
           - name: label
             values: [ "scrap-logs=true" ]
-
     pipeline_stages:
       - docker: { }
       - regex:
@@ -28,35 +27,7 @@ scrape_configs:
           expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
       - labels:
           traceId:
-
     relabel_configs:
-      - source_labels: [ __meta_docker_container_state ]
-        regex: running
-        action: keep
-
-      - source_labels: [ __meta_docker_container_label_com_docker_compose_service ]
-        regex: (.+)
-        target_label: service_name
-        action: replace
-
-      - source_labels: [ __meta_docker_container_label_com_docker_compose_project ]
-        regex: (.+)
-        target_label: project
-        action: replace
-
-      - source_labels: [ service_name, __meta_docker_container_name ]
-        separator: ;
-        regex: ^$;^/?(.+)$
-        target_label: service_name
-        replacement: $1
-        action: replace
-
-      - source_labels: [ service_name ]
-        regex: ^$
-        replacement: unknown_service
-        target_label: service_name
-        action: replace
-
-      - target_label: job
-        replacement: docker
-        action: replace
+      - source_labels: [ '__meta_docker_container_name' ]
+        regex: '/docker-(.*)'
+        target_label: 'container'
