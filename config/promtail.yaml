@@ -24,7 +24,7 @@ scrape_configs:
           source: ts
           format: "2006-01-02 15:04:05,000"
       - regex:
-          expression: 'traceId=(?P<traceId>(?i:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}|[0-9a-f]{32}))'
+          expression: 'xTraceId=(?P<traceId>[A-Za-z0-9]+)'
       - labels:
           traceId:
     relabel_configs:
