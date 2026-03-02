@@ -30,7 +30,6 @@ public class ResourceFinalizingProducer {
 
         var producerRecord = new ProducerRecord<>(topic, key, value);
         var traceId = TraceContext.getTraceIdOrThrow();
-        logger.info("ResourceFinalizingProducer traceId2={}", traceId);
         producerRecord.headers().add(new RecordHeader(TraceConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8)));
 
         kafkaTemplate.send(producerRecord)

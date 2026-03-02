@@ -34,15 +34,8 @@ public class ResourceParsingProducer {
         var value = toJson(resource);
 
         var producerRecord = new ProducerRecord<>(topic, key, value);
-
         var traceId = TraceContext.getTraceIdOrThrow();
-        logger.info("ResourceParsingProducer traceId2={}", traceId);
         producerRecord.headers().add(new RecordHeader(TraceConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8)));
-
-//        String messageTraceId = (traceId != null && !traceId.isBlank()) ? traceId : currentTraceId();
-//        if (messageTraceId != null) {
-//            producerRecord.headers().add(new RecordHeader(traceHeader, messageTraceId.getBytes(StandardCharsets.UTF_8)));
-//        }
 
         kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
