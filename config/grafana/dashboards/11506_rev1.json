@@ -58,7 +58,10 @@
             "rgba(191, 148, 112, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "format": "none",
           "gauge": {
@@ -112,7 +115,7 @@
           "tableColumn": "Value",
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{job=~\"$gatewayService\"})",
+              "expr": "sum(gateway_requests_seconds_count{job=\"api-gateway\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -146,7 +149,10 @@
             "rgba(191, 148, 112, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "format": "none",
           "gauge": {
@@ -200,7 +206,7 @@
           "tableColumn": "Value",
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", job=~\"$gatewayService\"})",
+              "expr": "sum(gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", job=\"api-gateway\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -234,7 +240,10 @@
             "rgba(191, 148, 112, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "format": "none",
           "gauge": {
@@ -288,7 +297,7 @@
           "tableColumn": "Value",
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{outcome!=\"SUCCESSFUL\", job=~\"$gatewayService\"})",
+              "expr": "sum(gateway_requests_seconds_count{outcome!=\"SUCCESSFUL\", job=\"api-gateway\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -333,7 +342,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "fill": 1,
           "gridPos": {
             "h": 7,
@@ -373,7 +385,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=~\"$gatewayService\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=\"api-gateway\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -424,7 +436,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "fill": 1,
           "gridPos": {
             "h": 7,
@@ -466,7 +481,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=~\"$gatewayService\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=\"api-gateway\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -517,7 +532,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "fill": 1,
           "gridPos": {
             "h": 7,
@@ -559,7 +577,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=~\"$gatewayService\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=\"api-gateway\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -610,7 +628,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "fill": 1,
           "gridPos": {
             "h": 7,
@@ -652,7 +673,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=~\"$gatewayService\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_sum{routeId=~\"$routeId\", job=\"api-gateway\"}/gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -718,7 +739,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -760,7 +784,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -813,7 +837,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -857,7 +884,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -910,7 +937,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -954,7 +984,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -1007,7 +1037,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1051,7 +1084,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_count{outcome=\"SUCCESSFUL\", routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -1119,7 +1152,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1153,7 +1189,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "gateway_requests_seconds_count{outcome!=\"SUCCESSFUL\", routeId=~\"$routeId\", job=~\"$gatewayService\"}",
+              "expr": "gateway_requests_seconds_count{outcome!=\"SUCCESSFUL\", routeId=~\"$routeId\", job=\"api-gateway\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1219,7 +1255,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1260,7 +1299,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}) by (job, status)",
+              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}) by (job, status)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1311,7 +1350,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1354,7 +1396,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}) by (job, status)",
+              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}) by (job, status)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1405,7 +1447,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1448,7 +1493,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}) by (job, status)",
+              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}) by (job, status)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1499,7 +1544,10 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "prometheus",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
           "description": "",
           "fill": 1,
           "gridPos": {
@@ -1542,7 +1590,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=~\"$gatewayService\"}) by (job, status)",
+              "expr": "sum(gateway_requests_seconds_count{routeId=~\"$routeId\", job=\"api-gateway\"}) by (job, status)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -1611,7 +1659,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -1643,7 +1694,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_cpu_usage{job=~\"$gatewayService\"}",
+          "expr": "process_cpu_usage{job=\"api-gateway\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1693,7 +1744,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -1725,7 +1779,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{job=~\"$gatewayService\"}) by (job, instance)",
+          "expr": "sum(jvm_memory_used_bytes{job=\"api-gateway\"}) by (job, instance)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1775,7 +1829,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -1807,7 +1864,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_threads_live{job=~\"$gatewayService\"}",
+          "expr": "jvm_threads_live{job=\"api-gateway\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1889,7 +1946,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus-uid"
+      },
       "fill": 1,
       "gridPos": {
         "h": 9,
@@ -1983,7 +2043,10 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "prometheus",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus-uid"
+        },
         "hide": 0,
         "includeAll": true,
         "label": "Gateway Service",
@@ -2003,7 +2066,10 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "prometheus",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus-uid"
+        },
         "hide": 0,
         "includeAll": true,
         "label": "Route Id",
