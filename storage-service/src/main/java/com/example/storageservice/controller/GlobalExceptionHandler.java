@@ -5,6 +5,7 @@ import com.example.storageservice.exception.InvalidIdException;
 import com.example.storageservice.exception.StorageTypeAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,11 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse("Validation error", 400, details));
     }
+
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<ErrorResponse> handle(AccessDeniedException e) {
+//        return buildResponse(HttpStatus.FORBIDDEN, "Access Denied: You don't have permission to access this resource");
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {

@@ -1,0 +1,24 @@
+package com.epam.learning.microservices.gateway_server;
+
+import io.netty.resolver.DefaultAddressResolverGroup;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import reactor.core.publisher.Hooks;
+import reactor.netty.http.client.HttpClient;
+
+@SpringBootApplication
+public class ApiGatewayServerApplication {
+
+	public static void main(String[] args) {
+        Hooks.enableAutomaticContextPropagation();
+
+		SpringApplication.run(ApiGatewayServerApplication.class, args);
+	}
+
+    @Bean
+    public HttpClient httpClient() {
+        // Used default resolved to avoid windows dns resolution issue by netty resolver
+        return HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
+    }
+}
