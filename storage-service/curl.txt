@@ -1,7 +1,7 @@
-podman machine start
+
 podman compose --file compose.yaml down --remove-orphans
 podman compose --file compose.yaml up --build
-podman compose --file compose.yaml up storage-db storage-service keycloak
+podman compose --file compose.yaml up storage-db storage-service keycloak eureka-server tempo
 podman compose logs -f storage-service
 podman compose logs -f keycloak
 podman ps --format "table {{.Names}}\t{{.Status}}"
@@ -24,7 +24,8 @@ curl -s -X POST \
   -d "client_secret=storage-service-secret" \
   -d "username=admin_user" \
   -d "password=admin" | jq -r .access_token
-``
+
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIta3kzcHZ1ampYVk9JV29ibWtsd1FfV2lMbURDY1NyRkpmOHNwbzUwNUJrIn0.eyJleHAiOjE3NzI5MTAyMzgsImlhdCI6MTc3MjkwOTkzOCwianRpIjoiYjNmODhkNzgtN2MyMC00NjFiLTk1ZjEtMGFlMTJiMzA2M2VkIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODkvcmVhbG1zL21pY3Jvc2VydmljZXMtZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6InN0b3JhZ2Utc2VydmljZSIsInNpZCI6IjNiMjhlNDNhLTc2NzYtNDNkYi04NWUzLTgzZjBjOTVlY2NjNyIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhZG1pbiJdfSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbImFkbWluIl0sIm5hbWUiOiJTeXN0ZW0gQWRtaW5pc3RyYXRvciIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluX3VzZXIiLCJnaXZlbl9uYW1lIjoiU3lzdGVtIiwiZmFtaWx5X25hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSJ9.Rt_XatJs4MstLvAPPcxYoZ6DjP7a7WXv5TFAVd_DFQBrDaFR-AizqeJYmtbBsblNVNBPD5U3hhf6RUpIYk-uawjO8oXhVttLgT2hxy5juJIVxEMHsZ2GjQHC0nWQws-NgGBeNPB4OnwhiU0As9vL9m-5WwvtCRIgMRw_n4FeFOkrpBdZGFr2yyCkkVhiRsle-odz4Hm98Xw2hYUu534mvvWSTrqCKQ7TALiqOYaccUEdgOslcvCMtDRzwHtzVdPl6FQkfuq4h9b13hzFznqNlGZImqz0XR4ktfXsnPEwMhSLklgdoYKPHhbvFRxB63Bgc9jBBTRfS_kx9MqyBTLxJg
 
 User token
 
@@ -37,12 +38,14 @@ curl -s -X POST \
   -d "username=normal_user" \
   -d "password=user" | jq -r .access_token
 
+eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIta3kzcHZ1ampYVk9JV29ibWtsd1FfV2lMbURDY1NyRkpmOHNwbzUwNUJrIn0.eyJleHAiOjE3NzI5MTAyNjAsImlhdCI6MTc3MjkwOTk2MCwianRpIjoiM2EyMDJkY2UtOGI4MC00N2E4LTkxODktYTJiMjFiMmVhYmVkIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODkvcmVhbG1zL21pY3Jvc2VydmljZXMtZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6InN0b3JhZ2Utc2VydmljZSIsInNpZCI6ImZmNzU4NjJiLWI0NTItNGVlYi05NzdmLTVmOWRhZWRiMmU2NCIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJ1c2VyIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicm9sZXMiOlsidXNlciJdLCJuYW1lIjoiTm9ybWFsIFVzZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJub3JtYWxfdXNlciIsImdpdmVuX25hbWUiOiJOb3JtYWwiLCJmYW1pbHlfbmFtZSI6IlVzZXIiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20ifQ.BWxvafYGe176jWYiRk1yFJ7woeUNJgzo8OfYp9Hcv6oCz_sufhjHeFntgPih40UBkp5gQ_xeRJfpKFWhDlG4D6HCSY_g3l1LMeZoX7ukFqmOPwQGb3UcOHA0XEg3STBXeOsiUC7yVV4aNFOuQwtQr4bKIjSNvj8t7fI1roKajAUOP2VRxtJTx6YrlaJvbjfw25ltjw03yWhRUFKO8UwO-W4odT_xTG5Xpdhu5_LsOB_6SBKKkxG8vanwPmY5fC6EAHEyq2Qvwt8vrZ-KbfiDASEgkIk1bc3ppNlyuewyE7DyujIN9bySDf9B1uVMJTtpAvBObk9me8u3LVCgCScjMg
 
 5.2 Call your Storage API
 Replace TOKEN below with the JWT you got above. I’ll assume your endpoints are like /files:
 GET (should work for both roles)
+
 curl -i http://localhost:8087/storages \
-  -H "Authorization: Bearer TOKEN"
+  -H "Authorization: Bearer ADMIN_TOKEN"
 
 admin_user → 200 OK
 normal_user → 200 OK
