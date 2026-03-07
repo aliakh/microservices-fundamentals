@@ -2,13 +2,19 @@ package com.example.resourceservice.service;
 
 import com.example.resourceservice.dto.KafkaProperties;
 import com.example.resourceservice.entity.Resource;
+import com.example.resourceservice.tracing.TraceConstants;
+import com.example.resourceservice.tracing.TraceContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class ResourceParsingProducer {
@@ -23,7 +29,15 @@ public class ResourceParsingProducer {
     private KafkaProperties kafkaProperties;
 
     public void parseResource(Resource resource) {
-        kafkaTemplate.send(kafkaProperties.parsingResourcesTopic(), resource.getId(), toJson(resource))
+        var topic = kafkaProperties.parsingResourcesTopic();
+        var key = resource.getId();
+        var value = toJson(resource);
+
+        var producerRecord = new ProducerRecord<>(topic, key, value);
+        var traceId = TraceContext.getTraceIdOrThrow();
+        producerRecord.headers().add(new RecordHeader(TraceConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8)));
+
+        kafkaTemplate.send(producerRecord)
             .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         logger.info("Resource parsing message with key {} and value {} was published to topic {} at offset {}",
