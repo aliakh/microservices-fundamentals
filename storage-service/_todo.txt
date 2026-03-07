@@ -1,0 +1,273 @@
+Below is a complete, explain + verify walkthrough of your solution using Keycloak as the Authorization Server and your Storage Service as a Spring Boot Resource Server that enforces role-based access:
+
+Admin → can GET, POST, DELETE
+User → can only GET
+
+I’ll (1) validate your Keycloak realm JSON, (2) review & fix the Spring Security config, (3) point out mistakes in Docker/env config, (4) give Postman/cURL test steps to verify 401/403/200, (5) add troubleshooting & recommended enhancements.
+
+1) Architecture choice: why Keycloak here
+For microservices, Keycloak is a very good fit because:
+
+It’s a full OAuth 2.0 / OIDC provider, issues JWTs (self-contained) used by each microservice without calling Keycloak per request.
+It supports realm roles, client roles, mappers, and service accounts.
+It simplifies local and containerized development.
+
+
+Alternative: Spring Authorization Server is excellent when you want to keep everything in Spring and have full control, but it requires more setup/maintenance. External providers (Auth0, Google) are great for SaaS/production with ready SSO but may be overkill for local labs.
+
+Given your provided files, Keycloak is the right choice and you’re 90% there.
+
+2) Keycloak realm JSON — validation & minor adjustments
+You defined:
+
+Realm: microservices-demo
+Roles: admin, user
+Users:
+
+admin_user (password admin) → role admin
+normal_user (password user) → role user
+
+
+Clients:
+
+storage-service (confidential) with directAccessGrantsEnabled = true (Password grant), standardFlowEnabled = true (Auth code)
+resource-service (confidential), no flows
+
+
+
+This is fully workable for your use case. A few notes:
+
+
+Realm roles in JWTs
+Keycloak already puts realm roles into the JWT under:
+JSON"realm_access": {  "roles": ["admin", "user"]}Show more lines
+Your custom protocol mapper that adds a top-level "roles" array is not necessary. It won’t break anything, but your current Spring converter does not read that "roles" claim—only realm_access.roles. You can:
+
+Option A (recommended): remove the custom “roles” protocol mapper and rely on the default realm_access.roles claim
+Option B: keep it, and update your converter to also check "roles"
+
+
+
+Client roles
+If later you use client roles, they appear under "resource_access": {"<clientId>": {"roles":[...]}}. Your current converter won’t pick these up. I included an improved converter below that supports both realm and client roles.
+
+
+Do you need the resource-service client?
+Not strictly. A Spring resource server validating JWTs via issuer-uri doesn’t need to be a Keycloak client unless you will use introspection instead of JWK validation. You can keep it, but it’s optional.
+
+
+
+3) Spring Security (Resource Server) — review & improved config
+✅ What you did right
+
+You correctly used Spring Security’s Resource Server with JWT.
+You mapped roles to ROLE_....
+You enforced:
+
+GET /** → roles user or admin
+POST/**, DELETE/** → role admin
+
+
+You opened /actuator/**.
+
+⚠️ Things to fix / improve
+
+Environment variable typo
+You used OATUH2_JWT_ISSUER (typo) in docker compose and Spring property:
+
+.propertiesspring.security.oauth2.resourceserver.jwt.issuer-uri=${OATUH2_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}Show more lines
+
+Fix the env var name and reference consistently:
+
+Use MICROSERVICES_JWT_ISSUER everywhere (you already define it).
+Or rename to OAUTH2_JWT_ISSUER consistently.
+
+
+
+
+Stateless session
+Add stateless session management; resource servers should be stateless:
+
+Javahttp.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))Show more lines
+
+
+Exception handling (optional but recommended)
+Spring’s resource server sets entry point/denied handler automatically, but if you want JSON bodies, you can add explicit handlers.
+
+
+Role converter
+Keep your KeycloakRealmRoleConverter but expand it to support:
+
+
+
+realm_access.roles
+fallback to top-level "roles" (if you keep that mapper)
+optionally resource_access.<clientId>.roles
+
+Here’s a robust variant:
+Javapackage com.example.storageservice.config;import org.springframework.core.convert.converter.Converter;import org.springframework.security.core.GrantedAuthority;import org.springframework.security.core.authority.SimpleGrantedAuthority;import org.springframework.security.oauth2.jwt.Jwt;import java.util.*;import java.util.stream.Collectors;public class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {    @Override    public Collection<GrantedAuthority> convert(Jwt jwt) {        Set<String> roles = new HashSet<>();        // 1) Realm roles (default Keycloak)        Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");        if (realmAccess != null) {            Object realmRoles = realmAccess.get("roles");            if (realmRoles instanceof Collection<?> rr) {                rr.stream().filter(String.class::isInstance).map(String.class::cast).forEach(roles::add);            }        }        // 2) Optional: top-level "roles" (if a custom mapper adds it)        Object topLevelRoles = jwt.getClaim("roles");        if (topLevelRoles instanceof Collection<?> tr) {            tr.stream().filter(String.class::isInstance).map(String.class::cast).forEach(roles::add);        }        // 3) Optional: client roles (resource_access.<clientId>.roles)        Map<String, Object> resourceAccess = jwt.getClaimAsMap("resource_access");        if (resourceAccess != null) {            resourceAccess.forEach((clientId, value) -> {                if (value instanceof Map<?, ?> m) {                    Object clientRoles = m.get("roles");                    if (clientRoles instanceof Collection<?> cr) {                        cr.stream().filter(String.class::isInstance).map(String.class::cast).forEach(roles::add);                    }                }            });        }        return roles.stream()                .map(r -> new SimpleGrantedAuthority("ROLE_" + r))                .collect(Collectors.toSet());    }}``Show more lines
+
+Full SecurityConfig with stateless + combined authorities
+
+Javapackage com.example.storageservice.config;import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.Configuration;import org.springframework.core.convert.converter.Converter;import org.springframework.http.HttpMethod;import org.springframework.security.authentication.AbstractAuthenticationToken;import org.springframework.security.config.annotation.web.builders.HttpSecurity;import org.springframework.security.config.http.SessionCreationPolicy;import org.springframework.security.core.GrantedAuthority;import org.springframework.security.oauth2.jwt.Jwt;import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;import org.springframework.security.web.SecurityFilterChain;import java.util.ArrayList;import java.util.Collection;@Configurationpublic class SecurityConfig {    @Bean    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        http            .csrf(csrf -> csrf.disable())            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))            .authorizeHttpRequests(auth -> auth                .requestMatchers("/actuator/**").permitAll()                .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")                .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")                .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")                .anyRequest().authenticated()            )            .oauth2ResourceServer(oauth2 -> oauth2                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))            );        return http.build();    }    private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();        converter.setJwtGrantedAuthoritiesConverter(jwt -> {            // Combine Keycloak roles + standard scopes            Collection<GrantedAuthority> authorities = new ArrayList<>();            // Include Keycloak realm/client roles            authorities.addAll(new KeycloakRealmRoleConverter().convert(jwt));            // Include OAuth2 scopes (e.g., SCOPE_openid, SCOPE_profile, etc.)            JwtGrantedAuthoritiesConverter scopesConverter = new JwtGrantedAuthoritiesConverter();            authorities.addAll(scopesConverter.convert(jwt));            return authorities;        });        return converter;    }}Show more lines
+
+Application properties — fix issuer var
+
+.properties# application.properties (or application.yml equivalent)spring.security.oauth2.resourceserver.jwt.issuer-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}# Optional: use this if issuer discovery cannot resolve from your container/host network# spring.security.oauth2.resourceserver.jwt.jwk-set-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}/protocol/openid-connect/certsShow more lines
+
+Important: The token’s "iss" (issuer) must exactly match your configured issuer-uri. In Docker, your --hostname=keycloak makes the token issuer http://keycloak:8089/realms/microservices-demo. That’s fine for other containers on the same Docker network (like storage-service) if they use http://keycloak:8089/.... If you run your service outside Docker (localhost), prefer jwk-set-uri pointing to http://localhost:8089/... or add keycloak to your hosts file.
+
+
+Maven versions
+You have:
+
+XML<parent>  <groupId>org.springframework.boot</groupId>  <artifactId>spring-boot-starter-parent</artifactId>  <version>3.5.9</version></parent><properties>  <spring-cloud.version>2025.0.1</spring-cloud.version></properties>Show more lines
+Just ensure your Spring Cloud release train matches your Boot version (check the official compatibility table). If you see odd classpath issues, align these versions.
+
+4) Docker Compose — Keycloak & Storage Service
+Keycloak (you’re good)
+YAML  keycloak:    image: quay.io/keycloak/keycloak:26.0.0    container_name: keycloak    command:      - start-dev      - --import-realm      - --hostname=keycloak      - --hostname-strict=false      - --http-enabled=true    environment:      KC_DB: dev-file      KC_BOOTSTRAP_ADMIN_USERNAME: admin      KC_BOOTSTRAP_ADMIN_PASSWORD: admin      KC_PROXY_HEADERS: xforwarded      KC_HTTP_PORT: 8089    volumes:      - ./init-scripts/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json    ports:      - "8089:8089"``Show more lines
+Storage Service — fix env var name
+Change OATUH2_JWT_ISSUER → MICROSERVICES_JWT_ISSUER to match your property:
+YAML  storage-service:    build:      context: ./storage-service    environment:      SPRING_DATASOURCE_URL: ${STORAGE_DB_URL}      SPRING_DATASOURCE_USERNAME: ${STORAGE_DB_USERNAME}      SPRING_DATASOURCE_PASSWORD: ${STORAGE_DB_PASSWORD}      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}      MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}      MICROSERVICES_JWT_ISSUER: ${MICROSERVICES_JWT_ISSUER}#     Optionally set jwk as a fallback if issuer discovery fails in your network:#     JWT_SET_URI: ${JWT_SET_URI}    ports:      - "${STORAGE_SERVICE_PORT}:8087"    depends_on:      storage-db:        condition: service_healthy      eureka-server:        condition: service_healthy      keycloak:        condition: service_started    healthcheck:      test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]      interval: 10s      timeout: 5s      retries: 10      start_period: 30s``Show more lines
+And define in your .env:
+Plain Textenv isn’t fully supported. Syntax highlighting is based on Plain Text.MICROSERVICES_JWT_ISSUER=http://keycloak:8089/realms/microservices-demoMICROSERVICES_JWT_TOKEN_URL=http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token# Or use keycloak:8089 from another container; from Postman/host use localhost:8089Show more lines
+
+Note: MICROSERVICES_JWT_TOKEN_URL isn’t used by the service—it’s handy for Postman/cURL.
+
+
+5) End‑to‑end verification with Postman / cURL
+5.1 Get Access Tokens from Keycloak
+Use the Password grant (direct access grants) against the storage-service client (since you set "directAccessGrantsEnabled": true there). From your host:
+
+Admin token
+
+YAMLcurl -s -X POST \  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \  -H "Content-Type: application/x-www-form-urlencoded" \  -d "grant_type=password" \  -d "client_id=storage-service" \  -d "client_secret=storage-service-secret" \  -d "username=admin_user" \  -d "password=admin" | jq -r .access_token``Show more lines
+
+User token
+
+Shellcurl -s -X POST \  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \  -H "Content-Type: application/x-www-form-urlencoded" \  -d "grant_type=password" \  -d "client_id=storage-service" \  -d "client_secret=storage-service-secret" \  -d "username=normal_user" \  -d "password=user" | jq -r .access_tokenShow more lines
+
+If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Postman’s OAuth 2.0 flow with the same client_id/secret and redirect URI.
+
+5.2 Call your Storage API
+Replace TOKEN below with the JWT you got above. I’ll assume your endpoints are like /files:
+GET (should work for both roles)
+Shellcurl -i http://localhost:8087/files \  -H "Authorization: Bearer TOKEN"Show more lines
+
+admin_user → 200 OK
+normal_user → 200 OK
+
+POST (admin only)
+Shellcurl -i -X POST http://localhost:8087/files \  -H "Authorization: Bearer TOKEN" \  -H "Content-Type: application/json" \  -d '{"name":"report.pdf"}'Show more lines
+
+admin_user → 201 Created / 200 OK (depending on your controller)
+normal_user → 403 Forbidden
+
+DELETE (admin only)
+Shellcurl -i -X DELETE http://localhost:8087/files/123 \  -H "Authorization: Bearer TOKEN"Show more lines
+
+admin_user → 204 No Content / 200 OK
+normal_user → 403 Forbidden
+
+Unauthorized (no token)
+Shellcurl -i http://localhost:8087/filesShow more lines
+
+→ 401 Unauthorized
+
+Actuator health (open)
+Shellcurl -i http://localhost:8087/actuator/healthShow more lines
+
+→ 200 OK
+
+This matrix verifies your role rules and proper 401/403 handling.
+
+6) How the OAuth 2.0 flow works in this setup (mapping to your diagram)
+
+Client → Authorization Server: Your Postman/cURL asks Keycloak for an access token (password grant in our example).
+Authorization Server → Client: Keycloak returns a JWT access token containing claims (iss, sub, realm_access.roles, scope, etc.).
+Client → Resource Server: Client sends API request with Authorization: Bearer <token> to Storage Service.
+Resource Server → (local validation): Storage Service validates the JWT using the issuer’s JWK set (no round-trip needed per request).
+If valid & authorized: Spring Security resolves roles to ROLE_admin/ROLE_user, evaluates your requestMatchers and proceeds to controller; else returns 401/403.
+
+
+You do not need a custom filter for JWT validation—Spring Security’s resource server adds the necessary filter. Your custom Converter is the right place to map claims → authorities.
+
+
+7) Common pitfalls & troubleshooting
+
+
+401 Unauthorized
+
+Missing/expired token.
+The token’s iss does not match your configured issuer-uri. Ensure your service’s issuer-uri equals the token’s iss. In Docker, use http://keycloak:8089/.... Outside Docker, either use localhost or set jwk-set-uri.
+JWK discovery blocked by networking (container cannot resolve keycloak). Use service name/network alias or set jwk-set-uri explicitly.
+
+
+
+403 Forbidden
+
+Token is valid, but role missing:
+
+normal_user has only user role → POST/DELETE should be 403 (expected).
+Your converter doesn’t see roles (e.g., you removed realm roles and only mapped top-level roles): update converter as above.
+
+
+You’re using client roles only → ensure converter reads resource_access.<clientId>.roles.
+
+
+
+No roles inside token
+
+In Keycloak, ensure:
+
+User has the realm role.
+Client has access to realm roles (by default yes).
+If using client roles, user must be granted them (via group/role mapping).
+
+
+
+
+
+Service runs locally but Keycloak in Docker
+
+Use spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8089/realms/microservices-demo/protocol/openid-connect/certs
+Or add keycloak to your /etc/hosts → 127.0.0.1 keycloak (only if Keycloak is bound to localhost as that hostname).
+
+
+
+Boot/Spring Cloud incompatibility
+
+Check the compatibility matrix if you add Spring Cloud starters.
+
+
+
+
+8) (Optional) Hardening & enhancements
+
+
+Audience validation: ensure tokens are really meant for your API:
+Java@BeanJwtDecoder jwtDecoder(NimbusJwtDecoder jwtDecoder) {    OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);    OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(        withIssuer,        jwt -> jwt.getAudience().contains("storage-service") ? OAuth2TokenValidatorResult.success()             : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token","Missing aud",""))    );    ((NimbusJwtDecoder) jwtDecoder).setJwtValidator(withAudience);    return jwtDecoder;}Show more lines
+And configure Keycloak to include the aud claim (via client settings/mapper).
+
+
+Method security (if you want even finer-grained checks):
+Java@EnableMethodSecuritypublic class MethodSecurityConfig {}@PreAuthorize("hasRole('admin')")public void deleteFile(...) { ... }Show more lines
+
+
+API Gateway (Kong/Traefik/Spring Cloud Gateway) to centralize cross-cutting concerns (rate limiting, CORS, etc.).
+
+
+Key rotation & token lifetimes: leave JWK discovery enabled (issuer-uri), tune token expiry, and support refresh tokens for UI flows if needed.
+
+
+
+✅ Summary (what to change, in short)
+
+Fix env var name: use MICROSERVICES_JWT_ISSUER consistently and reference it in issuer-uri.
+Add stateless sessions in SecurityConfig.
+Role converter: either remove the custom "roles" mapper in Keycloak OR support it (and client roles) in the converter (code provided).
+Verify with Postman/cURL using the provided commands—expect 200 for GET (both roles), 403 for POST/DELETE (user), 200 for admin, 401 without token.
+If running outside Docker, consider setting jwk-set-uri to http://localhost:8089/....
+
+If you want, share your actual endpoint URLs (e.g., /files, /files/{id}) and I’ll craft exact Postman collections and add a Spring Security test class to automate the 200/401/403 assertions.
