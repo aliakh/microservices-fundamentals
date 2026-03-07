@@ -160,6 +160,8 @@ services:
       KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP: ${KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP}
       MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
       OATUH2_JWT_TOKEN: ${MICROSERVICES_JWT_TOKEN_URL}
+#      KEYCLOAK_TOKEN_URI: ${KEYCLOAK_TOKEN_URI}
+#      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
@@ -221,6 +223,7 @@ services:
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
       MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
       OATUH2_JWT_ISSUER: ${MICROSERVICES_JWT_ISSUER}
+#      JWT_SET_URI: ${JWT_SET_URI}
     ports:
       - "${STORAGE_SERVICE_PORT}:8087"
     depends_on:
@@ -364,6 +367,28 @@ services:
       - ./init-scripts/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "8089:8089"
+
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:26.0.7
+#    container_name: keycloak
+#    command:
+#      - start-dev
+#      - --import-realm
+#    environment:
+#      - KEYCLOAK_ADMIN=admin
+#      - KEYCLOAK_ADMIN_PASSWORD=admin
+#      - KC_HTTP_PORT=8080
+#      - KC_HEALTH_ENABLED=true
+#    ports:
+#      - "9080:8080"
+#    volumes:
+#      - ./init-scripts/keycloak:/opt/keycloak/data/import
+#    healthcheck:
+#      test: ["CMD-SHELL", "timeout 2 sh -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 60s
 
 volumes:
   localstack:
