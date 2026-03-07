@@ -1,0 +1,125 @@
+5) End‑to‑end verification with Postman / cURL
+5.1 Get Access Tokens from Keycloak
+Use the Password grant (direct access grants) against the storage-service client (since you set "directAccessGrantsEnabled": true there). From your host:
+
+Admin token
+
+curl -s -X POST \
+  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password" \
+  -d "client_id=storage-service" \
+  -d "client_secret=storage-service-secret" \
+  -d "username=admin_user" \
+  -d "password=admin" | jq -r .access_token
+``
+
+User token
+
+curl -s -X POST \
+  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password" \
+  -d "client_id=storage-service" \
+  -d "client_secret=storage-service-secret" \
+  -d "username=normal_user" \
+  -d "password=user" | jq -r .access_token
+
+If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Postman’s OAuth 2.0 flow with the same client_id/secret and redirect URI.
+
+5.2 Call your Storage API
+Replace TOKEN below with the JWT you got above. I’ll assume your endpoints are like /files:
+GET (should work for both roles)
+curl -i http://localhost:8087/files \
+  -H "Authorization: Bearer TOKEN"
+
+admin_user → 200 OK
+normal_user → 200 OK
+
+POST (admin only)
+curl -i -X POST http://localhost:8087/files \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"report.pdf"}'
+
+admin_user → 201 Created / 200 OK (depending on your controller)
+normal_user → 403 Forbidden
+
+DELETE (admin only)
+curl -i -X DELETE http://localhost:8087/files/123 \
+  -H "Authorization: Bearer TOKEN"
+
+admin_user → 204 No Content / 200 OK
+normal_user → 403 Forbidden
+
+Unauthorized (no token)
+curl -i http://localhost:8087/files
+
+→ 401 Unauthorized
+
+Actuator health (open)
+curl -i http://localhost:8087/actuator/health
+
+→ 200 OK
+
+This matrix verifies your role rules and proper 401/403 handling.
+
+6) How the OAuth 2.0 flow works in this setup (mapping to your diagram)
+
+Client → Authorization Server: Your Postman/cURL asks Keycloak for an access token (password grant in our example).
+Authorization Server → Client: Keycloak returns a JWT access token containing claims (iss, sub, realm_access.roles, scope, etc.).
+Client → Resource Server: Client sends API request with Authorization: Bearer <token> to Storage Service.
+Resource Server → (local validation): Storage Service validates the JWT using the issuer’s JWK set (no round-trip needed per request).
+If valid & authorized: Spring Security resolves roles to ROLE_admin/ROLE_user, evaluates your requestMatchers and proceeds to controller; else returns 401/403.
+
+
+You do not need a custom filter for JWT validation—Spring Security’s resource server adds the necessary filter. Your custom Converter is the right place to map claims → authorities.
+
+
+7) Common pitfalls & troubleshooting
+
+
+401 Unauthorized
+
+Missing/expired token.
+The token’s iss does not match your configured issuer-uri. Ensure your service’s issuer-uri equals the token’s iss. In Docker, use http://keycloak:8089/.... Outside Docker, either use localhost or set jwk-set-uri.
+JWK discovery blocked by networking (container cannot resolve keycloak). Use service name/network alias or set jwk-set-uri explicitly.
+
+
+
+403 Forbidden
+
+Token is valid, but role missing:
+
+normal_user has only user role → POST/DELETE should be 403 (expected).
+Your converter doesn’t see roles (e.g., you removed realm roles and only mapped top-level roles): update converter as above.
+
+
+You’re using client roles only → ensure converter reads resource_access.<clientId>.roles.
+
+
+
+No roles inside token
+
+In Keycloak, ensure:
+
+User has the realm role.
+Client has access to realm roles (by default yes).
+If using client roles, user must be granted them (via group/role mapping).
+
+
+
+
+
+Service runs locally but Keycloak in Docker
+
+Use spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8089/realms/microservices-demo/protocol/openid-connect/certs
+Or add keycloak to your /etc/hosts → 127.0.0.1 keycloak (only if Keycloak is bound to localhost as that hostname).
+
+
+
+Boot/Spring Cloud incompatibility
+
+Check the compatibility matrix if you add Spring Cloud starters.
+
+
