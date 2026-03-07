@@ -1,3 +1,0 @@
-2) Service-to-service (always client-credentials)
-What it is:
-resource-service uses its own confidential client in Keycloak to obtain a client-credentials token (service account) and calls storage-service as itself.
