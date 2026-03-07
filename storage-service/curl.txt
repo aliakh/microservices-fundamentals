@@ -10,17 +10,19 @@ podman ps --format "table {{.Names}}\t{{.Status}}"
 
 5) End‑to‑end verification with Postman / cURL
 5.1 Get Access Tokens from Keycloak
+
 Use the Password grant (direct access grants) against the storage-service client (since you set "directAccessGrantsEnabled": true there). From your host:
+If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Postman’s OAuth 2.0 flow with the same client_id/secret and redirect URI.
 
 Admin token
 
-curl -s -X POST \
-  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=password" \
-  -d "client_id=storage-service" \
-  -d "client_secret=storage-service-secret" \
-  -d "username=admin_user" \
+curl -s -X POST `
+  "http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token" `
+  -H "Content-Type: application/x-www-form-urlencoded" `
+  -d "grant_type=password" `
+  -d "client_id=storage-service" `
+  -d "client_secret=storage-service-secret" `
+  -d "username=admin_user" `
   -d "password=admin" | jq -r .access_token
 ``
 
@@ -35,7 +37,6 @@ curl -s -X POST \
   -d "username=normal_user" \
   -d "password=user" | jq -r .access_token
 
-If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Postman’s OAuth 2.0 flow with the same client_id/secret and redirect URI.
 
 5.2 Call your Storage API
 Replace TOKEN below with the JWT you got above. I’ll assume your endpoints are like /files:
