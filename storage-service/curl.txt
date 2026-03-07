@@ -41,7 +41,7 @@ curl -s -X POST \
 5.2 Call your Storage API
 Replace TOKEN below with the JWT you got above. I’ll assume your endpoints are like /files:
 GET (should work for both roles)
-curl -i http://localhost:8087/files \
+curl -i http://localhost:8087/storages \
   -H "Authorization: Bearer TOKEN"
 
 admin_user → 200 OK
