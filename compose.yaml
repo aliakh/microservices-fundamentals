@@ -159,6 +159,7 @@ services:
       KAFKA_FINALIZING_RESOURCES_TOPIC: ${KAFKA_FINALIZING_RESOURCES_TOPIC}
       KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP: ${KAFKA_FINALIZING_RESOURCES_CONSUMER_GROUP}
       MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
+      OATUH2_JWT_TOKEN: ${MICROSERVICES_JWT_TOKEN_URL}
     ports:
       - "${RESOURCE_SERVICE_PORT}:8083"
     depends_on:
@@ -176,6 +177,8 @@ services:
         condition: service_healthy
       localstack:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8083/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -217,6 +220,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${STORAGE_DB_PASSWORD}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
       MANAGEMENT_OTLP_TRACING_ENDPOINT: ${MANAGEMENT_OTLP_TRACING_ENDPOINT}
+      OATUH2_JWT_ISSUER: ${MICROSERVICES_JWT_ISSUER}
     ports:
       - "${STORAGE_SERVICE_PORT}:8087"
     depends_on:
@@ -224,6 +228,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+      keycloak:
+        condition: service_started
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8087/actuator/health | grep -q '\"status\":\"UP\"'" ]
       interval: 10s
@@ -338,6 +344,26 @@ services:
       - prometheus
       - loki
       - tempo
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: keycloak
+    command:
+      - start-dev
+      - --import-realm
+      - --hostname=keycloak
+      - --hostname-strict=false
+      - --http-enabled=true
+    environment:
+      KC_DB: dev-file
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_PORT: 8089
+    volumes:
+      - ./init-scripts/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - "8089:8089"
 
 volumes:
   localstack:
