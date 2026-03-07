@@ -1,3 +1,13 @@
+podman machine start
+podman compose --file compose.yaml down --remove-orphans
+podman compose --file compose.yaml up --build
+podman compose --file compose.yaml up storage-db storage-service keycloak
+podman compose logs -f storage-service
+podman compose logs -f keycloak
+podman ps --format "table {{.Names}}\t{{.Status}}"
+
+
+
 5) End‑to‑end verification with Postman / cURL
 5.1 Get Access Tokens from Keycloak
 Use the Password grant (direct access grants) against the storage-service client (since you set "directAccessGrantsEnabled": true there). From your host:
