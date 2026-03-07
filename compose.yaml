@@ -365,7 +365,7 @@ services:
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_PORT: 8089
     volumes:
-      - ./init-scripts/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./config/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "8089:8089"
 

@@ -16,13 +16,13 @@ If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Po
 
 Admin token
 
-curl -s -X POST `
-  "http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token" `
-  -H "Content-Type: application/x-www-form-urlencoded" `
-  -d "grant_type=password" `
-  -d "client_id=storage-service" `
-  -d "client_secret=storage-service-secret" `
-  -d "username=admin_user" `
+curl -s -X POST \
+  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password" \
+  -d "client_id=storage-service" \
+  -d "client_secret=storage-service-secret" \
+  -d "username=admin_user" \
   -d "password=admin" | jq -r .access_token
 ``
 
