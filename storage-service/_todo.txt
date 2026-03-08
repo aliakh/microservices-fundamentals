@@ -20,7 +20,7 @@ Given your provided files, Keycloak is the right choice and you’re 90% there.
 2) Keycloak realm JSON — validation & minor adjustments
 You defined:
 
-Realm: microservices-demo
+Realm: microservices-fundamentals-realm
 Roles: admin, user
 Users:
 
@@ -75,7 +75,7 @@ You opened /actuator/**.
 Environment variable typo
 You used OATUH2_JWT_ISSUER (typo) in docker compose and Spring property:
 
-.propertiesspring.security.oauth2.resourceserver.jwt.issuer-uri=${OATUH2_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}Show more lines
+.propertiesspring.security.oauth2.resourceserver.jwt.issuer-uri=${OATUH2_JWT_ISSUER:http://localhost:8089/realms/microservices-fundamentals-realm}Show more lines
 
 Fix the env var name and reference consistently:
 
@@ -219,9 +219,9 @@ public class SecurityConfig {
 
 Application properties — fix issuer var
 
-.properties# application.properties (or application.yml equivalent)spring.security.oauth2.resourceserver.jwt.issuer-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}# Optional: use this if issuer discovery cannot resolve from your container/host network# spring.security.oauth2.resourceserver.jwt.jwk-set-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-demo}/protocol/openid-connect/certsShow more lines
+.properties# application.properties (or application.yml equivalent)spring.security.oauth2.resourceserver.jwt.issuer-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-fundamentals-realm}# Optional: use this if issuer discovery cannot resolve from your container/host network# spring.security.oauth2.resourceserver.jwt.jwk-set-uri=${MICROSERVICES_JWT_ISSUER:http://localhost:8089/realms/microservices-fundamentals-realm}/protocol/openid-connect/certsShow more lines
 
-Important: The token’s "iss" (issuer) must exactly match your configured issuer-uri. In Docker, your --hostname=keycloak makes the token issuer http://keycloak:8089/realms/microservices-demo. That’s fine for other containers on the same Docker network (like storage-service) if they use http://keycloak:8089/.... If you run your service outside Docker (localhost), prefer jwk-set-uri pointing to http://localhost:8089/... or add keycloak to your hosts file.
+Important: The token’s "iss" (issuer) must exactly match your configured issuer-uri. In Docker, your --hostname=keycloak makes the token issuer http://keycloak:8089/realms/microservices-fundamentals-realm. That’s fine for other containers on the same Docker network (like storage-service) if they use http://keycloak:8089/.... If you run your service outside Docker (localhost), prefer jwk-set-uri pointing to http://localhost:8089/... or add keycloak to your hosts file.
 
 
 Maven versions
@@ -283,7 +283,7 @@ storage-service:
       start_period: 30s
 ``
 And define in your .env:
-Plain Textenv isn’t fully supported. Syntax highlighting is based on Plain Text.MICROSERVICES_JWT_ISSUER=http://keycloak:8089/realms/microservices-demoMICROSERVICES_JWT_TOKEN_URL=http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token# Or use keycloak:8089 from another container; from Postman/host use localhost:8089Show more lines
+Plain Textenv isn’t fully supported. Syntax highlighting is based on Plain Text.MICROSERVICES_JWT_ISSUER=http://keycloak:8089/realms/microservices-fundamentals-realmMICROSERVICES_JWT_TOKEN_URL=http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/token# Or use keycloak:8089 from another container; from Postman/host use localhost:8089Show more lines
 
 Note: MICROSERVICES_JWT_TOKEN_URL isn’t used by the service—it’s handy for Postman/cURL.
 

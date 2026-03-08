@@ -1,7 +1,7 @@
 {
-  "realm": "microservices-demo",
+  "realm": "microservices-fundamentals-realm",
   "enabled": true,
-  "displayName": "Microservices Demo Realm",
+  "displayName": "Microservices Rundamentals realm",
   "roles": {
     "realm": [
       {
@@ -122,8 +122,8 @@
       "enabled": true,
       "serviceAccountClientId": "resource-service",
       "emailVerified": true,
-      "firstName": "Service Account",
-      "lastName": "Resource Service",
+      "firstName": "service account",
+      "lastName": "resource service",
       "credentials": [],
       "realmRoles": [
         "admin"

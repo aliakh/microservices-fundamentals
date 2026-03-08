@@ -17,7 +17,7 @@ If you prefer Authorization Code flow, keep standardFlowEnabled: true and use Po
 Admin token
 
 curl -s -X POST \
-  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
+  http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=storage-service" \
@@ -26,7 +26,7 @@ curl -s -X POST \
   -d "password=admin" | jq -r .access_token
 
 curl.exe -s -X POST `
-  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token `
+  http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/token `
   -H "Content-Type: application/x-www-form-urlencoded" `
   -d "grant_type=password&client_id=storage-service&client_secret=storage-service-secret&username=admin_user&password=admin"
 
@@ -35,7 +35,7 @@ eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzR2VMeWR3YUZrNWhydktDZlZPN3pz
 User token
 
 curl -s -X POST \
-  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token \
+  http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=storage-service" \
@@ -44,7 +44,7 @@ curl -s -X POST \
   -d "password=user" | jq -r .access_token
 
 curl.exe -s -X POST `
-  http://localhost:8089/realms/microservices-demo/protocol/openid-connect/token `
+  http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/token `
   -H "Content-Type: application/x-www-form-urlencoded" `
   -d "grant_type=password&client_id=storage-service&client_secret=storage-service-secret&username=normal_user&password=user"
 
@@ -152,7 +152,7 @@ If using client roles, user must be granted them (via group/role mapping).
 
 Service runs locally but Keycloak in Docker
 
-Use spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8089/realms/microservices-demo/protocol/openid-connect/certs
+Use spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/certs
 Or add keycloak to your /etc/hosts → 127.0.0.1 keycloak (only if Keycloak is bound to localhost as that hostname).
 
 
