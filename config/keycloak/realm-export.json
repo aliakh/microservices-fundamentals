@@ -4,8 +4,12 @@
   "displayName": "Microservices Demo Realm",
   "roles": {
     "realm": [
-      { "name": "admin" },
-      { "name": "user" }
+      {
+        "name": "admin"
+      },
+      {
+        "name": "user"
+      }
     ]
   },
   "clients": [
@@ -21,7 +25,11 @@
       "directAccessGrantsEnabled": true,
       "bearerOnly": false,
       "attributes": {},
-      "defaultClientScopes": ["roles", "profile", "email"],
+      "defaultClientScopes": [
+        "roles",
+        "profile",
+        "email"
+      ],
       "protocolMappers": [
         {
           "name": "realm roles",
@@ -50,7 +58,11 @@
       "directAccessGrantsEnabled": false,
       "bearerOnly": false,
       "attributes": {},
-      "defaultClientScopes": ["roles", "profile", "email"],
+      "defaultClientScopes": [
+        "roles",
+        "profile",
+        "email"
+      ],
       "protocolMappers": [
         {
           "name": "realm roles",
@@ -83,7 +95,9 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["admin"]
+      "realmRoles": [
+        "admin"
+      ]
     },
     {
       "username": "normal_user",
@@ -99,7 +113,23 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["user"]
+      "realmRoles": [
+        "user"
+      ]
+    },
+    {
+      "username": "service-account-resource-service",
+      "enabled": true,
+      "serviceAccountClientId": "resource-service",
+      "emailVerified": true,
+      "firstName": "Service",
+      "lastName": "Account",
+      "credentials": [],
+      "realmRoles": [
+        "admin"
+      ],
+      "clientRoles": {},
+      "groups": []
     }
   ]
 }

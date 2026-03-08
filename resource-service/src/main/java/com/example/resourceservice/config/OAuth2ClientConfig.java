@@ -28,6 +28,12 @@ import org.springframework.security.oauth2.core.*;
 public class OAuth2ClientConfig {
 
     // OAuth2 Client Manager - manages token acquisition and caching for service-to-service calls
+
+    @Bean
+    OAuth2AuthorizedClientService oAuth2AuthorizedClientService(ClientRegistrationRepository repo) {
+        return new InMemoryOAuth2AuthorizedClientService(repo);
+    }
+
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager(
         ClientRegistrationRepository clientRegistrationRepository,
