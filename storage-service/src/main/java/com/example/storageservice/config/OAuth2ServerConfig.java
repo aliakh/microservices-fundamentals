@@ -27,16 +27,16 @@ public class OAuth2ServerConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")
-                    .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")
-                    .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")
-                    .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(amrmr -> amrmr
+                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")
+                .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")
+                .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")
+                .anyRequest().authenticated()
+            )
+            .oauth2ResourceServer(rsc -> rsc.jwt(jc -> jc.jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         return http.build();
     }
@@ -54,8 +54,7 @@ public class OAuth2ServerConfig {
             JwtGrantedAuthoritiesConverter scopesConverter = new JwtGrantedAuthoritiesConverter();
             authorities.addAll(scopesConverter.convert(jwt));
 
-            logger.info("Granted authorities: {}" , authorities);
-
+            logger.info("Granted authorities: {}", authorities);
             return authorities;
         });
         return converter;
