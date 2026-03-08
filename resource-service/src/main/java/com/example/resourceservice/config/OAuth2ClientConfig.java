@@ -57,8 +57,8 @@ public class OAuth2ClientConfig {
     RequestInterceptor outh2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
             var principal = new AnonymousAuthenticationToken(
-                "key",
-                "resource-service",
+                "resource-service-key",
+                "resource-service-client",
                 AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
             );
 

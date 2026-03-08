@@ -48,13 +48,9 @@ public class OAuth2ServerConfig {
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         var converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            // combine Keycloak roles + standard scopes
             var authorities = new ArrayList<GrantedAuthority>();
-
-            // include Keycloak realm/client roles
             authorities.addAll(new KeycloakRealmRoleConverter().convert(jwt));
 
-            // include OAuth2 scopes (e.g., SCOPE_openid, SCOPE_profile, etc.)
             var scopesConverter = new JwtGrantedAuthoritiesConverter();
             authorities.addAll(scopesConverter.convert(jwt));
 

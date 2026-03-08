@@ -1,7 +1,7 @@
 {
   "realm": "microservices-fundamentals-realm",
   "enabled": true,
-  "displayName": "Microservices Rundamentals realm",
+  "displayName": "Microservices Fundamentals realm",
   "roles": {
     "realm": [
       {
@@ -14,11 +14,11 @@
   },
   "clients": [
     {
-      "clientId": "storage-service",
+      "clientId": "storage-service-client",
       "enabled": true,
       "protocol": "openid-connect",
       "clientAuthenticatorType": "client-secret",
-      "secret": "storage-service-secret",
+      "secret": "storage-service-client-secret",
       "serviceAccountsEnabled": true,
       "standardFlowEnabled": true,
       "publicClient": false,
@@ -47,11 +47,11 @@
       ]
     },
     {
-      "clientId": "resource-service",
+      "clientId": "resource-service-client",
       "enabled": true,
       "protocol": "openid-connect",
       "clientAuthenticatorType": "client-secret",
-      "secret": "resource-service-secret",
+      "secret": "resource-service-client-secret",
       "serviceAccountsEnabled": true,
       "standardFlowEnabled": false,
       "publicClient": false,
@@ -120,7 +120,7 @@
     {
       "username": "service-account-resource-service",
       "enabled": true,
-      "serviceAccountClientId": "resource-service",
+      "serviceAccountClientId": "resource-service-client",
       "emailVerified": true,
       "firstName": "Service Account",
       "lastName": "Resource Service",
