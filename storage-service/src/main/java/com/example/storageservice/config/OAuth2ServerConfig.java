@@ -28,15 +28,20 @@ public class OAuth2ServerConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(amrmr -> amrmr
-                .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")
-                .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")
-                .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")
-                .anyRequest().authenticated()
+            .sessionManagement(smc ->
+                smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(amrmr ->
+                amrmr.requestMatchers("/actuator/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")
+                    .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")
+                    .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")
+                    .anyRequest().authenticated()
             )
-            .oauth2ResourceServer(rsc -> rsc.jwt(jc -> jc.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+            .oauth2ResourceServer(rsc ->
+                rsc.jwt(
+                    jc ->
+                        jc.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+            );
 
         return http.build();
     }
