@@ -7,20 +7,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
-import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
-import org.springframework.security.oauth2.core.*;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.web.SecurityFilterChain;
 
 /*
@@ -30,44 +28,34 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class OAuth2ClientConfig {
 
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)   // important: disable CSRF for POST/PUT on public API
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()           // make everything public
+                .anyRequest().permitAll()
             );
-
-        // No oauth2Login, no resource server here
         return http.build();
     }
 
-    // OAuth2 Client Manager - manages token acquisition and caching for service-to-service calls
-
     @Bean
-    OAuth2AuthorizedClientService oAuth2AuthorizedClientService(ClientRegistrationRepository repo) {
-        return new InMemoryOAuth2AuthorizedClientService(repo);
+    OAuth2AuthorizedClientService oAuth2AuthorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
     }
 
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager(
         ClientRegistrationRepository clientRegistrationRepository,
-        OAuth2AuthorizedClientService authorizedClientService) {
-
-        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
-            new AuthorizedClientServiceOAuth2AuthorizedClientManager(
-                clientRegistrationRepository, authorizedClientService);
-
-        OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+        OAuth2AuthorizedClientService authorizedClientService
+    ) {
+        var authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
             .clientCredentials()
             .build();
 
+        var authorizedClientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientService);
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
         return authorizedClientManager;
     }
-
-    public static final String REGISTRATION_ID = "storage-service-client"; // must match properties
 
     @Bean
     RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager clientManager) {
@@ -79,7 +67,7 @@ public class OAuth2ClientConfig {
                 "key", "resource-service", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
 
             var request = OAuth2AuthorizeRequest
-                .withClientRegistrationId(REGISTRATION_ID)
+                .withClientRegistrationId("storage-service-client")
                 .principal(principal)
                 .build();
 
@@ -87,7 +75,7 @@ public class OAuth2ClientConfig {
             if (client == null || client.getAccessToken() == null) {
                 throw new OAuth2AuthorizationException(new OAuth2Error(
                     "authorization_failed",
-                    "Failed to acquire access token for registration '" + REGISTRATION_ID + "'",
+                    "Failed to acquire access token for registration '" + "storage-service-client" + "'",
                     null));
             }
 
@@ -143,7 +131,7 @@ public class OAuth2ClientConfig {
      * Feign interceptor that:
      * 1) forwards current user's JWT if present, else
      * 2) obtains client-credentials token using registration "storage-service-client".
-     *
+     * <p>
      * If you always want client-credentials and never want to forward the user’s token,
      * remove the resolveCurrentRequestJwt() branch and always call acquireClientCredentialsToken(...).
      */
@@ -176,7 +164,6 @@ public class OAuth2ClientConfig {
 //        }
 //        return null;
 //    }
-
     private String acquireClientCredentialsToken(OAuth2AuthorizedClientManager manager, String registrationId) {
         // principal can be anything for client_credentials; it is not used for end-user context
         var principal = new AnonymousAuthenticationToken("key", "resource-service",

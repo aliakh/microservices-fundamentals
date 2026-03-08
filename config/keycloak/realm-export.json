@@ -122,8 +122,8 @@
       "enabled": true,
       "serviceAccountClientId": "resource-service",
       "emailVerified": true,
-      "firstName": "service account",
-      "lastName": "resource service",
+      "firstName": "Service Account",
+      "lastName": "Resource Service",
       "credentials": [],
       "realmRoles": [
         "ADMIN"
