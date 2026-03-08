@@ -17,7 +17,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 @Configuration
 public class OAuth2ServerConfig {
@@ -47,16 +46,16 @@ public class OAuth2ServerConfig {
     }
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        var converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            // Combine Keycloak roles + standard scopes
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            // combine Keycloak roles + standard scopes
+            var authorities = new ArrayList<GrantedAuthority>();
 
-            // Include Keycloak realm/client roles
+            // include Keycloak realm/client roles
             authorities.addAll(new KeycloakRealmRoleConverter().convert(jwt));
 
-            // Include OAuth2 scopes (e.g., SCOPE_openid, SCOPE_profile, etc.)
-            JwtGrantedAuthoritiesConverter scopesConverter = new JwtGrantedAuthoritiesConverter();
+            // include OAuth2 scopes (e.g., SCOPE_openid, SCOPE_profile, etc.)
+            var scopesConverter = new JwtGrantedAuthoritiesConverter();
             authorities.addAll(scopesConverter.convert(jwt));
 
             logger.info("Granted authorities: {}", authorities);
@@ -65,48 +64,3 @@ public class OAuth2ServerConfig {
         return converter;
     }
 }
-
-/*
-package com.epam.learning.microservices.storage.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-@EnableMethodSecurity
-public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> auth
-                        // Allow actuator endpoints without authentication
-                        .requestMatchers("/actuator/**").permitAll()
-                        // All other requests need authentication
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .build();
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }
-}
-
- */
