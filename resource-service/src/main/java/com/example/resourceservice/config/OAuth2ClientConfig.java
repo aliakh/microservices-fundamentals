@@ -4,7 +4,9 @@ import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.*;
@@ -57,11 +59,11 @@ public class OAuth2ClientConfig {
     RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
             // 1) Try to reuse current request's JWT (user propagation)
-            String bearer = resolveCurrentRequestJwt();
-            if (bearer == null) {
+//            String bearer = resolveCurrentRequestJwt();
+//            if (bearer == null) {
                 // 2) Fallback to client-credentials
-                bearer = acquireClientCredentialsToken(authorizedClientManager, "storage-service-client");
-            }
+            String   bearer = acquireClientCredentialsToken(authorizedClientManager, "storage-service-client");
+//            }
 
             if (bearer != null) {
                 template.header(HttpHeaders.AUTHORIZATION, "Bearer " + bearer);
@@ -69,13 +71,13 @@ public class OAuth2ClientConfig {
         };
     }
 
-    private String resolveCurrentRequestJwt() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtAuthenticationToken jwtAuth && jwtAuth.getToken() != null) {
-            return jwtAuth.getToken().getTokenValue();
-        }
-        return null;
-    }
+//    private String resolveCurrentRequestJwt() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth instanceof JwtAuthenticationToken jwtAuth && jwtAuth.getToken() != null) {
+//            return jwtAuth.getToken().getTokenValue();
+//        }
+//        return null;
+//    }
 
     private String acquireClientCredentialsToken(OAuth2AuthorizedClientManager manager, String registrationId) {
         // principal can be anything for client_credentials; it is not used for end-user context
@@ -115,4 +117,4 @@ public class OAuth2ClientConfig {
     }
 
  */
-}
+
