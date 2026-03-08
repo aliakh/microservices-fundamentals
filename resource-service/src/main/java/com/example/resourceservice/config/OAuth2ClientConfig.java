@@ -27,24 +27,22 @@ import org.springframework.security.oauth2.core.*;
 @Configuration
 public class OAuth2ClientConfig {
 
+    // OAuth2 Client Manager - manages token acquisition and caching for service-to-service calls
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager(
         ClientRegistrationRepository clientRegistrationRepository,
-        OAuth2AuthorizedClientService clientService) {
+        OAuth2AuthorizedClientService authorizedClientService) {
 
-//        OAuth2AuthorizedClientService clientService =
-//            new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
-
-        AuthorizedClientServiceOAuth2AuthorizedClientManager manager =
+        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
             new AuthorizedClientServiceOAuth2AuthorizedClientManager(
-                clientRegistrationRepository, clientService);
+                clientRegistrationRepository, authorizedClientService);
 
-        OAuth2AuthorizedClientProvider provider = OAuth2AuthorizedClientProviderBuilder.builder()
+        OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
             .clientCredentials()
             .build();
 
-        manager.setAuthorizedClientProvider(provider);
-        return manager;
+        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+        return authorizedClientManager;
     }
 
     /**
@@ -70,6 +68,11 @@ public class OAuth2ClientConfig {
             }
         };
     }
+
+//    @Bean
+//    public OAuth2ClientInterceptor oauth2Interceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
+//        return new OAuth2ClientInterceptor(authorizedClientManager, "keycloak", "resource-service");
+//    }
 
 //    private String resolveCurrentRequestJwt() {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
