@@ -287,34 +287,34 @@ services:
       retries: 10
       start_period: 30s
 
-#  prometheus:
-#    image: prom/prometheus:latest
-#    hostname: prometheus
-#    ports:
-#      - '9090:9090'
-#    command:
-#      - --config.file=/etc/prometheus/prometheus.yml
-#    volumes:
-#      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
-#
-#  loki:
-#    image: grafana/loki:latest
-#    command: -config.file=/etc/loki/config.yaml
-#    volumes:
-#      - ./config/loki.yaml:/etc/loki/config.yaml
-#    ports:
-#      - "3100:3100"
-#
-#  promtail:
-#    image: grafana/promtail:latest
-#    volumes:
-#      - ./config/promtail.yaml:/etc/promtail/config.yaml:ro
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#    command: '-config.file=/etc/promtail/config.yaml -config.expand-env'
-#    ports:
-#      - "9080:9080"
-#    depends_on:
-#      - loki
+  prometheus:
+    image: prom/prometheus:latest
+    hostname: prometheus
+    ports:
+      - '9090:9090'
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./config/loki.yaml:/etc/loki/config.yaml
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./config/promtail.yaml:/etc/promtail/config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: '-config.file=/etc/promtail/config.yaml -config.expand-env'
+    ports:
+      - "9080:9080"
+    depends_on:
+      - loki
 
   tempo:
     image: grafana/tempo:2.4.1
@@ -327,24 +327,24 @@ services:
       - "3200:3200"
       - "9095:9095"
 
-#  grafana:
-#    image: grafana/grafana:10.3.1
-#    volumes:
-#      - ./config/grafana/provisioning:/etc/grafana/provisioning/
-#      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
-#      - grafana:/var/lib/grafana
-#    environment:
-#      - GF_AUTH_ANONYMOUS_ENABLED=true
-#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-#      - GF_AUTH_DISABLE_LOGIN_FORM=true
-#      - GF_SERVER_SERVE_FROM_SUB_PATH=true
-#      - GF_SERVER_ROOT_URL=http://localhost:3000/
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - prometheus
-#      - loki
-#      - tempo
+  grafana:
+    image: grafana/grafana:10.3.1
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning/
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana:/var/lib/grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_ROOT_URL=http://localhost:3000/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.0
@@ -364,28 +364,6 @@ services:
       - ./config/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "8089:8089"
-
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:26.0.7
-#    container_name: keycloak
-#    command:
-#      - start-dev
-#      - --import-realm
-#    environment:
-#      - KEYCLOAK_ADMIN=admin
-#      - KEYCLOAK_ADMIN_PASSWORD=admin
-#      - KC_HTTP_PORT=8080
-#      - KC_HEALTH_ENABLED=true
-#    ports:
-#      - "9080:8080"
-#    volumes:
-#      - ./init-scripts/keycloak:/opt/keycloak/data/import
-#    healthcheck:
-#      test: ["CMD-SHELL", "timeout 2 sh -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 60s
 
 volumes:
   localstack:
