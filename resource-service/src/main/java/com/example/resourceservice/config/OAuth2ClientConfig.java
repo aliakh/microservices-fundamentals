@@ -51,6 +51,36 @@ public class OAuth2ClientConfig {
         return authorizedClientManager;
     }
 
+    public static final String REGISTRATION_ID = "storage-service-client"; // must match properties
+    @Bean
+    RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager clientManager) {
+        return template -> {
+            // don't overwrite if some upstream logic already set Authorization
+//            if (template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
+//                return;
+//            }
+
+            var principal = new AnonymousAuthenticationToken(
+                "key", "resource-service", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+
+            var request = OAuth2AuthorizeRequest
+                .withClientRegistrationId(REGISTRATION_ID)
+                .principal(principal)
+                .build();
+
+            OAuth2AuthorizedClient client = clientManager.authorize(request);
+            if (client == null || client.getAccessToken() == null) {
+                throw new OAuth2AuthorizationException(new OAuth2Error(
+                    "authorization_failed",
+                    "Failed to acquire access token for registration '" + REGISTRATION_ID + "'",
+                    null));
+            }
+
+            template.header(HttpHeaders.AUTHORIZATION, "Bearer " + client.getAccessToken().getTokenValue());
+        };
+    }
+
+
     /**
      * Feign interceptor that:
      * 1) forwards current user's JWT if present, else
@@ -59,6 +89,7 @@ public class OAuth2ClientConfig {
      * If you always want client-credentials and never want to forward the user’s token,
      * remove the resolveCurrentRequestJwt() branch and always call acquireClientCredentialsToken(...).
      */
+/*
     @Bean
     RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
@@ -74,7 +105,7 @@ public class OAuth2ClientConfig {
             }
         };
     }
-
+*/
 //    @Bean
 //    public OAuth2ClientInterceptor oauth2Interceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
 //        return new OAuth2ClientInterceptor(authorizedClientManager, "keycloak", "resource-service");
