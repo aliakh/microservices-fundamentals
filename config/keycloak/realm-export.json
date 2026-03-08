@@ -85,36 +85,36 @@
       "username": "admin_user",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "System",
-      "lastName": "Administrator",
-      "email": "admin@example.com",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@email.com",
       "credentials": [
         {
           "type": "password",
-          "value": "admin",
+          "value": "admin123",
           "temporary": false
         }
       ],
       "realmRoles": [
-        "admin"
+        "ADMIN"
       ]
     },
     {
-      "username": "normal_user",
+      "username": "regular_user",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "Normal",
+      "firstName": "Regular",
       "lastName": "User",
-      "email": "user@example.com",
+      "email": "user@email.com",
       "credentials": [
         {
           "type": "password",
-          "value": "user",
+          "value": "user123",
           "temporary": false
         }
       ],
       "realmRoles": [
-        "user"
+        "USER"
       ]
     },
     {
@@ -126,7 +126,7 @@
       "lastName": "resource service",
       "credentials": [],
       "realmRoles": [
-        "admin"
+        "ADMIN"
       ],
       "clientRoles": {},
       "groups": []

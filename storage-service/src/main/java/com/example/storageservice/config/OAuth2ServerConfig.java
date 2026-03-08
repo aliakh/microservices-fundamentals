@@ -31,9 +31,9 @@ public class OAuth2ServerConfig {
                 smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(amrmr ->
                 amrmr.requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("user", "admin")
-                    .requestMatchers(HttpMethod.POST, "/**").hasRole("admin")
-                    .requestMatchers(HttpMethod.DELETE, "/**").hasRole("admin")
+                    .requestMatchers(HttpMethod.GET, "/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .oauth2ResourceServer(rsc ->

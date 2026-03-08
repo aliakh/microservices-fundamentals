@@ -154,11 +154,3 @@ Service runs locally but Keycloak in Docker
 
 Use spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8089/realms/microservices-fundamentals-realm/protocol/openid-connect/certs
 Or add keycloak to your /etc/hosts → 127.0.0.1 keycloak (only if Keycloak is bound to localhost as that hostname).
-
-
-
-Boot/Spring Cloud incompatibility
-
-Check the compatibility matrix if you add Spring Cloud starters.
-
-
