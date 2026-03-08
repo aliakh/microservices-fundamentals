@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,7 @@ import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.oauth2.core.*;
+import org.springframework.security.web.SecurityFilterChain;
 
 /*
  Create a small config that wires an OAuth2AuthorizedClientManager for the client_credentials grant
@@ -26,6 +29,19 @@ import org.springframework.security.oauth2.core.*;
  */
 @Configuration
 public class OAuth2ClientConfig {
+
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)   // important: disable CSRF for POST/PUT on public API
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()           // make everything public
+            );
+
+        // No oauth2Login, no resource server here
+        return http.build();
+    }
 
     // OAuth2 Client Manager - manages token acquisition and caching for service-to-service calls
 
@@ -52,13 +68,12 @@ public class OAuth2ClientConfig {
     }
 
     public static final String REGISTRATION_ID = "storage-service-client"; // must match properties
+
     @Bean
     RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager clientManager) {
         return template -> {
-            // don't overwrite if some upstream logic already set Authorization
-//            if (template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
-//                return;
-//            }
+            // Optionally: don’t overwrite if already set
+            // if (template.headers().containsKey(HttpHeaders.AUTHORIZATION)) return;
 
             var principal = new AnonymousAuthenticationToken(
                 "key", "resource-service", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
@@ -68,7 +83,7 @@ public class OAuth2ClientConfig {
                 .principal(principal)
                 .build();
 
-            OAuth2AuthorizedClient client = clientManager.authorize(request);
+            var client = clientManager.authorize(request);
             if (client == null || client.getAccessToken() == null) {
                 throw new OAuth2AuthorizationException(new OAuth2Error(
                     "authorization_failed",
@@ -77,9 +92,52 @@ public class OAuth2ClientConfig {
             }
 
             template.header(HttpHeaders.AUTHORIZATION, "Bearer " + client.getAccessToken().getTokenValue());
+            template.header(HttpHeaders.ACCEPT, "application/json");
         };
     }
 
+
+/*
+    @Bean
+    RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
+        return template -> {
+            // don't overwrite if some upstream logic already set Authorization
+//            if (template.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
+//                return;
+//            }
+
+            // Build a client request with the registration id for client_credentials
+            OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest
+                .withClientRegistrationId("storage-service-client")
+                .principal("resource-service") // synthetic principal for client_credentials
+                .build();
+
+            OAuth2AuthorizedClient client = authorizedClientManager.authorize(request);
+            if (client == null || client.getAccessToken() == null) {
+                throw new OAuth2AuthorizationException(
+                    new OAuth2Error("authorization_failed", "Failed to acquire access token for storage-service", null));
+            }
+
+//            var principal = new AnonymousAuthenticationToken(
+//                "key", "resource-service", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+
+//            var request = OAuth2AuthorizeRequest
+//                .withClientRegistrationId(REGISTRATION_ID)
+//                .principal(principal)
+//                .build();
+//
+//            OAuth2AuthorizedClient client = clientManager.authorize(request);
+//            if (client == null || client.getAccessToken() == null) {
+//                throw new OAuth2AuthorizationException(new OAuth2Error(
+//                    "authorization_failed",
+//                    "Failed to acquire access token for registration '" + REGISTRATION_ID + "'",
+//                    null));
+//            }
+
+            template.header(HttpHeaders.AUTHORIZATION, "Bearer " + client.getAccessToken().getTokenValue());
+        };
+    }
+*/
 
     /**
      * Feign interceptor that:
