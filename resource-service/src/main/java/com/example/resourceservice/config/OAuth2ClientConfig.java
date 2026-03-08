@@ -3,10 +3,17 @@ package com.example.resourceservice.config;
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.*;
-import org.springframework.security.oauth2.client.registration.*;
-import org.springframework.security.oauth2.client.web.*;
-import org.springframework.security.oauth2.core.*;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 
 /*
  Create a small config that wires an OAuth2AuthorizedClientManager for the client_credentials grant
@@ -15,11 +22,8 @@ import org.springframework.security.oauth2.core.*;
 @Configuration
 public class OAuth2ClientConfig {
 
-    private static final String REGISTRATION_ID = "storage-service-client";
-
     @Bean
-    OAuth2AuthorizedClientManager authorizedClientManager(
-        ClientRegistrationRepository clientRegistrationRepository) {
+    OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository) {
 
         OAuth2AuthorizedClientService clientService =
             new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
@@ -41,7 +45,7 @@ public class OAuth2ClientConfig {
         return template -> {
             // Build a client request with the registration id for client_credentials
             OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest
-                .withClientRegistrationId(REGISTRATION_ID)
+                .withClientRegistrationId("storage-service-client")
                 .principal("resource-service") // synthetic principal for client_credentials
                 .build();
 
