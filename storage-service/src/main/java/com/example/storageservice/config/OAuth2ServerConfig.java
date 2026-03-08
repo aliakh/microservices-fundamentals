@@ -8,8 +8,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -20,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Configuration
-public class SecurityConfig {
+public class OAuth2ServerConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2ServerConfig.class);
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

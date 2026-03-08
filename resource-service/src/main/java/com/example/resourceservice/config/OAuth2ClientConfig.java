@@ -23,10 +23,12 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 public class OAuth2ClientConfig {
 
     @Bean
-    OAuth2AuthorizedClientManager authorizedClientManager(ClientRegistrationRepository clientRegistrationRepository) {
+    OAuth2AuthorizedClientManager authorizedClientManager(
+        ClientRegistrationRepository clientRegistrationRepository,
+        OAuth2AuthorizedClientService clientService) {
 
-        OAuth2AuthorizedClientService clientService =
-            new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
+//        OAuth2AuthorizedClientService clientService =
+//            new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
 
         AuthorizedClientServiceOAuth2AuthorizedClientManager manager =
             new AuthorizedClientServiceOAuth2AuthorizedClientManager(
@@ -41,7 +43,7 @@ public class OAuth2ClientConfig {
     }
 
     @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager clientManager) {
+    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
             // Build a client request with the registration id for client_credentials
             OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest
@@ -49,10 +51,10 @@ public class OAuth2ClientConfig {
                 .principal("resource-service") // synthetic principal for client_credentials
                 .build();
 
-            OAuth2AuthorizedClient client = clientManager.authorize(request);
+            OAuth2AuthorizedClient client = authorizedClientManager.authorize(request);
             if (client == null || client.getAccessToken() == null) {
                 throw new OAuth2AuthorizationException(
-                    new OAuth2Error("authorization_failed", "Failed to acquire access token", null));
+                    new OAuth2Error("authorization_failed", "Failed to acquire access token for storage-service", null));
             }
 
             String tokenValue = client.getAccessToken().getTokenValue();
