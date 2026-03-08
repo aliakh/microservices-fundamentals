@@ -58,7 +58,7 @@ public class OAuth2ClientConfig {
         return template -> {
             var principal = new AnonymousAuthenticationToken(
                 "resource-service-key",
-                "resource-service-client",
+                "resource-service-principal",
                 AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
             );
 
@@ -72,7 +72,7 @@ public class OAuth2ClientConfig {
                 throw new OAuth2AuthorizationException(
                     new OAuth2Error(
                         "authorization_failed",
-                        "Failed to acquire access token for client registration storage-service-client",
+                        "Failed to acquire access token for client registration 'storage-service-client'",
                         null
                     )
                 );
