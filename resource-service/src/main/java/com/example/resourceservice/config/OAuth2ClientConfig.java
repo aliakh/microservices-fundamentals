@@ -1,52 +1,58 @@
 package com.example.resourceservice.config;
 
+import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.*;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.*;
+import org.springframework.security.oauth2.client.web.*;
+import org.springframework.security.oauth2.core.*;
 
+/*
+ Create a small config that wires an OAuth2AuthorizedClientManager for the client_credentials grant
+ and a Feign RequestInterceptor that automatically injects the obtained token into the Authorization header.
+ */
 @Configuration
 public class OAuth2ClientConfig {
 
-//    @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository) {
-        return new AuthorizedClientServiceOAuth2AuthorizedClientManager(
-                clientRegistrationRepository,
-                new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository)
-        );
-    }
-/*
-It does not set a provider (e.g., clientCredentials()), so authorize(...) will return null.
-It creates a new InMemoryOAuth2AuthorizedClientService instead of reusing the one auto-configured by Spring Boot.
-Prefer injecting the existing OAuth2AuthorizedClientService bean.
- */
+    private static final String REGISTRATION_ID = "storage-service-client";
+
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager(
-        ClientRegistrationRepository clientRegistrationRepository,
-        OAuth2AuthorizedClientService clientService) {
+        ClientRegistrationRepository clientRegistrationRepository) {
 
-        var provider = OAuth2AuthorizedClientProviderBuilder.builder()
-            .clientCredentials()   // <-- IMPORTANT
+        OAuth2AuthorizedClientService clientService =
+            new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
+
+        AuthorizedClientServiceOAuth2AuthorizedClientManager manager =
+            new AuthorizedClientServiceOAuth2AuthorizedClientManager(
+                clientRegistrationRepository, clientService);
+
+        OAuth2AuthorizedClientProvider provider = OAuth2AuthorizedClientProviderBuilder.builder()
+            .clientCredentials()
             .build();
 
-        var manager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, clientService);
         manager.setAuthorizedClientProvider(provider);
         return manager;
     }
+
+    @Bean
+    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager clientManager) {
+        return template -> {
+            // Build a client request with the registration id for client_credentials
+            OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest
+                .withClientRegistrationId(REGISTRATION_ID)
+                .principal("resource-service") // synthetic principal for client_credentials
+                .build();
+
+            OAuth2AuthorizedClient client = clientManager.authorize(request);
+            if (client == null || client.getAccessToken() == null) {
+                throw new OAuth2AuthorizationException(
+                    new OAuth2Error("authorization_failed", "Failed to acquire access token", null));
+            }
+
+            String tokenValue = client.getAccessToken().getTokenValue();
+            template.header("Authorization", "Bearer " + tokenValue);
+        };
+    }
 }
-/*
-This is the same manager we referenced in the Feign RequestInterceptor.
-Without it, your fallback to client‑credentials cannot acquire a token.
-
-
-When could you skip this bean?
-
-If your Feign calls always forward the end-user JWT from the SecurityContext and you never fall back to client‑credentials, then you could omit the manager.
-In our earlier design, we do fall back to client‑credentials—so keep this bean.
-
-
-Avoid duplicate beans
-If you already defined an authorizedClientManager bean (e.g., in FeignConfig), remove one to avoid duplicate bean definition errors. Define it once and inject it where needed (e.g., your Feign interceptor).
-If you want, paste your current FeignConfig here and I’ll make sure the wiring is consistent end‑to‑end.
- */
