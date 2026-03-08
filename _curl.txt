@@ -71,13 +71,7 @@ curl -i -X POST http://localhost:8087/storages \
 
 eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzR2VMeWR3YUZrNWhydktDZlZPN3pzZEhlYk96ZGZhQkpwTUJVSi15Rnd3In0.eyJleHAiOjE3NzI5NDg0ODYsImlhdCI6MTc3Mjk0ODE4NiwianRpIjoiYTU5NGU1OTUtMTMwZC00Njc5LWE1MWQtOTk5ZGUyYzA5YmU3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODkvcmVhbG1zL21pY3Jvc2VydmljZXMtZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6InN0b3JhZ2Utc2VydmljZSIsInNpZCI6IjJjMGE1YTg4LTAzNzctNDczZC1hYWE5LTAzMjY3YmVlMmIyMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhZG1pbiJdfSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbImFkbWluIl0sIm5hbWUiOiJTeXN0ZW0gQWRtaW5pc3RyYXRvciIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluX3VzZXIiLCJnaXZlbl9uYW1lIjoiU3lzdGVtIiwiZmFtaWx5X25hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSJ9.nh8FmxfigZpnNBGPzAr3J3s85fnMT1IlvcPXPkhvieJ1j1zfHuzGRetbKAl8NKbEc_b4BYw7TxWbc-Z22G-JvGlem3TH8xF_8gEWkSpl1L59BSyzmZZLbFqJKTFsDbpYHhWnZ_syr30JGAXYw_mgN-nfS_LricbWPxAcU93xYil0k_lqSQw7Uy4ip9OyHiRn7BlLZGEWg8LdTHYr180tY6axpK9Hq8q5WhuDMX-fOagTrYIdLeqL_DduwZKake7HuX2q6geFrQfaTDerkNO6SPf-hCt3IE3gCqMeboLCHeNYDWxzjM9EbKKpqqNyUq-ckR0FAlc0Rhy7Vtonwry6Sw
 
-curl.exe -i -X POST http://localhost:8087/storages `
-  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzR2VMeWR3YUZrNWhydktDZlZPN3pzZEhlYk96ZGZhQkpwTUJVSi15Rnd3In0.eyJleHAiOjE3NzI5NDk2ODgsImlhdCI6MTc3Mjk0OTM4NywianRpIjoiMWUwNTY0Y2MtMWU2ZS00MWQ3LTg5YzMtMmVjNWFmNGIzZjIzIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODkvcmVhbG1zL21pY3Jvc2VydmljZXMtZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6InN0b3JhZ2Utc2VydmljZSIsInNpZCI6ImE4MmI1MjFkLTFhNTctNGQ3ZC05OGM5LTJiMzI4MWJmNGRmNCIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJhZG1pbiJdfSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbImFkbWluIl0sIm5hbWUiOiJTeXN0ZW0gQWRtaW5pc3RyYXRvciIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluX3VzZXIiLCJnaXZlbl9uYW1lIjoiU3lzdGVtIiwiZmFtaWx5X25hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSJ9.xbhHd1RDKRiphMW3elgONOGfcL4IJrQTRPCOq0mrOz-2VFcVSm0J4g9VzfXh4-kyEi6JnVyIc8pJv8vhZXA_RO2btG-eHAQiU3duU3AnasSpVuq6mMrnuhDrq5PSw2SeOdwaQRcOyWSNEIffeKJP4cNJP4bWnp92l9_LwzM_9Xf4wS5CScBMf3qh95lK8x68ztzMFi6Zg0kVEukx47qDDOfRm2GLG5NCXUopRJWWcWKJ0GYOJkvw4lCbVMecienfYqamDH59G0i-SJv7NDSudz_2C2XPgKea1RvLzq-BoFLUk2qmgd0uJ9fxJlXcgMwhC0G9zPgcWV4G1EsZCniSdA" `
-  -H "Content-Type: application/json; charset=utf-8" `
-  --data-binary '{\"storageType\":\"TEMP\",\"bucket\":\"resources-temp\",\"path\":\"/temp/\"}'
 
-admin_user → 201 Created / 200 OK (depending on your controller)
-normal_user → 403 Forbidden
 
 DELETE (admin only)
 curl -i -X DELETE http://localhost:8087/storages/3 \
@@ -89,15 +83,9 @@ curl.exe -i -X DELETE http://localhost:8087/storages?id=3 `
 admin_user → 204 No Content / 200 OK
 normal_user → 403 Forbidden
 
-Unauthorized (no token)
-curl.exe -i -X POST http://localhost:8087/storages
 
-→ 401 Unauthorized
 
-Actuator health (open)
-curl -i http://localhost:8087/actuator/health
 
-curl.exe -i http://localhost:8087/actuator/health
 
 → 200 OK
 
