@@ -35,12 +35,13 @@ class ResourceParsingConsumerTest {
         var message = objectMapper.writeValueAsString(resourceDto);
         var audio = new byte[]{0};
         var createSongDto = buildCreateSongDto(id);
+        var traceId = "traceId";
 
         when(resourceServiceClient.getResource(id)).thenReturn(audio);
         when(metadataService.extractSongMetadata(audio, id)).thenReturn(createSongDto);
         when(songServiceClient.createSong(createSongDto)).thenReturn(new CreateSongResponse(id));
 
-        resourceParsingConsumer.parseResource(message);
+        resourceParsingConsumer.parseResource(message, traceId);
 
         verify(resourceServiceClient).getResource(id);
         verify(metadataService).extractSongMetadata(audio, id);

@@ -15,11 +15,14 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.util.Map;
+
 @Testcontainers
 @ContextConfiguration(classes = AbstractTestcontainersTest.TestConfig.class)
 public abstract class AbstractTestcontainersTest {
 
-    protected static final String TOPIC_NAME = "resources";
+    protected static final String PARSING_RESOURCES_TOPIC = "parsing_resources_topic";
+    protected static final String FINALIZING_RESOURCES_TOPIC = "finalizing_resources_topic";
 
     @Container
     protected static final LocalStackContainer LOCAL_STACK =
@@ -57,7 +60,9 @@ public abstract class AbstractTestcontainersTest {
         public KafkaProperties kafkaProperties() {
             return new KafkaProperties(
                 KAFKA.getBootstrapServers(),
-                TOPIC_NAME
+                PARSING_RESOURCES_TOPIC,
+                FINALIZING_RESOURCES_TOPIC,
+                Map.of()
             );
         }
     }
