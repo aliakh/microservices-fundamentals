@@ -4,13 +4,30 @@ import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+
+import static org.mockito.Mockito.mock;
 
 @Configuration
 public class TestOAuth2ClientConfig {
 
     @Bean
     @Primary
-    public RequestInterceptor noOpFeignRequestInterceptor() {
+    public ClientRegistrationRepository clientRegistrationRepositoryMock() {
+        return mock(ClientRegistrationRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public OAuth2AuthorizedClientService oauth2AuthorizedClientServiceMock() {
+        return mock(OAuth2AuthorizedClientService.class);
+    }
+
+    @Bean
+    @Primary
+    RequestInterceptor oauth2FeignRequestInterceptorNoOp(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
         };
     }
