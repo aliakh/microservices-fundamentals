@@ -8,7 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import static org.mockito.Mockito.mock;
 
 @TestConfiguration
-public class KafkaMockConfig {
+public class KafkaTestConfig {
 
     @Bean
     public KafkaTemplate<Long, String> kafkaTemplateMock() {

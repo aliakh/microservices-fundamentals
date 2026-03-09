@@ -1,6 +1,7 @@
 package com.example.resourceservice.controller;
 
 import com.example.resourceservice.AbstractTestcontainersTest;
+import com.example.resourceservice.config.KafkaTestConfig;
 import com.example.resourceservice.dto.DeleteResourcesResponse;
 import com.example.resourceservice.dto.UploadResourceResponse;
 import com.example.resourceservice.repository.ResourceRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Import(KafkaTestConfig.class)
 public class ResourceControllerApplicationTest extends AbstractTestcontainersTest {
 
     private static final String URL = "/resources";
