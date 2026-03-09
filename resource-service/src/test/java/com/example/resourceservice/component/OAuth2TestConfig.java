@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import static org.mockito.Mockito.mock;
 
 @Configuration
-public class TestOAuth2ClientConfig {
+public class OAuth2TestConfig {
 
     @Bean
     @Primary
