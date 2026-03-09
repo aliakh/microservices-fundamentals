@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.example.resourceprocessor.Builders.buildCreateSongDto;
 import static com.example.resourceprocessor.Builders.buildResourceDto;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +26,8 @@ class ResourceParsingConsumerTest {
     private MetadataService metadataService;
     @Mock
     private SongServiceClient songServiceClient;
+    @Mock
+    private ResourceFinalizingProducer resourceFinalizingProducer;
     @InjectMocks
     private ResourceParsingConsumer resourceParsingConsumer;
 
@@ -46,5 +49,7 @@ class ResourceParsingConsumerTest {
         verify(resourceServiceClient).getResource(id);
         verify(metadataService).extractSongMetadata(audio, id);
         verify(songServiceClient).createSong(createSongDto);
+        verify(resourceFinalizingProducer).finalizeResource(id);
+        verifyNoMoreInteractions(resourceServiceClient, metadataService, songServiceClient, resourceFinalizingProducer);
     }
 }
