@@ -1,5 +1,6 @@
 package com.example.resourceprocessor.contracts;
 
+import com.example.resourceprocessor.config.MockKafkaConfig;
 import com.example.resourceprocessor.dto.CreateSongResponse;
 import com.example.resourceprocessor.dto.DeleteSongsResponse;
 import com.example.resourceprocessor.dto.SongDto;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
+@Import(MockKafkaConfig.class)
 @AutoConfigureStubRunner(
     ids = "com.example:song-service:+:stubs:8082",
     stubsMode = StubRunnerProperties.StubsMode.LOCAL
