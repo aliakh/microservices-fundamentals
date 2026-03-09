@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class NoOpOAuth2FeignConfig {
+public class TestOAuth2ClientConfig {
 
     @Bean
     @Primary
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
+    public RequestInterceptor noOpFeignRequestInterceptor() {
         return template -> {
         };
     }
