@@ -1,6 +1,6 @@
 package com.example.resourceprocessor.contracts;
 
-import com.example.resourceprocessor.config.KafkaMockConfig;
+import com.example.resourceprocessor.config.KafkaTestConfig;
 import com.example.resourceprocessor.dto.CreateSongResponse;
 import com.example.resourceprocessor.dto.DeleteSongsResponse;
 import com.example.resourceprocessor.dto.SongDto;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Import(KafkaMockConfig.class)
+@Import(KafkaTestConfig.class)
 @AutoConfigureStubRunner(
     ids = "com.example:song-service:+:stubs:8082",
     stubsMode = StubRunnerProperties.StubsMode.LOCAL
