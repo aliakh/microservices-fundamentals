@@ -54,7 +54,7 @@ public class OAuth2ClientConfig {
     }
 
     @Bean
-    RequestInterceptor outh2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
+    RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager authorizedClientManager) {
         return template -> {
             var principal = new AnonymousAuthenticationToken(
                 "resource-service-key",
