@@ -1,11 +1,13 @@
 package com.example.resourceservice.controller;
 
 import com.example.resourceservice.AbstractTestcontainersTest;
+import com.example.resourceservice.config.KafkaTestConfig;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
+@Import(KafkaTestConfig.class)
 public class ResourceControllerMvcTest extends AbstractTestcontainersTest {
 
     private static final String URL = "/resources";
