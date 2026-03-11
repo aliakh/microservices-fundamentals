@@ -1,0 +1,135 @@
+{
+  "realm": "microservices-fundamentals-realm",
+  "enabled": true,
+  "displayName": "microservices fundamentals realm",
+  "roles": {
+    "realm": [
+      {
+        "name": "admin"
+      },
+      {
+        "name": "user"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "storage-service-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "clientAuthenticatorType": "client-secret",
+      "secret": "storage-service-client-secret",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": true,
+      "publicClient": false,
+      "directAccessGrantsEnabled": true,
+      "bearerOnly": false,
+      "attributes": {},
+      "defaultClientScopes": [
+        "roles",
+        "profile",
+        "email"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "resource-service-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "clientAuthenticatorType": "client-secret",
+      "secret": "resource-service-client-secret",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "publicClient": false,
+      "directAccessGrantsEnabled": false,
+      "bearerOnly": false,
+      "attributes": {},
+      "defaultClientScopes": [
+        "roles",
+        "profile",
+        "email"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin_user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@email.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "username": "regular_user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Regular",
+      "lastName": "User",
+      "email": "user@email.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "username": "service-account-resource-service",
+      "enabled": true,
+      "serviceAccountClientId": "resource-service-client",
+      "emailVerified": true,
+      "firstName": "Service Account",
+      "lastName": "Resource Service",
+      "credentials": [],
+      "realmRoles": [
+        "ADMIN"
+      ],
+      "clientRoles": {},
+      "groups": []
+    }
+  ]
+}
